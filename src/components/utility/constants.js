@@ -1,0 +1,1 @@
+export const EVENT_RESIZE_PANEL = "EVENT_RESIZE_PANEL";
