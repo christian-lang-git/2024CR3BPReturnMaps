@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Emitter from "@/components/utility/emitter";
 import * as Constants from "@/components/utility/constants";
+import LabeledField from "@/components/uicustom/labeledfield";
 
 class TabData extends Component {
 
@@ -27,6 +28,7 @@ class TabData extends Component {
                         <AccordionItem value="item-1">
                             <AccordionTrigger>Physics</AccordionTrigger>
                             <AccordionContent>
+                                <LabeledField labelText={"mu (mass of secondary)"}/>
                             Stuff
                             </AccordionContent>
                         </AccordionItem>
