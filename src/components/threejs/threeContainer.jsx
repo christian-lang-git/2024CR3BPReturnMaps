@@ -41,12 +41,12 @@ class ThreeContainer extends Component{
         window.addEventListener("resize", this.handleResize);
 
         this.updateCanvasSize();
-
         
         this.simulationParameters = new SimulationParameters();
         console.log("this.simulationParameters.mu", this.simulationParameters.mu);
 
         Emitter.on(Constants.EVENT_RESIZE_PANEL, this.handleResize);
+        Emitter.on(Constants.EVENT_CALCULATE_FTLE, this.handleEventCalculateFTLE);
 
         this.renderLoop();
     }
@@ -70,6 +70,10 @@ class ThreeContainer extends Component{
     handleResize =() => {
         console.log("handleResize");
         this.updateCanvasSize();
+    }
+
+    handleEventCalculateFTLE =() => {
+        console.log("handleEventCalculateFTLE");
     }
 
     updateCanvasSize(){
