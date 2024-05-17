@@ -93,6 +93,7 @@ class ThreeContainer extends Component{
         
         this.renderer.setSize(width, height, false);
         this.renderer.render(this.scene, this.camera); 
+        console.warn("RESIZE")
     }
 
     renderLoop = () => {

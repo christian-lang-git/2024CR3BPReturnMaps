@@ -2,7 +2,7 @@ import "./App.css"
 import * as Constants from "./components/utility/constants";
 import ThreeContainer from "./components/threejs/threeContainer";
 import Emitter from "./components/utility/emitter";
-import { LeftPanel } from "./components/uicustom/leftpanel";
+import LeftPanel from "./components/uicustom/leftpanel";
 import {
     ResizableHandle,
     ResizablePanel,
