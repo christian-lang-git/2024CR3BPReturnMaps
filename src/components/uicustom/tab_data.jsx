@@ -39,14 +39,14 @@ class TabData extends Component {
                                 <AccordionTrigger>Physics</AccordionTrigger>
                                 <AccordionContent>
                                     <Input                                    
-                                        name="name"
-                                        value={uiState.name}
+                                        name="UI_STATE_DATA_PHYSICS_MU"
+                                        value={uiState.UI_STATE_DATA_PHYSICS_MU}
                                         onChange={this.handleChange}
                                     />
                                     <p>{`Current User: ${uiState.name}`}</p>
                                     <Input                                    
-                                        name="email"
-                                        value={uiState.email}
+                                        name="UI_STATE_DATA_INTEGRATION_STEP_SIZE"
+                                        value={uiState.UI_STATE_DATA_INTEGRATION_STEP_SIZE}
                                         onChange={this.handleChange}
                                     />
                                     <LabeledField labelText={"mu (mass of secondary)"} />
