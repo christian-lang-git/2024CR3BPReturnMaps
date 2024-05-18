@@ -109,12 +109,18 @@ class SceneWrapperVisualization {
     }
 
     updateBodies() {
+        //scale
         var radius = this.simulationParameters.getPrimaryRadius();
         this.primary_mesh.scale.set(radius, radius, radius);
         var radius = this.simulationParameters.getSecondaryRadius();
         this.secondary_mesh.scale.set(radius, radius, radius);
         var radius = this.simulationParameters.getCenterOfMassRadius();
         this.center_mesh.scale.set(radius, radius, radius);
+
+        //position
+        this.primary_mesh.position.set(this.simulationParameters.getPrimaryX(),0,0);
+        this.secondary_mesh.position.set(this.simulationParameters.getSecondaryX(),0,0);
+
     }
 }
 
