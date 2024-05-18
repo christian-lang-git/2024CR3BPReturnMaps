@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import * as THREE from "three";
 import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 
-import { SimulationParameters } from "../logic/simulation_parameters";
 import Emitter from '../utility/emitter';
 import * as Constants from "../utility/constants";
 import { AppContext } from "@/components/uicustom/AppContext"
@@ -25,9 +24,8 @@ class ThreeContainer extends Component {
 
         this.updateCanvasSize();
         this.updateControls();
+        this.updateParameters();
         this.renderLoop();
-        //this.simulationParameters = new SimulationParameters();
-        //console.log("this.simulationParameters.mu", this.simulationParameters.mu);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -64,8 +62,10 @@ class ThreeContainer extends Component {
     initializeEventHandlers() {
         window.addEventListener("resize", this.handleResize);
         Emitter.on(Constants.EVENT_RESIZE_PANEL, this.handleResize);
+        Emitter.on(Constants.EVENT_DATA_UPDATE_PHYSICS, this.handleEventDataUpdatePhysics);
         Emitter.on(Constants.EVENT_CALCULATE_FTLE, this.handleEventCalculateFTLE);
         Emitter.on(Constants.EVENT_CAMERA_UPDATE_CONTROLS, this.handleEventCameraUpdateControls);
+        Emitter.on(Constants.EVENT_RENDERING_UPDATE_BODIES, this.handleEventRenderingUpdateBodies);
     }
 
     loadScene() {
@@ -93,6 +93,16 @@ class ThreeContainer extends Component {
     handleEventCameraUpdateControls = () => {
         console.log("handleEventCameraUpdateControls");
         this.updateControls();
+    }
+
+    handleEventDataUpdatePhysics = () => {
+        console.log("handleEventDataUpdatePhysics");
+        this.updateParametersPhysics();
+    }
+
+    handleEventRenderingUpdateBodies = () => {
+        console.log("handleEventRenderingUpdateBodies");
+        this.updateParametersBodies();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,6 +139,26 @@ class ThreeContainer extends Component {
         this.controls.panSpeed = uiState.UI_STATE_CAMERA_CONTROLS_PANSPEED * 0.3;//default: 0.3
         this.controls.zoomSpeed = uiState.UI_STATE_CAMERA_CONTROLS_ZOOMSPEED * 1.2;//default: 1.2
         this.controls.update();
+    }
+
+    updateParameters() {
+        this.updateParametersPhysics();
+        this.updateParametersBodies();
+    }
+
+    updateParametersPhysics() {
+        const { uiState } = this.context;
+        var mu = uiState.UI_STATE_DATA_PHYSICS_MU;
+        this.sceneWrapper.updateParametersPhysics(mu);
+        this.sceneWrapper.updateBodies();
+    }
+
+    updateParametersBodies() {
+        const { uiState } = this.context;
+        var max_radius_bodies = uiState.UI_STATE_RENDERING_BODIES_MAX_RADIUS_BODIES;
+        var radius_center_of_mass = uiState.UI_STATE_RENDERING_BODIES_RADIUS_CENTER_OF_MASS;
+        this.sceneWrapper.updateParametersBodies(max_radius_bodies, radius_center_of_mass);
+        this.sceneWrapper.updateBodies();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

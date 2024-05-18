@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { ObjectArrow, ObjectAxes } from "./custom_objects";
 import { vec3 } from "gl-matrix/esm";
+import { SimulationParameters } from "@/components/logic/simulation_parameters";
 
 /**
  * This class is responsible for the scene that shows the main visualization
@@ -16,10 +17,16 @@ class SceneWrapperVisualization {
     }
 
     initialize() {
+        this.initializeSimulationParameters();
         this.initializeLight();
         this.initializeAxesArrows();
         this.initializePlane();
         this.initializeBodies();
+    }
+
+    initializeSimulationParameters() {
+        this.simulationParameters = new SimulationParameters();
+        console.log("this.simulationParameters.mu", this.simulationParameters.mu);
     }
 
     initializeExampleCube() {
@@ -90,6 +97,24 @@ class SceneWrapperVisualization {
         this.center_mesh = new THREE.Mesh(this.center_geometry, this.center_material);
         this.center_mesh.position.set(0, 0, 0);
         this.scene.add(this.center_mesh);
+    }
+
+    updateParametersPhysics(mu) {
+        this.simulationParameters.mu = mu;
+    }
+
+    updateParametersBodies(max_radius_bodies, radius_center_of_mass) {
+        this.simulationParameters.max_radius_bodies = max_radius_bodies;
+        this.simulationParameters.radius_center_of_mass = radius_center_of_mass;
+    }
+
+    updateBodies() {
+        var radius = this.simulationParameters.getPrimaryRadius();
+        this.primary_mesh.scale.set(radius, radius, radius);
+        var radius = this.simulationParameters.getSecondaryRadius();
+        this.secondary_mesh.scale.set(radius, radius, radius);
+        var radius = this.simulationParameters.getCenterOfMassRadius();
+        this.center_mesh.scale.set(radius, radius, radius);
     }
 }
 

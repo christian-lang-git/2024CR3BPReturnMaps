@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import TabData from "@/components/uicustom/tab_data";
 import TabCamera from "@/components/uicustom/tab_camera";
+import TabRendering from '@/components/uicustom/tab_rendering';
 
 class LeftPanel extends Component {
 
@@ -14,7 +15,7 @@ class LeftPanel extends Component {
                     <TabsTrigger value="camera">Camera</TabsTrigger>
                 </TabsList>
                 <TabData />
-                <TabsContent value="rendering">Change your password here.</TabsContent>
+                <TabRendering />
                 <TabCamera />
             </Tabs>
         )

@@ -15,6 +15,11 @@ import { Input } from "@/components/ui/input"
 
 class TabData extends Component {
 
+    handleClickDataUpdatePhysics() {
+        console.log("handleClickDataUpdatePhysics")
+        Emitter.emit(Constants.EVENT_DATA_UPDATE_PHYSICS, {});
+    }
+
     handleClickDataButtonCalculateFTLE() {
         console.log("Calculate FTLE")
         Emitter.emit(Constants.EVENT_CALCULATE_FTLE, {});
@@ -35,6 +40,7 @@ class TabData extends Component {
                                         name="UI_STATE_DATA_PHYSICS_MU"
                                         labelText={"mu (mass of secondary)"}
                                     />
+                                    <Button onClick={this.handleClickDataUpdatePhysics}>update physics</Button>
                                 </AccordionContent>
                             </AccordionItem>
                             <AccordionItem value="integration">
@@ -49,7 +55,7 @@ class TabData extends Component {
                             <AccordionItem value="streamline">
                                 <AccordionTrigger>Streamline</AccordionTrigger>
                                 <AccordionContent>
-                                    
+
                                 </AccordionContent>
                             </AccordionItem>
                             <AccordionItem value="ftle">
