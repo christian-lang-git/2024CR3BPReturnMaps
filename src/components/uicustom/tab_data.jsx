@@ -42,7 +42,6 @@ class TabData extends Component {
                                 <AccordionContent>
                                     <LabeledField 
                                         name="UI_STATE_DATA_PHYSICS_MU"
-                                        value={uiState.UI_STATE_DATA_PHYSICS_MU}
                                         labelText={"mu (mass of secondary)"}
                                     />
                                 </AccordionContent>
@@ -52,7 +51,6 @@ class TabData extends Component {
                                 <AccordionContent>
                                     <LabeledField 
                                         name="UI_STATE_DATA_INTEGRATION_STEP_SIZE"
-                                        value={uiState.UI_STATE_DATA_INTEGRATION_STEP_SIZE}
                                         labelText={"step size"}
                                     />
                                 </AccordionContent>

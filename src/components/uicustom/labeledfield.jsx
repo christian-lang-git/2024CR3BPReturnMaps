@@ -21,11 +21,14 @@ class LabeledField extends Component {
     handleChange = (e) => {
         const { setUiState } = this.context;
         setUiState({ [e.target.name]: e.target.value });
-      };
+    };
 
     render() {
 
-        const { name, value, labelText } = this.props;
+        const { name, labelText } = this.props;
+        const { uiState } = this.context;
+        const value = uiState[name];
+
 
         return(
             <div className="w-full p-2">                
