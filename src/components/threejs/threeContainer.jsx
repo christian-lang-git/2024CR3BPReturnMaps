@@ -5,8 +5,11 @@ import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 import { SimulationParameters } from "../logic/simulation_parameters";
 import Emitter from '../utility/emitter';
 import * as Constants from "../utility/constants";
+import { AppContext } from "@/components/uicustom/AppContext"
 
 class ThreeContainer extends Component {
+
+    static contextType = AppContext;
 
     componentDidMount() {
         console.warn("ThreeScene::componentDidMount");
@@ -23,10 +26,6 @@ class ThreeContainer extends Component {
         this.camera.position.z = 5;
 
         this.controls = new TrackballControls(this.camera, this.renderer.domElement);
-        //we can use default controls if we use handleResize()
-        //this.controls.rotateSpeed = 0.1;//default: 1.0
-        //this.controls.panSpeed = 0.03;//default: 0.3
-        //this.controls.zoomSpeed = 1.0;//default: 1.2
         this.controls.update();
 
         var geometry = new THREE.BoxGeometry();
@@ -40,31 +39,25 @@ class ThreeContainer extends Component {
         window.addEventListener("resize", this.handleResize);
 
         this.updateCanvasSize();
+        this.updateControls();
 
         this.simulationParameters = new SimulationParameters();
         console.log("this.simulationParameters.mu", this.simulationParameters.mu);
 
         Emitter.on(Constants.EVENT_RESIZE_PANEL, this.handleResize);
         Emitter.on(Constants.EVENT_CALCULATE_FTLE, this.handleEventCalculateFTLE);
+        Emitter.on(Constants.EVENT_CAMERA_UPDATE_CONTROLS, this.handleEventCameraUpdateControls);
 
         this.renderLoop();
     }
 
-    testAddRedCube() {
-        console.log("testAddRedCube");
-
-        var geometry = new THREE.BoxGeometry();
-        var material = new THREE.MeshBasicMaterial({
-            color: 0xff0000
-        });
-        this.mesh2 = new THREE.Mesh(geometry, material);
-        this.mesh2.position.y = 1
-        this.scene.add(this.mesh2);
-
-
-
-        this.renderer.render(this.scene, this.camera);
-    };
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //      EVENT HANDLERS
+    //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     handleResize = () => {
         console.log("handleResize");
@@ -74,6 +67,19 @@ class ThreeContainer extends Component {
     handleEventCalculateFTLE = () => {
         console.log("handleEventCalculateFTLE");
     }
+
+    handleEventCameraUpdateControls = () => {
+        console.log("handleEventCameraUpdateControls");
+        this.updateControls();
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //      UPDATE FUNCTIONS
+    //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     updateCanvasSize() {
         var canvas = this.renderer.domElement;
@@ -94,6 +100,40 @@ class ThreeContainer extends Component {
         this.renderer.render(this.scene, this.camera);
         console.warn("RESIZE")
     }
+
+    updateControls() {
+        const { uiState } = this.context;
+        this.controls.rotateSpeed = uiState.UI_STATE_CAMERA_CONTROLS_ROTATESPEED * 5.0;//default: 1.0
+        this.controls.panSpeed = uiState.UI_STATE_CAMERA_CONTROLS_PANSPEED * 0.3;//default: 0.3
+        this.controls.zoomSpeed = uiState.UI_STATE_CAMERA_CONTROLS_ZOOMSPEED * 1.2;//default: 1.2
+        this.controls.update();
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //      _________
+    //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    testAddRedCube() {
+        console.log("testAddRedCube");
+
+        var geometry = new THREE.BoxGeometry();
+        var material = new THREE.MeshBasicMaterial({
+            color: 0xff0000
+        });
+        this.mesh2 = new THREE.Mesh(geometry, material);
+        this.mesh2.position.y = 1
+        this.scene.add(this.mesh2);
+
+        this.renderer.render(this.scene, this.camera);
+    };
+
+
+
+
 
     renderLoop = () => {
         this.controls.update();

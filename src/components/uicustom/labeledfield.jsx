@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { AppContext } from '@/components/uicustom/AppContext'
+import { AppContext } from "@/components/uicustom/AppContext"
 
 class LabeledField extends Component {
 
-    static contextType = AppContext
+    static contextType = AppContext;
     handleChange = (e) => {
         const { setUiState } = this.context;
         setUiState({ [e.target.name]: e.target.value });
