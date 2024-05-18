@@ -14,6 +14,10 @@ class SimulationParameters {
         //bodies
         this.scale_bodies_by_volume = true;
         this.max_radius_bodies = 0.05;
+        //center of mass
+        this.radius_center_of_mass = 0.01;
+        //clicked position
+        this.radius_clicked_position = 0.025;
         //tubes
         this.tube_radius = 0.0025;
         this.tube_num_sides = 20;
@@ -56,7 +60,11 @@ class SimulationParameters {
     }
 
     getCenterOfMassRadius() {
-        return 0.01;
+        return this.radius_center_of_mass;
+    }
+
+    getClickedPositionRadius(){
+        return this.radius_clicked_position;
     }
 
     getSphereVolume(radius) {

@@ -71,10 +71,11 @@ class ThreeContainer extends Component {
         Emitter.on(Constants.EVENT_CALCULATE_FTLE, this.handleEventCalculateFTLE);
         Emitter.on(Constants.EVENT_CAMERA_UPDATE_CONTROLS, this.handleEventCameraUpdateControls);
         Emitter.on(Constants.EVENT_RENDERING_UPDATE_BODIES, this.handleEventRenderingUpdateBodies);
+        Emitter.on(Constants.EVENT_RENDERING_UPDATE_CLICKED_POSITION, this.handleEventRenderingUpdateClickedPosition);
     }
 
 
-
+    
     loadScene() {
         this.sceneWrapper = new SceneWrapperVisualization(this.renderer, this.scene, this.camera, this.raycaster);
         this.sceneWrapper.initialize();
@@ -111,6 +112,12 @@ class ThreeContainer extends Component {
         console.log("handleEventRenderingUpdateBodies");
         this.updateParametersBodies();
     }
+
+    handleEventRenderingUpdateClickedPosition = () => {
+        console.log("handleEventRenderingUpdateClickedPosition");
+        this.updateParametersClickedPosition();
+    }
+
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -151,6 +158,7 @@ class ThreeContainer extends Component {
     updateParameters() {
         this.updateParametersPhysics();
         this.updateParametersBodies();
+        this.updateParametersClickedPosition();
     }
 
     updateParametersPhysics() {
@@ -166,6 +174,13 @@ class ThreeContainer extends Component {
         var radius_center_of_mass = uiState.UI_STATE_RENDERING_BODIES_RADIUS_CENTER_OF_MASS;
         this.sceneWrapper.updateParametersBodies(max_radius_bodies, radius_center_of_mass);
         this.sceneWrapper.updateBodies();
+    }
+
+    updateParametersClickedPosition() {        
+        const { uiState } = this.context;
+        var radius_clicked_position = uiState.UI_STATE_RENDERING_CLICKED_POSITION_RADIUS;
+        this.sceneWrapper.updateParametersClickedPosition(radius_clicked_position);
+        this.sceneWrapper.updateClickedPosition();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

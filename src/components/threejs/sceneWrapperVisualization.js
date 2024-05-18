@@ -25,6 +25,7 @@ class SceneWrapperVisualization {
         this.initializeAxesArrows();
         this.initializePlane();
         this.initializeBodies();
+        this.initializeClickedPositionMarker();
         this.initializeEventListeners();
     }
 
@@ -103,6 +104,15 @@ class SceneWrapperVisualization {
         this.scene.add(this.center_mesh);
     }
 
+    initializeClickedPositionMarker() {
+        var radius = 1.0;
+        this.clicked_geometry = new THREE.SphereGeometry(radius);
+        this.clicked_material = new THREE.MeshStandardMaterial({ color: 0xff00ff });
+        this.clicked_mesh = new THREE.Mesh(this.clicked_geometry, this.clicked_material);
+        this.clicked_mesh.position.set(0, 0, 10000);
+        this.scene.add(this.clicked_mesh);
+    }
+
     initializeEventListeners() {
         this.renderer.domElement.addEventListener("click", (event) => {
             var mousePositionNDC = getMousePositionInCanvasNDC(this.renderer.domElement, event);
@@ -114,9 +124,11 @@ class SceneWrapperVisualization {
             const intersects = this.raycaster.intersectObject(this.plane_mesh);
             if (intersects.length > 0) {
                 console.log("plane intersection", intersects[0].point);
+                this.clicked_mesh.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
             }
             else {
                 console.log("no plane intersection");
+                this.clicked_mesh.position.set(0, 0, 10000);
             }
         },
             false
@@ -139,6 +151,10 @@ class SceneWrapperVisualization {
         this.simulationParameters.radius_center_of_mass = radius_center_of_mass;
     }
 
+    updateParametersClickedPosition(radius_clicked_position){
+        this.simulationParameters.radius_clicked_position = radius_clicked_position;
+    }
+
     updateBodies() {
         //scale
         var radius = this.simulationParameters.getPrimaryRadius();
@@ -151,7 +167,11 @@ class SceneWrapperVisualization {
         //position
         this.primary_mesh.position.set(this.simulationParameters.getPrimaryX(), 0, 0);
         this.secondary_mesh.position.set(this.simulationParameters.getSecondaryX(), 0, 0);
+    }
 
+    updateClickedPosition(){        
+        var radius = this.simulationParameters.getClickedPositionRadius();
+        this.clicked_mesh.scale.set(radius, radius, radius);
     }
 }
 

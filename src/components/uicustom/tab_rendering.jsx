@@ -20,6 +20,12 @@ class TabRendering extends Component {
         Emitter.emit(Constants.EVENT_RENDERING_UPDATE_BODIES, {});
     }
 
+    handleClickRenderingUpdateClickedPosition() {
+        console.log("handleClickRenderingUpdateClickedPosition")
+        Emitter.emit(Constants.EVENT_RENDERING_UPDATE_CLICKED_POSITION, {});
+    }
+    
+
     render() {
         return (
             <TabsContent value="rendering" className="flex-1 overflow-hidden">
@@ -36,6 +42,16 @@ class TabRendering extends Component {
                                         labelText={"max radius bodies"}
                                     />
                                     <Button onClick={this.handleClickRenderingUpdateBodies}>update bodies</Button>
+                                </AccordionContent>
+                            </AccordionItem>
+                            <AccordionItem value="bodies">
+                                <AccordionTrigger>Clicked Position</AccordionTrigger>
+                                <AccordionContent>
+                                    <LabeledField
+                                        name="UI_STATE_RENDERING_CLICKED_POSITION_RADIUS"
+                                        labelText={"radius clicked position"}
+                                    />
+                                    <Button onClick={this.handleClickRenderingUpdateClickedPosition}>update clicked position</Button>
                                 </AccordionContent>
                             </AccordionItem>
                         </Accordion>
