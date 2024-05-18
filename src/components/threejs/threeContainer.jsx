@@ -18,6 +18,7 @@ class ThreeContainer extends Component {
         this.initializeRenderer();
         this.initializeCamera();
         this.initializeControls();
+        this.initializeRayCaster();
         this.initializeEventHandlers();
 
         this.loadScene();
@@ -39,7 +40,7 @@ class ThreeContainer extends Component {
     initializeScene() {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xffffff);
-        //this.scene.background = new THREE.Color( 0x000000 );//background color for debugging layout
+        this.scene.background = new THREE.Color( 0x000000 );//background color for debugging layout
     }
 
     initializeRenderer() {
@@ -59,6 +60,10 @@ class ThreeContainer extends Component {
         this.controls.update();
     }
 
+    initializeRayCaster() {
+        this.raycaster = new THREE.Raycaster();
+    }
+
     initializeEventHandlers() {
         window.addEventListener("resize", this.handleResize);
         Emitter.on(Constants.EVENT_RESIZE_PANEL, this.handleResize);
@@ -68,8 +73,10 @@ class ThreeContainer extends Component {
         Emitter.on(Constants.EVENT_RENDERING_UPDATE_BODIES, this.handleEventRenderingUpdateBodies);
     }
 
+
+
     loadScene() {
-        this.sceneWrapper = new SceneWrapperVisualization(this.scene, this.camera);
+        this.sceneWrapper = new SceneWrapperVisualization(this.renderer, this.scene, this.camera, this.raycaster);
         this.sceneWrapper.initialize();
     }
 
@@ -177,8 +184,8 @@ class ThreeContainer extends Component {
 
     render() {
         return (
-            <div className="parent h-full w-full">
-                <div className="child flex flex-1 p-2 h-full w-full" ref={mount => { this.mount = mount; }} />
+            <div className="parent h-full w-full p-2">
+                <div className="child flex flex-1 h-full w-full" ref={mount => { this.mount = mount; }} />
             </div>
         )
     }

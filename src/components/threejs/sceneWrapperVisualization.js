@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { ObjectArrow, ObjectAxes } from "./custom_objects";
 import { vec3 } from "gl-matrix/esm";
 import { SimulationParameters } from "@/components/logic/simulation_parameters";
+import { getMousePositionInCanvasNDC } from "@/components/utility/mouseHelper";
 
 /**
  * This class is responsible for the scene that shows the main visualization
@@ -11,9 +12,11 @@ import { SimulationParameters } from "@/components/logic/simulation_parameters";
  * - a deformed sphere that visualizes equivalent energy
  */
 class SceneWrapperVisualization {
-    constructor(scene, camera) {
+    constructor(renderer, scene, camera, raycaster) {
+        this.renderer = renderer;
         this.scene = scene;
         this.camera = camera;
+        this.raycaster = raycaster;
     }
 
     initialize() {
@@ -22,6 +25,7 @@ class SceneWrapperVisualization {
         this.initializeAxesArrows();
         this.initializePlane();
         this.initializeBodies();
+        this.initializeEventListeners();
     }
 
     initializeSimulationParameters() {
@@ -99,6 +103,33 @@ class SceneWrapperVisualization {
         this.scene.add(this.center_mesh);
     }
 
+    initializeEventListeners() {
+        this.renderer.domElement.addEventListener("click", (event) => {
+            var mousePositionNDC = getMousePositionInCanvasNDC(this.renderer.domElement, event);
+            console.log("CLICK NDC:", mousePositionNDC.x, mousePositionNDC.y);
+            var mouse = new THREE.Vector2();
+            mouse.x = mousePositionNDC.x;
+            mouse.y = mousePositionNDC.y;
+            this.raycaster.setFromCamera(mouse, this.camera);
+            const intersects = this.raycaster.intersectObject(this.plane_mesh);
+            if (intersects.length > 0) {
+                console.log("plane intersection", intersects[0].point);
+            }
+            else {
+                console.log("no plane intersection");
+            }
+        },
+            false
+        );
+    }
+
+
+
+
+
+
+
+
     updateParametersPhysics(mu) {
         this.simulationParameters.mu = mu;
     }
@@ -118,8 +149,8 @@ class SceneWrapperVisualization {
         this.center_mesh.scale.set(radius, radius, radius);
 
         //position
-        this.primary_mesh.position.set(this.simulationParameters.getPrimaryX(),0,0);
-        this.secondary_mesh.position.set(this.simulationParameters.getSecondaryX(),0,0);
+        this.primary_mesh.position.set(this.simulationParameters.getPrimaryX(), 0, 0);
+        this.secondary_mesh.position.set(this.simulationParameters.getSecondaryX(), 0, 0);
 
     }
 }
