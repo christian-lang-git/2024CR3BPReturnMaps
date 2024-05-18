@@ -18,8 +18,8 @@ class TabData extends Component {
 
     static contextType = AppContext
     handleChange = (e) => {
-        const { setFormState } = this.context;
-        setFormState({ [e.target.name]: e.target.value });
+        const { setUiState } = this.context;
+        setUiState({ [e.target.name]: e.target.value });
       };
 
     handleClickDataButtonCalculateFTLE() {
@@ -28,7 +28,7 @@ class TabData extends Component {
     }
 
     render() {
-        const { formState } = this.context;
+        const { uiState } = this.context;
 
         return (
             <TabsContent value="data" className="flex-1 overflow-hidden">
@@ -40,13 +40,13 @@ class TabData extends Component {
                                 <AccordionContent>
                                     <Input                                    
                                         name="name"
-                                        value={formState.name}
+                                        value={uiState.name}
                                         onChange={this.handleChange}
                                     />
-                                    <p>{`Current User: ${formState.name}`}</p>
+                                    <p>{`Current User: ${uiState.name}`}</p>
                                     <Input                                    
                                         name="email"
-                                        value={formState.email}
+                                        value={uiState.email}
                                         onChange={this.handleChange}
                                     />
                                     <LabeledField labelText={"mu (mass of secondary)"} />

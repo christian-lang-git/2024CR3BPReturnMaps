@@ -22,8 +22,9 @@ class LabeledField extends Component {
 
         return(
             <div className="w-full p-2">                
-                <Label htmlFor="" className="w-50">{labelText}</Label>    
-                <Input />   
+                <Label className="w-50">{labelText}   
+                <Input/>   
+                </Label> 
             </div>
         )
     }
