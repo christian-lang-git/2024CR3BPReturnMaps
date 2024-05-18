@@ -6,6 +6,7 @@ import { SimulationParameters } from "../logic/simulation_parameters";
 import Emitter from '../utility/emitter';
 import * as Constants from "../utility/constants";
 import { AppContext } from "@/components/uicustom/AppContext"
+import { SceneWrapperVisualization } from "./sceneWrapperVisualization";
 
 class ThreeContainer extends Component {
 
@@ -14,41 +15,61 @@ class ThreeContainer extends Component {
     componentDidMount() {
         console.warn("ThreeScene::componentDidMount");
 
-        this.scene = new THREE.Scene();
+        this.initializeScene();
+        this.initializeRenderer();
+        this.initializeCamera();
+        this.initializeControls();
+        this.initializeEventHandlers();
 
-        this.renderer = new THREE.WebGLRenderer();
-        this.renderer.setSize(10, 10);
-
-        this.mount.appendChild(this.renderer.domElement);
-        var canvas = this.renderer.domElement;
-
-        this.camera = new THREE.PerspectiveCamera(75, 1.0, 0.1, 1000);
-        this.camera.position.z = 5;
-
-        this.controls = new TrackballControls(this.camera, this.renderer.domElement);
-        this.controls.update();
-
-        var geometry = new THREE.BoxGeometry();
-        var material = new THREE.MeshBasicMaterial({
-            color: 0x00ff00
-        });
-        this.mesh = new THREE.Mesh(geometry, material);
-        this.scene.add(this.mesh);
-        this.renderer.render(this.scene, this.camera);
-
-        window.addEventListener("resize", this.handleResize);
+        this.loadScene();
 
         this.updateCanvasSize();
         this.updateControls();
+        this.renderLoop();
+        //this.simulationParameters = new SimulationParameters();
+        //console.log("this.simulationParameters.mu", this.simulationParameters.mu);
+    }
 
-        this.simulationParameters = new SimulationParameters();
-        console.log("this.simulationParameters.mu", this.simulationParameters.mu);
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //      INITIALIZATION
+    //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    initializeScene() {
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color(0xffffff);
+        //this.scene.background = new THREE.Color( 0x000000 );//background color for debugging layout
+    }
+
+    initializeRenderer() {
+        this.renderer = new THREE.WebGLRenderer();
+        this.renderer.setSize(10, 10);
+        this.mount.appendChild(this.renderer.domElement);
+    }
+
+    initializeCamera() {
+        this.camera = new THREE.PerspectiveCamera(75, 1.0, 0.1, 1000);
+        this.camera.position.z = 5;
+    }
+
+    initializeControls() {
+        this.controls = new TrackballControls(this.camera, this.renderer.domElement);
+        this.controls.update();
+    }
+
+    initializeEventHandlers() {
+        window.addEventListener("resize", this.handleResize);
         Emitter.on(Constants.EVENT_RESIZE_PANEL, this.handleResize);
         Emitter.on(Constants.EVENT_CALCULATE_FTLE, this.handleEventCalculateFTLE);
         Emitter.on(Constants.EVENT_CAMERA_UPDATE_CONTROLS, this.handleEventCameraUpdateControls);
+    }
 
-        this.renderLoop();
+    loadScene() {
+        this.sceneWrapper = new SceneWrapperVisualization(this.scene);
+        this.sceneWrapper.initialize();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -112,28 +133,10 @@ class ThreeContainer extends Component {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
-    //      _________
+    //      RENDERING
     //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    testAddRedCube() {
-        console.log("testAddRedCube");
-
-        var geometry = new THREE.BoxGeometry();
-        var material = new THREE.MeshBasicMaterial({
-            color: 0xff0000
-        });
-        this.mesh2 = new THREE.Mesh(geometry, material);
-        this.mesh2.position.y = 1
-        this.scene.add(this.mesh2);
-
-        this.renderer.render(this.scene, this.camera);
-    };
-
-
-
-
 
     renderLoop = () => {
         this.controls.update();

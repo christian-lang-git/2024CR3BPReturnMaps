@@ -1,0 +1,24 @@
+import * as THREE from "three";
+
+class SceneWrapperVisualization {
+    constructor(scene) {
+        this.scene = scene;       
+    }
+
+    initialize() {
+        this.initializeExampleCube();
+    }    
+
+    initializeExampleCube(){
+        
+        var geometry = new THREE.BoxGeometry();
+        var material = new THREE.MeshBasicMaterial({
+            color: 0x00ff00
+        });
+        this.example_cube_mesh = new THREE.Mesh(geometry, material);
+        this.scene.add(this.example_cube_mesh);
+        //this.renderer.render(this.scene, this.camera);
+    }
+}
+
+export { SceneWrapperVisualization };
