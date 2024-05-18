@@ -17,10 +17,12 @@ import { AppContext } from '@/components/uicustom/AppContext'
 class TabData extends Component {
 
     static contextType = AppContext
+    /*
     handleChange = (e) => {
         const { setUiState } = this.context;
         setUiState({ [e.target.name]: e.target.value });
-      };
+    };
+    */
 
     handleClickDataButtonCalculateFTLE() {
         console.log("Calculate FTLE")
@@ -38,25 +40,21 @@ class TabData extends Component {
                             <AccordionItem value="item-1">
                                 <AccordionTrigger>Physics</AccordionTrigger>
                                 <AccordionContent>
-                                    <Input                                    
+                                    <LabeledField 
                                         name="UI_STATE_DATA_PHYSICS_MU"
                                         value={uiState.UI_STATE_DATA_PHYSICS_MU}
-                                        onChange={this.handleChange}
+                                        labelText={"mu (mass of secondary)"}
                                     />
-                                    <p>{`Current User: ${uiState.name}`}</p>
-                                    <Input                                    
-                                        name="UI_STATE_DATA_INTEGRATION_STEP_SIZE"
-                                        value={uiState.UI_STATE_DATA_INTEGRATION_STEP_SIZE}
-                                        onChange={this.handleChange}
-                                    />
-                                    <LabeledField labelText={"mu (mass of secondary)"} />
-                                    Stuff
                                 </AccordionContent>
                             </AccordionItem>
                             <AccordionItem value="item-2">
                                 <AccordionTrigger>Integration</AccordionTrigger>
                                 <AccordionContent>
-                                    Stuff
+                                    <LabeledField 
+                                        name="UI_STATE_DATA_INTEGRATION_STEP_SIZE"
+                                        value={uiState.UI_STATE_DATA_INTEGRATION_STEP_SIZE}
+                                        labelText={"step size"}
+                                    />
                                 </AccordionContent>
                             </AccordionItem>
                             <AccordionItem value="item-3">
