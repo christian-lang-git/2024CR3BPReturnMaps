@@ -12,17 +12,8 @@ import Emitter from "@/components/utility/emitter";
 import * as Constants from "@/components/utility/constants";
 import LabeledField from "@/components/uicustom/labeledfield";
 import { Input } from "@/components/ui/input"
-import { AppContext } from '@/components/uicustom/AppContext'
 
 class TabData extends Component {
-
-    static contextType = AppContext
-    /*
-    handleChange = (e) => {
-        const { setUiState } = this.context;
-        setUiState({ [e.target.name]: e.target.value });
-    };
-    */
 
     handleClickDataButtonCalculateFTLE() {
         console.log("Calculate FTLE")
@@ -30,8 +21,6 @@ class TabData extends Component {
     }
 
     render() {
-        const { uiState } = this.context;
-
         return (
             <TabsContent value="data" className="flex-1 overflow-hidden">
                 <ScrollArea className="h-full overflow-y-auto">
