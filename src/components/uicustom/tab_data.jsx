@@ -29,7 +29,7 @@ class TabData extends Component {
                             <AccordionItem value="item-1">
                                 <AccordionTrigger>Physics</AccordionTrigger>
                                 <AccordionContent>
-                                    <LabeledField 
+                                    <LabeledField
                                         name="UI_STATE_DATA_PHYSICS_MU"
                                         labelText={"mu (mass of secondary)"}
                                     />
@@ -38,7 +38,7 @@ class TabData extends Component {
                             <AccordionItem value="item-2">
                                 <AccordionTrigger>Integration</AccordionTrigger>
                                 <AccordionContent>
-                                    <LabeledField 
+                                    <LabeledField
                                         name="UI_STATE_DATA_INTEGRATION_STEP_SIZE"
                                         labelText={"step size"}
                                     />

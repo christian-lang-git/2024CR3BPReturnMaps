@@ -1,8 +1,8 @@
-class SimulationParameters{
-    constructor(){
+class SimulationParameters {
+    constructor() {
         //physics
         this.mu = 0.1;//mass of secondary
-        
+
         //RK4
         this.steps = 15000;
         this.step_size = 0.001;
@@ -22,48 +22,48 @@ class SimulationParameters{
         this.print();
     }
 
-    getPrimaryMass(){
+    getPrimaryMass() {
         return (1 - this.mu);
     }
 
-    getSecondaryMass(){
+    getSecondaryMass() {
         return this.mu;
     }
 
-    getPrimaryX(){
+    getPrimaryX() {
         return -this.mu;
     }
 
-    getSecondaryX(){
+    getSecondaryX() {
         return (1 - this.mu);
     }
 
-    getPrimaryRadius(){
-        if(this.scale_bodies_by_volume)
-            return Math.pow((3/(4*Math.PI)*this.getPrimaryMass()),(1/3)) * this.max_radius_bodies;
+    getPrimaryRadius() {
+        if (this.scale_bodies_by_volume)
+            return Math.pow((3 / (4 * Math.PI) * this.getPrimaryMass()), (1 / 3)) * this.max_radius_bodies;
         else
             return this.getPrimaryMass() * this.max_radius_bodies;
     }
 
-    getSecondaryRadius(){
+    getSecondaryRadius() {
         //scale by radius
         //return (this.mu) * this.max_radius_bodies;
         //scale by volume
-        if(this.scale_bodies_by_volume)
-            return Math.pow((3/(4*Math.PI)*this.getSecondaryMass()),(1/3)) * this.max_radius_bodies;
+        if (this.scale_bodies_by_volume)
+            return Math.pow((3 / (4 * Math.PI) * this.getSecondaryMass()), (1 / 3)) * this.max_radius_bodies;
         else
             return this.getSecondaryMass() * this.max_radius_bodies;
     }
 
-    getCenterOfMassRadius(){
+    getCenterOfMassRadius() {
         return 0.01;
     }
 
-    getSphereVolume(radius){
-        return (4/3)*Math.PI*radius*radius*radius;
+    getSphereVolume(radius) {
+        return (4 / 3) * Math.PI * radius * radius * radius;
     }
 
-    print(){
+    print() {
         var primary_radius = this.getPrimaryRadius();
         var secondary_radius = this.getSecondaryRadius();
         var primary_radius_unscaled = this.getPrimaryRadius() / this.max_radius_bodies;
@@ -83,4 +83,4 @@ class SimulationParameters{
     }
 }
 
-export {SimulationParameters};
+export { SimulationParameters };

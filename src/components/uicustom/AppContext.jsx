@@ -1,5 +1,4 @@
 import React, { createContext, useState } from 'react';
-import * as Constants from "@/components/utility/constants";
 
 export const AppContext = createContext();
 
