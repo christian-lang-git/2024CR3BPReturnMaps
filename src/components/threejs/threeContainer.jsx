@@ -77,7 +77,7 @@ class ThreeContainer extends Component {
 
     
     loadScene() {
-        this.sceneWrapper = new SceneWrapperVisualization(this.renderer, this.scene, this.camera, this.raycaster);
+        this.sceneWrapper = new SceneWrapperVisualization(this.renderer, this.scene, this.camera, this.controls, this.raycaster);
         this.sceneWrapper.initialize();
     }
 
@@ -118,6 +118,10 @@ class ThreeContainer extends Component {
         this.updateParametersClickedPosition();
     }
 
+    handleEventUpdateActiveBehavior = () => {
+        console.log("handleEventUpdateActiveBehavior");
+        this.updateParameters();
+    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -159,6 +163,7 @@ class ThreeContainer extends Component {
         this.updateParametersPhysics();
         this.updateParametersBodies();
         this.updateParametersClickedPosition();
+        this.updateParametersActiveBehavior();
     }
 
     updateParametersPhysics() {
@@ -181,6 +186,13 @@ class ThreeContainer extends Component {
         var radius_clicked_position = uiState.UI_STATE_RENDERING_CLICKED_POSITION_RADIUS;
         this.sceneWrapper.updateParametersClickedPosition(radius_clicked_position);
         this.sceneWrapper.updateClickedPosition();
+    }
+
+    updateParametersActiveBehavior(){
+        const { uiState } = this.context;
+        var activeBehavior = uiState.UI_STATE_ACTIVE_BEHAVIOR;  
+        this.sceneWrapper.updateParametersActiveBehavior(activeBehavior);    
+        this.sceneWrapper.updateBehavior();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

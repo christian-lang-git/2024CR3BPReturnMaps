@@ -3,6 +3,7 @@ import { ObjectArrow, ObjectAxes } from "./custom_objects";
 import { vec3 } from "gl-matrix/esm";
 import { SimulationParameters } from "@/components/logic/simulation_parameters";
 import { getMousePositionInCanvasNDC } from "@/components/utility/mouseHelper";
+import * as Constants from "@/components/utility/constants";
 
 /**
  * This class is responsible for the scene that shows the main visualization
@@ -12,10 +13,11 @@ import { getMousePositionInCanvasNDC } from "@/components/utility/mouseHelper";
  * - a deformed sphere that visualizes equivalent energy
  */
 class SceneWrapperVisualization {
-    constructor(renderer, scene, camera, raycaster) {
+    constructor(renderer, scene, camera, controls, raycaster) {
         this.renderer = renderer;
         this.scene = scene;
         this.camera = camera;
+        this.controls = controls;
         this.raycaster = raycaster;
     }
 
@@ -115,6 +117,14 @@ class SceneWrapperVisualization {
 
     initializeEventListeners() {
         this.renderer.domElement.addEventListener("click", (event) => {
+
+            if (false) {
+                //do nothing --> controls takes care of camera stuff 
+                return;
+            }
+
+            event.preventDefault();
+
             var mousePositionNDC = getMousePositionInCanvasNDC(this.renderer.domElement, event);
             console.log("CLICK NDC:", mousePositionNDC.x, mousePositionNDC.y);
             var mouse = new THREE.Vector2();
@@ -130,6 +140,13 @@ class SceneWrapperVisualization {
                 console.log("no plane intersection");
                 this.clicked_mesh.position.set(0, 0, 10000);
             }
+        },
+            false
+        );
+
+        this.renderer.domElement.addEventListener("mousemove", (event) => {
+            console.log("mousemove");
+            event.preventDefault();
         },
             false
         );
@@ -151,8 +168,12 @@ class SceneWrapperVisualization {
         this.simulationParameters.radius_center_of_mass = radius_center_of_mass;
     }
 
-    updateParametersClickedPosition(radius_clicked_position){
+    updateParametersClickedPosition(radius_clicked_position) {
         this.simulationParameters.radius_clicked_position = radius_clicked_position;
+    }
+
+    updateParametersActiveBehavior(activeBehavior){
+        this.simulationParameters.activeBehavior = activeBehavior;        
     }
 
     updateBodies() {
@@ -169,9 +190,18 @@ class SceneWrapperVisualization {
         this.secondary_mesh.position.set(this.simulationParameters.getSecondaryX(), 0, 0);
     }
 
-    updateClickedPosition(){        
+    updateClickedPosition() {
         var radius = this.simulationParameters.getClickedPositionRadius();
         this.clicked_mesh.scale.set(radius, radius, radius);
+    }
+
+    updateBehavior() {
+        if(this.simulationParameters.activeBehavior == Constants.BEHAVIOR_CONTROL_CAMERA){
+            this.controls.noRotate = false;
+        }
+        if(this.simulationParameters.activeBehavior == Constants.BEHAVIOR_MOVE_SEED){
+            this.controls.noRotate = true;
+        }
     }
 }
 
