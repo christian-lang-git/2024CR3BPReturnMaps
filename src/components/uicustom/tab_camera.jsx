@@ -25,8 +25,10 @@ class TabCamera extends Component {
             <TabsContent value="camera" className="flex-1 overflow-hidden">
                 <ScrollArea className="h-full overflow-y-auto">
                     <div className="pl-2 pr-4 pb-2">
-                        <Accordion type="multiple" className="w-full" collapsible="true">
-                            <AccordionItem value="item-1">
+                        <Accordion type="multiple" className="w-full" collapsible="true"
+                            defaultValue={["controls"]}
+                        >
+                            <AccordionItem value="controls">
                                 <AccordionTrigger>Controls</AccordionTrigger>
                                 <AccordionContent>
                                     <LabeledField

@@ -25,8 +25,10 @@ class TabData extends Component {
             <TabsContent value="data" className="flex-1 overflow-hidden">
                 <ScrollArea className="h-full overflow-y-auto">
                     <div className="pl-2 pr-4 pb-2">
-                        <Accordion type="multiple" className="w-full" collapsible="true">
-                            <AccordionItem value="item-1">
+                        <Accordion type="multiple" className="w-full" collapsible="true"
+                            defaultValue={["physics", "integration", "streamline", "ftle", "geometry"]}
+                        >
+                            <AccordionItem value="physics">
                                 <AccordionTrigger>Physics</AccordionTrigger>
                                 <AccordionContent>
                                     <LabeledField
@@ -35,7 +37,7 @@ class TabData extends Component {
                                     />
                                 </AccordionContent>
                             </AccordionItem>
-                            <AccordionItem value="item-2">
+                            <AccordionItem value="integration">
                                 <AccordionTrigger>Integration</AccordionTrigger>
                                 <AccordionContent>
                                     <LabeledField
@@ -44,13 +46,19 @@ class TabData extends Component {
                                     />
                                 </AccordionContent>
                             </AccordionItem>
-                            <AccordionItem value="item-3">
+                            <AccordionItem value="streamline">
+                                <AccordionTrigger>Streamline</AccordionTrigger>
+                                <AccordionContent>
+                                    
+                                </AccordionContent>
+                            </AccordionItem>
+                            <AccordionItem value="ftle">
                                 <AccordionTrigger>FTLE</AccordionTrigger>
                                 <AccordionContent>
                                     Stuff
                                 </AccordionContent>
                             </AccordionItem>
-                            <AccordionItem value="item-4">
+                            <AccordionItem value="geometry">
                                 <AccordionTrigger>Geometry</AccordionTrigger>
                                 <AccordionContent>
                                     Stuff
