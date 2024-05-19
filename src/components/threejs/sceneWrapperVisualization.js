@@ -208,6 +208,11 @@ class SceneWrapperVisualization {
     }
 
     updateBehavior() {
+        if(this.simulationParameters.activeBehavior == this.simulationParameters.activeBehaviorLastFrame){
+            return;
+        }
+        this.simulationParameters.activeBehaviorLastFrame = this.simulationParameters.activeBehavior;
+        //console.warn("behavior changed", this.simulationParameters.activeBehavior);
         if(this.simulationParameters.activeBehavior == Constants.BEHAVIOR_CONTROL_CAMERA){
             this.controls.noRotate = false;
         }

@@ -118,11 +118,6 @@ class ThreeContainer extends Component {
         this.updateParametersClickedPosition();
     }
 
-    handleEventUpdateActiveBehavior = () => {
-        console.log("handleEventUpdateActiveBehavior");
-        this.updateParameters();
-    }
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -204,6 +199,8 @@ class ThreeContainer extends Component {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     renderLoop = () => {
+        this.updateParametersActiveBehavior();
+        this.sceneWrapper.updateBehavior();
         this.sceneWrapper.preRender();
         this.controls.update();
         this.renderer.render(this.scene, this.camera);
