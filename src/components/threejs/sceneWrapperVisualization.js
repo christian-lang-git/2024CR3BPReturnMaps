@@ -20,7 +20,7 @@ class SceneWrapperVisualization {
         this.camera = camera;
         this.controls = controls;
         this.raycaster = raycaster;
-        this.OffscreenRendererFlowMap = new OffscreenRendererFlowMap(renderer);
+        this.offscreenRendererFlowMap = new OffscreenRendererFlowMap(renderer);
     }
 
     initialize() {
@@ -85,7 +85,7 @@ class SceneWrapperVisualization {
 
     initializeTexturedPlane() {
         this.textured_plane_geometry = new THREE.PlaneGeometry(2, 2);
-        this.textured_plane_material = new THREE.MeshBasicMaterial({map:this.OffscreenRendererFlowMap.renderTarget.texture});
+        this.textured_plane_material = new THREE.MeshBasicMaterial({map:this.offscreenRendererFlowMap.renderTarget.texture});
         this.textured_plane_mesh = new THREE.Mesh(this.textured_plane_geometry, this.textured_plane_material);
         this.scene.add(this.textured_plane_mesh);
         /*
@@ -241,7 +241,7 @@ class SceneWrapperVisualization {
             this.newClickedPosition = false;            
             this.rayCastAndMovePosition(this.clickedMousePositionNDC);
         }
-        //this.OffscreenRendererFlowMap.compute();
+        //this.offscreenRendererFlowMap.compute();
     }
 }
 
