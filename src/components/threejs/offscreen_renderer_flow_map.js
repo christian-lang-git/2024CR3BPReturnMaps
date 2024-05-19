@@ -17,7 +17,8 @@ class OffscreenRendererFlowMap {
         this.renderTarget = new THREE.WebGLRenderTarget(this.width, this.height, {
             minFilter: THREE.LinearFilter,
             magFilter: THREE.NearestFilter,//THREE.LinearFilter
-            format: THREE.RGBAFormat
+            format: THREE.RGBAFormat,
+            type: THREE.FloatType
         });
         this.bufferCamera = new THREE.PerspectiveCamera(70, this.width / this.height, 0.1, 100);
         this.bufferCamera.position.z = 5;
@@ -46,6 +47,10 @@ class OffscreenRendererFlowMap {
         this.renderer.setRenderTarget(this.renderTarget);
         this.renderer.render(this.bufferScene, this.bufferCamera);
         this.renderer.setRenderTarget(null);
+
+        const pixelBuffer = new Float32Array(this.width * this.height * 4);
+        this.renderer.readRenderTargetPixels(this.renderTarget, 0, 0, this.width, this.height, pixelBuffer);
+        console.log("pixelBuffer", pixelBuffer);
     }
 
     vertexShader() {
@@ -69,17 +74,21 @@ class OffscreenRendererFlowMap {
   
         void main() {
             //coordinates in pixel starting bottom left
-            float i = gl_FragCoord[0];//x
-            float j = gl_FragCoord[1];//y
+            float x_pixel = gl_FragCoord[0];//x
+            float y_pixel = gl_FragCoord[1];//y
 
-            if(i>50.0){
+            if(x_pixel>50.0){
                 gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
             }
             else{
                 gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
             }
-            if(j>75.0){
+            if(y_pixel>75.0){
                 gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
+            }
+
+            if(x_pixel < 1.0){
+                gl_FragColor = vec4(0.42, 8.0, -10.0, 9999.0);
             }
         }    
         `
