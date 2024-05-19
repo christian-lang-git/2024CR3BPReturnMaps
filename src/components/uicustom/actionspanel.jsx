@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import TabData from "@/components/uicustom/tab_data";
-import TabCamera from "@/components/uicustom/tab_camera";
-import TabRendering from '@/components/uicustom/tab_rendering';
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+
+import {
+    Camera,
+    Move
+} from "lucide-react"
 
 class ActionsPanel extends Component {
 
     render() {
         return (
-            <ToggleGroup size={"lg"} type="single">
-                <ToggleGroupItem value="a">A</ToggleGroupItem>
-                <ToggleGroupItem value="b">B</ToggleGroupItem>
-                <ToggleGroupItem value="c">C</ToggleGroupItem>
+            <ToggleGroup type="single">
+                <ToggleGroupItem value="camera">
+                    <Camera className="h-8 w-8" />    
+                </ToggleGroupItem>
+                <ToggleGroupItem value="move">
+                    <Move className="h-8 w-8" />
+                </ToggleGroupItem>
             </ToggleGroup>
         )
     }
