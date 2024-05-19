@@ -20,6 +20,13 @@ class TabData extends Component {
         Emitter.emit(Constants.EVENT_DATA_UPDATE_PHYSICS, {});
     }
 
+    handleClickDataUpdateDomain() {
+        console.log("handleClickDataUpdateDomain")
+        Emitter.emit(Constants.EVENT_DATA_UPDATE_DOMAIN, {});
+    }
+
+    
+
     handleClickDataButtonCalculateFTLE() {
         console.log("Calculate FTLE")
         Emitter.emit(Constants.EVENT_CALCULATE_FTLE, {});
@@ -31,7 +38,7 @@ class TabData extends Component {
                 <ScrollArea className="h-full overflow-y-auto">
                     <div className="pl-2 pr-4 pb-2">
                         <Accordion type="multiple" className="w-full" collapsible="true"
-                            defaultValue={["physics", "integration", "streamline", "ftle", "geometry"]}
+                            defaultValue={["physics", "integration", "domain", "streamline", "ftle", "geometry"]}
                         >
                             <AccordionItem value="physics">
                                 <AccordionTrigger>Physics</AccordionTrigger>
@@ -50,6 +57,40 @@ class TabData extends Component {
                                         name="UI_STATE_DATA_INTEGRATION_STEP_SIZE"
                                         labelText={"step size"}
                                     />
+                                </AccordionContent>
+                            </AccordionItem>
+                            <AccordionItem value="domain">
+                                <AccordionTrigger>Domain</AccordionTrigger>
+                                <AccordionContent>
+                                    <div className="grid grid-cols-3">
+                                    <LabeledField
+                                        name="UI_STATE_DATA_DOMAIN_MIN_X"
+                                        labelText={"min x"}
+                                    />
+                                    <LabeledField
+                                        name="UI_STATE_DATA_DOMAIN_MAX_X"
+                                        labelText={"max x"}
+                                    />
+                                    <LabeledField
+                                        name="UI_STATE_DATA_DOMAIN_PIXELS_X"
+                                        labelText={"grid nodes x"}
+                                    />
+                                    </div>
+                                    <div className="grid grid-cols-3">
+                                    <LabeledField
+                                        name="UI_STATE_DATA_DOMAIN_MIN_Y"
+                                        labelText={"min y"}
+                                    />
+                                    <LabeledField
+                                        name="UI_STATE_DATA_DOMAIN_MAX_Y"
+                                        labelText={"max y"}
+                                    />
+                                    <LabeledField
+                                        name="UI_STATE_DATA_DOMAIN_PIXELS_Y"
+                                        labelText={"grid nodes y"}
+                                    />
+                                    </div>
+                                    <Button onClick={this.handleClickDataUpdateDomain}>update domain</Button>
                                 </AccordionContent>
                             </AccordionItem>
                             <AccordionItem value="streamline">

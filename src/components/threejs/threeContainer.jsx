@@ -44,7 +44,7 @@ class ThreeContainer extends Component {
     }
 
     initializeRenderer() {
-        this.renderer = new THREE.WebGLRenderer({antialias: true});
+        this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setSize(10, 10);
         this.mount.appendChild(this.renderer.domElement);
     }
@@ -68,6 +68,7 @@ class ThreeContainer extends Component {
         window.addEventListener("resize", this.handleResize);
         Emitter.on(Constants.EVENT_RESIZE_PANEL, this.handleResize);
         Emitter.on(Constants.EVENT_DATA_UPDATE_PHYSICS, this.handleEventDataUpdatePhysics);
+        Emitter.on(Constants.EVENT_DATA_UPDATE_DOMAIN, this.handleEventDataUpdateDomain);
         Emitter.on(Constants.EVENT_CALCULATE_FTLE, this.handleEventCalculateFTLE);
         Emitter.on(Constants.EVENT_CAMERA_UPDATE_CONTROLS, this.handleEventCameraUpdateControls);
         Emitter.on(Constants.EVENT_RENDERING_UPDATE_BODIES, this.handleEventRenderingUpdateBodies);
@@ -75,7 +76,7 @@ class ThreeContainer extends Component {
     }
 
 
-    
+
     loadScene() {
         this.sceneWrapper = new SceneWrapperVisualization(this.renderer, this.scene, this.camera, this.controls, this.raycaster);
         this.sceneWrapper.initialize();
@@ -106,6 +107,11 @@ class ThreeContainer extends Component {
     handleEventDataUpdatePhysics = () => {
         console.log("handleEventDataUpdatePhysics");
         this.updateParametersPhysics();
+    }
+
+    handleEventDataUpdateDomain = () => {
+        console.log("handleEventDataUpdateDomain");
+        this.updateParametersDomain();
     }
 
     handleEventRenderingUpdateBodies = () => {
@@ -156,6 +162,7 @@ class ThreeContainer extends Component {
 
     updateParameters() {
         this.updateParametersPhysics();
+        this.updateParametersDomain();
         this.updateParametersBodies();
         this.updateParametersClickedPosition();
         this.updateParametersActiveBehavior();
@@ -168,6 +175,18 @@ class ThreeContainer extends Component {
         this.sceneWrapper.updateBodies();
     }
 
+    updateParametersDomain() {
+        const { uiState } = this.context;
+        var domain_min_x = uiState.UI_STATE_DATA_DOMAIN_MIN_X;
+        var domain_max_x = uiState.UI_STATE_DATA_DOMAIN_MAX_X;
+        var domain_pixels_x = uiState.UI_STATE_DATA_DOMAIN_PIXELS_X;
+        var domain_min_y = uiState.UI_STATE_DATA_DOMAIN_MIN_Y;
+        var domain_max_y = uiState.UI_STATE_DATA_DOMAIN_MAX_Y;
+        var domain_pixels_y = uiState.UI_STATE_DATA_DOMAIN_PIXELS_Y;
+        this.sceneWrapper.updateParametersDomain(domain_min_x, domain_max_x, domain_pixels_x, domain_min_y, domain_max_y, domain_pixels_y);
+        this.sceneWrapper.updateTexturedPlane();
+    }
+
     updateParametersBodies() {
         const { uiState } = this.context;
         var max_radius_bodies = uiState.UI_STATE_RENDERING_BODIES_MAX_RADIUS_BODIES;
@@ -176,17 +195,17 @@ class ThreeContainer extends Component {
         this.sceneWrapper.updateBodies();
     }
 
-    updateParametersClickedPosition() {        
+    updateParametersClickedPosition() {
         const { uiState } = this.context;
         var radius_clicked_position = uiState.UI_STATE_RENDERING_CLICKED_POSITION_RADIUS;
         this.sceneWrapper.updateParametersClickedPosition(radius_clicked_position);
         this.sceneWrapper.updateClickedPosition();
     }
 
-    updateParametersActiveBehavior(){
+    updateParametersActiveBehavior() {
         const { uiState } = this.context;
-        var activeBehavior = uiState.UI_STATE_ACTIVE_BEHAVIOR;  
-        this.sceneWrapper.updateParametersActiveBehavior(activeBehavior);    
+        var activeBehavior = uiState.UI_STATE_ACTIVE_BEHAVIOR;
+        this.sceneWrapper.updateParametersActiveBehavior(activeBehavior);
         this.sceneWrapper.updateBehavior();
     }
 

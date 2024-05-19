@@ -84,7 +84,7 @@ class SceneWrapperVisualization {
     }
 
     initializeTexturedPlane() {
-        this.textured_plane_geometry = new THREE.PlaneGeometry(2, 2);
+        this.textured_plane_geometry = new THREE.PlaneGeometry(1, 1);
         this.textured_plane_material = new THREE.MeshBasicMaterial({map:this.offscreenRendererFlowMap.renderTarget.texture});
         this.textured_plane_mesh = new THREE.Mesh(this.textured_plane_geometry, this.textured_plane_material);
         this.scene.add(this.textured_plane_mesh);
@@ -190,6 +190,17 @@ class SceneWrapperVisualization {
         this.simulationParameters.mu = mu;
     }
 
+    updateParametersDomain(domain_min_x, domain_max_x, domain_pixels_x, domain_min_y, domain_max_y, domain_pixels_y){       
+        this.simulationParameters.domain_min_x = parseFloat(domain_min_x);    
+        this.simulationParameters.domain_max_x = parseFloat(domain_max_x);    
+        this.simulationParameters.domain_dimension_x = this.simulationParameters.domain_max_x - this.simulationParameters.domain_min_x;    
+        this.simulationParameters.domain_pixels_x = parseFloat(domain_pixels_x);    
+        this.simulationParameters.domain_min_y = parseFloat(domain_min_y);    
+        this.simulationParameters.domain_max_y = parseFloat(domain_max_y);    
+        this.simulationParameters.domain_dimension_y = this.simulationParameters.domain_max_y - this.simulationParameters.domain_min_y;  
+        this.simulationParameters.domain_pixels_y = parseFloat(domain_pixels_y);
+    }
+
     updateParametersBodies(max_radius_bodies, radius_center_of_mass) {
         this.simulationParameters.max_radius_bodies = max_radius_bodies;
         this.simulationParameters.radius_center_of_mass = radius_center_of_mass;
@@ -215,6 +226,21 @@ class SceneWrapperVisualization {
         //position
         this.primary_mesh.position.set(this.simulationParameters.getPrimaryX(), 0, 0);
         this.secondary_mesh.position.set(this.simulationParameters.getSecondaryX(), 0, 0);
+    }
+
+    updateTexturedPlane(){
+        var min_x = this.simulationParameters.domain_min_x;
+        var max_x = this.simulationParameters.domain_max_x;
+        var min_y = this.simulationParameters.domain_min_y;
+        var max_y = this.simulationParameters.domain_max_y;
+        var scale_x = max_x - min_x;
+        var scale_y = max_y - min_y;
+        var pos_x = 0.5 * (min_x + max_x);
+        var pos_y = 0.5 * (min_y + max_y);
+        this.textured_plane_mesh.scale.set(scale_x, scale_y, 1);
+        this.textured_plane_mesh.position.set(pos_x, pos_y, 0);
+        this.offscreenRendererFlowMap.updateTexturedPlane(this.simulationParameters);
+        this.offscreenRendererFlowMap.compute();
     }
 
     updateClickedPosition() {
