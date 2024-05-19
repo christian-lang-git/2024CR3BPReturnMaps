@@ -11,6 +11,7 @@ import {
 
 import { useState } from 'react'
 import { AppProvider } from '@/components/uicustom/AppContext'
+import ActionsPanel from "./components/uicustom/actionspanel";
 
 function App() {
 
@@ -35,7 +36,7 @@ function App() {
                             <ResizableHandle />
                             <ResizablePanel defaultSize={25}>
                                 <div className="flex h-full items-center justify-center p-6">
-                                    <span className="font-semibold">Three</span>
+                                    <ActionsPanel />
                                 </div>
                             </ResizablePanel>
                         </ResizablePanelGroup>
