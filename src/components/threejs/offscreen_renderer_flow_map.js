@@ -16,14 +16,26 @@ class OffscreenRendererFlowMap {
         this.bufferScene = new THREE.Scene();
         this.renderTarget = new THREE.WebGLRenderTarget(this.width, this.height, {
             minFilter: THREE.LinearFilter,
-            magFilter: THREE.LinearFilter,
+            magFilter: THREE.NearestFilter,//THREE.LinearFilter
             format: THREE.RGBAFormat
         });
         this.bufferCamera = new THREE.PerspectiveCamera(70, this.width / this.height, 0.1, 100);
         this.bufferCamera.position.z = 5;
 
         this.dummy_plane_geometry = new THREE.PlaneGeometry(8, 8);
-        this.dummy_plane_material = new THREE.MeshBasicMaterial({ color: 0x500000, side: THREE.DoubleSide });
+        //this.dummy_plane_material = new THREE.MeshBasicMaterial({ color: 0x500000, side: THREE.DoubleSide });
+
+        var uniforms = {
+            colorB: { type: 'vec3', value: new THREE.Color(0xACB6E5) },
+            colorA: { type: 'vec3', value: new THREE.Color(0x74ebd5) }
+        }
+        this.dummy_plane_material = new THREE.ShaderMaterial({
+            uniforms: uniforms,
+            fragmentShader: this.fragmentShader(),
+            vertexShader: this.vertexShader(),
+        })
+
+
         this.dummy_plane_mesh = new THREE.Mesh(this.dummy_plane_geometry, this.dummy_plane_material);
         this.bufferScene.add(this.dummy_plane_mesh);
 
@@ -34,6 +46,43 @@ class OffscreenRendererFlowMap {
         this.renderer.setRenderTarget(this.renderTarget);
         this.renderer.render(this.bufferScene, this.bufferCamera);
         this.renderer.setRenderTarget(null);
+    }
+
+    vertexShader() {
+        return `
+        varying vec3 vUv; 
+    
+        void main() {
+          vUv = position; 
+    
+          vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
+          gl_Position = projectionMatrix * modelViewPosition; 
+        }
+        `
+    }
+
+    fragmentShader() {
+        return `
+        uniform vec3 colorA; 
+        uniform vec3 colorB; 
+        varying vec3 vUv;
+  
+        void main() {
+            //coordinates in pixel starting bottom left
+            float i = gl_FragCoord[0];//x
+            float j = gl_FragCoord[1];//y
+
+            if(i>50.0){
+                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+            }
+            else{
+                gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+            }
+            if(j>75.0){
+                gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
+            }
+        }    
+        `
     }
 
 }
