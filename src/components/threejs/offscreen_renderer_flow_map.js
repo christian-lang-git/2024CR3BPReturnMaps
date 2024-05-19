@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { vec3 } from "gl-matrix/esm";
 
-class OffscreenRendererFTLE {
+class OffscreenRendererFlowMap {
 
     constructor(renderer) {
         this.renderer = renderer;
@@ -9,7 +9,7 @@ class OffscreenRendererFTLE {
     }
 
     initialize() {
-        console.warn("INITIALIZE OffscreenRendererFTLE");
+        console.warn("INITIALIZE OffscreenRendererFlowMap");
 
         this.width = 100;
         this.height = 100;
@@ -38,4 +38,4 @@ class OffscreenRendererFTLE {
 
 }
 
-export { OffscreenRendererFTLE }
+export { OffscreenRendererFlowMap }

@@ -4,7 +4,7 @@ import { vec3 } from "gl-matrix/esm";
 import { SimulationParameters } from "@/components/logic/simulation_parameters";
 import { getMousePositionInCanvasNDC } from "@/components/utility/mouseHelper";
 import * as Constants from "@/components/utility/constants";
-import { OffscreenRendererFTLE } from "./offscreen_renderer_ftle";
+import { OffscreenRendererFlowMap } from "./offscreen_renderer_flow_map";
 
 /**
  * This class is responsible for the scene that shows the main visualization
@@ -20,7 +20,7 @@ class SceneWrapperVisualization {
         this.camera = camera;
         this.controls = controls;
         this.raycaster = raycaster;
-        this.offscreenRendererFTLE = new OffscreenRendererFTLE(renderer);
+        this.OffscreenRendererFlowMap = new OffscreenRendererFlowMap(renderer);
     }
 
     initialize() {
@@ -85,7 +85,7 @@ class SceneWrapperVisualization {
 
     initializeTexturedPlane() {
         this.textured_plane_geometry = new THREE.PlaneGeometry(2, 2);
-        this.textured_plane_material = new THREE.MeshBasicMaterial({map:this.offscreenRendererFTLE.renderTarget.texture});
+        this.textured_plane_material = new THREE.MeshBasicMaterial({map:this.OffscreenRendererFlowMap.renderTarget.texture});
         this.textured_plane_mesh = new THREE.Mesh(this.textured_plane_geometry, this.textured_plane_material);
         this.scene.add(this.textured_plane_mesh);
         /*
@@ -241,7 +241,7 @@ class SceneWrapperVisualization {
             this.newClickedPosition = false;            
             this.rayCastAndMovePosition(this.clickedMousePositionNDC);
         }
-        //this.offscreenRendererFTLE.compute();
+        //this.OffscreenRendererFlowMap.compute();
     }
 }
 
