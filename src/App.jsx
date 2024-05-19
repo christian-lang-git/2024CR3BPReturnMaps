@@ -35,7 +35,7 @@ function App() {
                             </ResizablePanel>
                             <ResizableHandle />
                             <ResizablePanel defaultSize={25}>
-                                <div className="flex h-full items-center justify-center p-6">
+                                <div className="flex items-center justify-center p-2">
                                     <ActionsPanel />
                                 </div>
                             </ResizablePanel>
