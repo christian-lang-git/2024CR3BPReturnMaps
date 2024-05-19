@@ -44,7 +44,7 @@ class ThreeContainer extends Component {
     }
 
     initializeRenderer() {
-        this.renderer = new THREE.WebGLRenderer();
+        this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setSize(10, 10);
         this.mount.appendChild(this.renderer.domElement);
     }
