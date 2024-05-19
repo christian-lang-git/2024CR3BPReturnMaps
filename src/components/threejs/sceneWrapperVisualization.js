@@ -118,41 +118,53 @@ class SceneWrapperVisualization {
     initializeEventListeners() {
         this.renderer.domElement.addEventListener("click", (event) => {
 
-            if (false) {
+            if (this.simulationParameters.activeBehavior == Constants.BEHAVIOR_CONTROL_CAMERA) {
                 //do nothing --> controls takes care of camera stuff 
                 return;
             }
 
-            event.preventDefault();
-
             var mousePositionNDC = getMousePositionInCanvasNDC(this.renderer.domElement, event);
-            console.log("CLICK NDC:", mousePositionNDC.x, mousePositionNDC.y);
-            var mouse = new THREE.Vector2();
-            mouse.x = mousePositionNDC.x;
-            mouse.y = mousePositionNDC.y;
-            this.raycaster.setFromCamera(mouse, this.camera);
-            const intersects = this.raycaster.intersectObject(this.plane_mesh);
-            if (intersects.length > 0) {
-                console.log("plane intersection", intersects[0].point);
-                this.clicked_mesh.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
-            }
-            else {
-                console.log("no plane intersection");
-                this.clicked_mesh.position.set(0, 0, 10000);
-            }
+            this.rayCastAndMovePosition(mousePositionNDC);
         },
             false
         );
 
         this.renderer.domElement.addEventListener("mousemove", (event) => {
-            console.log("mousemove");
-            event.preventDefault();
+
+            if (this.simulationParameters.activeBehavior == Constants.BEHAVIOR_CONTROL_CAMERA) {
+                //do nothing --> controls takes care of camera stuff 
+                return;
+            }
+
+            //check if the left mouse button is held down while moving
+            if (event.buttons & 1) {
+                this.clickedMousePositionNDC = getMousePositionInCanvasNDC(this.renderer.domElement, event);
+                this.newClickedPosition = true;
+            } else {
+                //currently do nothing if the left mouse is not held down
+            }
         },
             false
         );
     }
 
-
+    rayCastAndMovePosition(mousePositionNDC){
+        
+        console.log("CLICK NDC:", mousePositionNDC.x, mousePositionNDC.y);
+        var mouse = new THREE.Vector2();
+        mouse.x = mousePositionNDC.x;
+        mouse.y = mousePositionNDC.y;
+        this.raycaster.setFromCamera(mouse, this.camera);
+        const intersects = this.raycaster.intersectObject(this.plane_mesh);
+        if (intersects.length > 0) {
+            console.log("plane intersection", intersects[0].point);
+            this.clicked_mesh.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+        }
+        else {
+            console.log("no plane intersection");
+            this.clicked_mesh.position.set(0, 0, 10000);
+        }
+    }
 
 
 
@@ -201,6 +213,13 @@ class SceneWrapperVisualization {
         }
         if(this.simulationParameters.activeBehavior == Constants.BEHAVIOR_MOVE_SEED){
             this.controls.noRotate = true;
+        }
+    }
+
+    preRender(){
+        if(this.newClickedPosition){
+            this.newClickedPosition = false;            
+            this.rayCastAndMovePosition(this.clickedMousePositionNDC);
         }
     }
 }

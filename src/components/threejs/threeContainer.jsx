@@ -204,6 +204,7 @@ class ThreeContainer extends Component {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     renderLoop = () => {
+        this.sceneWrapper.preRender();
         this.controls.update();
         this.renderer.render(this.scene, this.camera);
         requestAnimationFrame(this.renderLoop);
