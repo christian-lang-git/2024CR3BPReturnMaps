@@ -4,6 +4,7 @@ import { vec3 } from "gl-matrix/esm";
 import { SimulationParameters } from "@/components/logic/simulation_parameters";
 import { getMousePositionInCanvasNDC } from "@/components/utility/mouseHelper";
 import * as Constants from "@/components/utility/constants";
+import { OffscreenRendererFTLE } from "./offscreen_renderer_ftle";
 
 /**
  * This class is responsible for the scene that shows the main visualization
@@ -19,6 +20,7 @@ class SceneWrapperVisualization {
         this.camera = camera;
         this.controls = controls;
         this.raycaster = raycaster;
+        this.offscreenRendererFTLE = new OffscreenRendererFTLE(renderer);
     }
 
     initialize() {
@@ -26,6 +28,7 @@ class SceneWrapperVisualization {
         this.initializeLight();
         this.initializeAxesArrows();
         this.initializePlane();
+        this.initializeTexturedPlane();
         this.initializeBodies();
         this.initializeClickedPositionMarker();
         this.initializeEventListeners();
@@ -77,7 +80,19 @@ class SceneWrapperVisualization {
         this.plane_material.transparent = true;
         this.plane_material.opacity = 0.5;
         this.plane_mesh = new THREE.Mesh(this.plane_geometry, this.plane_material);
-        this.scene.add(this.plane_mesh);
+        //this.scene.add(this.plane_mesh);
+    }
+
+    initializeTexturedPlane() {
+        this.textured_plane_geometry = new THREE.PlaneGeometry(2, 2);
+        this.textured_plane_material = new THREE.MeshBasicMaterial({map:this.offscreenRendererFTLE.renderTarget.texture});
+        this.textured_plane_mesh = new THREE.Mesh(this.textured_plane_geometry, this.textured_plane_material);
+        this.scene.add(this.textured_plane_mesh);
+        /*
+        this.textured_plane_material.transparent = true;
+        this.textured_plane_material.opacity = 0.5;
+        */
+        //this.textured_plane_material = new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide });
     }
 
 
@@ -226,6 +241,7 @@ class SceneWrapperVisualization {
             this.newClickedPosition = false;            
             this.rayCastAndMovePosition(this.clickedMousePositionNDC);
         }
+        //this.offscreenRendererFTLE.compute();
     }
 }
 

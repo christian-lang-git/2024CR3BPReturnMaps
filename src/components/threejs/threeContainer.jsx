@@ -40,7 +40,7 @@ class ThreeContainer extends Component {
     initializeScene() {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xffffff);
-        this.scene.background = new THREE.Color( 0x000000 );//background color for debugging layout
+        //this.scene.background = new THREE.Color( 0x000000 );//background color for debugging layout
     }
 
     initializeRenderer() {
