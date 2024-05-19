@@ -237,10 +237,21 @@ class SceneWrapperVisualization {
         var scale_y = max_y - min_y;
         var pos_x = 0.5 * (min_x + max_x);
         var pos_y = 0.5 * (min_y + max_y);
+        var update_size = this.offscreenRendererFlowMap.updateTexturedPlane(this.simulationParameters);
+        this.offscreenRendererFlowMap.compute();
+
+        if(update_size){
+            console.warn("offscreenRendererFlowMap texture changed --> new plane");
+            this.scene.remove(this.textured_plane_mesh);
+            this.textured_plane_geometry = new THREE.PlaneGeometry(1, 1);
+            this.textured_plane_material = new THREE.MeshBasicMaterial({map:this.offscreenRendererFlowMap.renderTarget.texture});
+            this.textured_plane_mesh = new THREE.Mesh(this.textured_plane_geometry, this.textured_plane_material);
+            this.scene.add(this.textured_plane_mesh);
+        }
+
         this.textured_plane_mesh.scale.set(scale_x, scale_y, 1);
         this.textured_plane_mesh.position.set(pos_x, pos_y, 0);
-        this.offscreenRendererFlowMap.updateTexturedPlane(this.simulationParameters);
-        this.offscreenRendererFlowMap.compute();
+
     }
 
     updateClickedPosition() {

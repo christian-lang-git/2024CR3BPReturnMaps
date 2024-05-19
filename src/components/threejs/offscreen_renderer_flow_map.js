@@ -23,7 +23,7 @@ class OffscreenRendererFlowMap {
         this.bufferCamera = new THREE.PerspectiveCamera(70, this.width / this.height, 0.1, 100);
         this.bufferCamera.position.z = 5;
 
-        this.dummy_plane_geometry = new THREE.PlaneGeometry(8, 8);
+        this.dummy_plane_geometry = new THREE.PlaneGeometry(100, 100);
         //this.dummy_plane_material = new THREE.MeshBasicMaterial({ color: 0x500000, side: THREE.DoubleSide });
 
         this.uniforms = {
@@ -50,6 +50,30 @@ class OffscreenRendererFlowMap {
         this.dummy_plane_mesh.material.uniforms.planeCornerBL.value.y = simulationParameters.domain_min_y;
         this.dummy_plane_mesh.material.uniforms.planeDimensions.value.x = simulationParameters.domain_dimension_x;
         this.dummy_plane_mesh.material.uniforms.planeDimensions.value.y = simulationParameters.domain_dimension_y;
+        this.dummy_plane_mesh.material.uniforms.planeDimensionsPixel.value.x = simulationParameters.domain_pixels_x;
+        this.dummy_plane_mesh.material.uniforms.planeDimensionsPixel.value.y = simulationParameters.domain_pixels_y;
+        
+        var update_size = false;
+        if(simulationParameters.domain_pixels_x != this.width){
+            this.width = simulationParameters.domain_pixels_x;
+            update_size = true;
+        }
+        if(simulationParameters.domain_pixels_y != this.height){
+            this.height = simulationParameters.domain_pixels_y;
+            update_size = true;
+        }
+        if(update_size){
+            console.warn("UPDATE TEXTURE SIZE");
+            this.renderTarget = new THREE.WebGLRenderTarget(this.width, this.height, {
+                minFilter: THREE.LinearFilter,
+                magFilter: THREE.NearestFilter,//THREE.LinearFilter
+                format: THREE.RGBAFormat,
+                type: THREE.FloatType
+            });
+        }
+
+        return update_size;
+
     }
 
     compute() {
@@ -105,7 +129,7 @@ class OffscreenRendererFlowMap {
             }
 
             if(x_coord > -0.1 && x_coord < 0.1 && y_coord > -0.1 && y_coord < 0.1){
-                gl_FragColor = vec4(1.0, 0.0, 1.0, 9999.0);
+                gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
             }
         }    
         `
