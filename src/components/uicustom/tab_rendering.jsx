@@ -28,8 +28,11 @@ class TabRendering extends Component {
 
     render() {
         return (
-            <TabsContent value="rendering" className="flex-1 overflow-hidden">
-                <ScrollArea className="h-full overflow-y-auto">
+            <div className="flex flex-col h-full">
+                <div className="pl-2 pr-4 pb-2">
+                    <Button onClick={this.handleClickRenderingUpdateBodies}>update</Button>
+                </div>
+                <ScrollArea className="flex-1 overflow-y-auto">
                     <div className="pl-2 pr-4 pb-2">
                         <Accordion type="multiple" className="w-full" collapsible="true"
                             defaultValue={["bodies"]}
@@ -57,7 +60,7 @@ class TabRendering extends Component {
                         </Accordion>
                     </div>
                 </ScrollArea>
-            </TabsContent>
+            </div>
         )
     }
 

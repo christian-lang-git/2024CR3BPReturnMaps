@@ -5,7 +5,6 @@ import TabCamera from "@/components/uicustom/tab_camera";
 import TabRendering from '@/components/uicustom/tab_rendering';
 
 class LeftPanel extends Component {
-
     render() {
         return (
             <Tabs defaultValue="data" className="flex flex-col h-full">
@@ -14,13 +13,18 @@ class LeftPanel extends Component {
                     <TabsTrigger value="rendering">Rendering</TabsTrigger>
                     <TabsTrigger value="camera">Camera</TabsTrigger>
                 </TabsList>
-                <TabData />
-                <TabRendering />
-                <TabCamera />
+                <TabsContent value="data" className="flex-1 overflow-hidden">
+                    <TabData />
+                </TabsContent>
+                <TabsContent value="rendering" className="flex-1 overflow-hidden">
+                    <TabRendering />
+                </TabsContent>
+                <TabsContent value="camera" className="flex-1 overflow-hidden">
+                    <TabCamera />
+                </TabsContent>
             </Tabs>
         )
     }
-
 }
 
 export default LeftPanel
