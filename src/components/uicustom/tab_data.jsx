@@ -11,7 +11,15 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Emitter from "@/components/utility/emitter";
 import * as Constants from "@/components/utility/constants";
 import LabeledField from "@/components/uicustom/labeledfield";
+import LabeledSelect from "@/components/uicustom/labeledSelect";
 import { Input } from "@/components/ui/input"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+  } from "@/components/ui/select"
 
 class TabData extends Component {
 
@@ -56,6 +64,12 @@ class TabData extends Component {
                                     <LabeledField
                                         name="UI_STATE_DATA_INTEGRATION_STEP_SIZE"
                                         labelText={"step size"}
+                                    />
+                                </AccordionContent>
+                                <AccordionContent>
+                                    <LabeledSelect
+                                        name="UI_STATE_DATA_INTEGRATION_TERMINATION_METHOD"
+                                        labelText={"termination method"}
                                     />
                                 </AccordionContent>
                             </AccordionItem>
