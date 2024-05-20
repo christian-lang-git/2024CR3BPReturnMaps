@@ -29,23 +29,6 @@ class TabData extends Component {
         Emitter.emit(Constants.EVENT_DATA_UPDATE, {});
     }
 
-    handleClickDataUpdatePhysics() {
-        console.log("handleClickDataUpdatePhysics")
-        Emitter.emit(Constants.EVENT_DATA_UPDATE_PHYSICS, {});
-    }
-
-    handleClickDataUpdateDomain() {
-        console.log("handleClickDataUpdateDomain")
-        Emitter.emit(Constants.EVENT_DATA_UPDATE_DOMAIN, {});
-    }
-
-    
-
-    handleClickDataButtonCalculateFTLE() {
-        console.log("Calculate FTLE")
-        Emitter.emit(Constants.EVENT_CALCULATE_FTLE, {});
-    }
-
     render() {
         return (
             <div className="flex flex-col h-full">
@@ -82,10 +65,7 @@ class TabData extends Component {
                                         name="UI_STATE_DATA_PHYSICS_SEED_DIRECTION_Z"
                                         labelText={"z"}
                                     />
-                                    </div>
-                                    
-
-                                    <Button onClick={this.handleClickDataUpdatePhysics}>update physics</Button>
+                                    </div>                                    
                                 </AccordionContent>
                             </AccordionItem>
                             <AccordionItem value="integration">
@@ -134,7 +114,6 @@ class TabData extends Component {
                                         labelText={"grid nodes y"}
                                     />
                                     </div>
-                                    <Button onClick={this.handleClickDataUpdateDomain}>update domain</Button>
                                 </AccordionContent>
                             </AccordionItem>
                             <AccordionItem value="streamline">
@@ -156,97 +135,6 @@ class TabData extends Component {
                                 </AccordionContent>
                             </AccordionItem>
                         </Accordion>
-                        <Button onClick={this.handleClickDataButtonCalculateFTLE}>Calculate FTLE</Button>
-                        Jokester began sneaking into the castle in the middle of the night and leaving
-                        jokes all over the place: under the king's pillow, in his soup, even in the
-                        royal toilet. The king was furious, but he couldn't seem to stop Jokester. And
-                        then, one day, the people of the kingdom discovered that the jokes left by
-                        Jokester were so funny that they couldn't help but laugh. And once they
-                        started laughing, they couldn't stop.
-                        Jokester began sneaking into the castle in the middle of the night and leaving
-                        jokes all over the place: under the king's pillow, in his soup, even in the
-                        royal toilet. The king was furious, but he couldn't seem to stop Jokester. And
-                        then, one day, the people of the kingdom discovered that the jokes left by
-                        Jokester were so funny that they couldn't help but laugh. And once they
-                        started laughing, they couldn't stop.
-                        Jokester began sneaking into the castle in the middle of the night and leaving
-                        jokes all over the place: under the king's pillow, in his soup, even in the
-                        royal toilet. The king was furious, but he couldn't seem to stop Jokester. And
-                        then, one day, the people of the kingdom discovered that the jokes left by
-                        Jokester were so funny that they couldn't help but laugh. And once they
-                        started laughing, they couldn't stop.
-                        Jokester began sneaking into the castle in the middle of the night and leaving
-                        jokes all over the place: under the king's pillow, in his soup, even in the
-                        royal toilet. The king was furious, but he couldn't seem to stop Jokester. And
-                        then, one day, the people of the kingdom discovered that the jokes left by
-                        Jokester were so funny that they couldn't help but laugh. And once they
-                        started laughing, they couldn't stop.
-                        Jokester began sneaking into the castle in the middle of the night and leaving
-                        jokes all over the place: under the king's pillow, in his soup, even in the
-                        royal toilet. The king was furious, but he couldn't seem to stop Jokester. And
-                        then, one day, the people of the kingdom discovered that the jokes left by
-                        Jokester were so funny that they couldn't help but laugh. And once they
-                        started laughing, they couldn't stop.
-                        Jokester began sneaking into the castle in the middle of the night and leaving
-                        jokes all over the place: under the king's pillow, in his soup, even in the
-                        royal toilet. The king was furious, but he couldn't seem to stop Jokester. And
-                        then, one day, the people of the kingdom discovered that the jokes left by
-                        Jokester were so funny that they couldn't help but laugh. And once they
-                        started laughing, they couldn't stop.
-                        Jokester began sneaking into the castle in the middle of the night and leaving
-                        jokes all over the place: under the king's pillow, in his soup, even in the
-                        royal toilet. The king was furious, but he couldn't seem to stop Jokester. And
-                        then, one day, the people of the kingdom discovered that the jokes left by
-                        Jokester were so funny that they couldn't help but laugh. And once they
-                        started laughing, they couldn't stop.
-                        Jokester began sneaking into the castle in the middle of the night and leaving
-                        jokes all over the place: under the king's pillow, in his soup, even in the
-                        royal toilet. The king was furious, but he couldn't seem to stop Jokester. And
-                        then, one day, the people of the kingdom discovered that the jokes left by
-                        Jokester were so funny that they couldn't help but laugh. And once they
-                        started laughing, they couldn't stop.
-                        Jokester began sneaking into the castle in the middle of the night and leaving
-                        jokes all over the place: under the king's pillow, in his soup, even in the
-                        royal toilet. The king was furious, but he couldn't seem to stop Jokester. And
-                        then, one day, the people of the kingdom discovered that the jokes left by
-                        Jokester were so funny that they couldn't help but laugh. And once they
-                        started laughing, they couldn't stop.
-                        Jokester began sneaking into the castle in the middle of the night and leaving
-                        jokes all over the place: under the king's pillow, in his soup, even in the
-                        royal toilet. The king was furious, but he couldn't seem to stop Jokester. And
-                        then, one day, the people of the kingdom discovered that the jokes left by
-                        Jokester were so funny that they couldn't help but laugh. And once they
-                        started laughing, they couldn't stop.
-                        Jokester began sneaking into the castle in the middle of the night and leaving
-                        jokes all over the place: under the king's pillow, in his soup, even in the
-                        royal toilet. The king was furious, but he couldn't seem to stop Jokester. And
-                        then, one day, the people of the kingdom discovered that the jokes left by
-                        Jokester were so funny that they couldn't help but laugh. And once they
-                        started laughing, they couldn't stop.
-                        Jokester began sneaking into the castle in the middle of the night and leaving
-                        jokes all over the place: under the king's pillow, in his soup, even in the
-                        royal toilet. The king was furious, but he couldn't seem to stop Jokester. And
-                        then, one day, the people of the kingdom discovered that the jokes left by
-                        Jokester were so funny that they couldn't help but laugh. And once they
-                        started laughing, they couldn't stop.
-                        Jokester began sneaking into the castle in the middle of the night and leaving
-                        jokes all over the place: under the king's pillow, in his soup, even in the
-                        royal toilet. The king was furious, but he couldn't seem to stop Jokester. And
-                        then, one day, the people of the kingdom discovered that the jokes left by
-                        Jokester were so funny that they couldn't help but laugh. And once they
-                        started laughing, they couldn't stop.
-                        Jokester began sneaking into the castle in the middle of the night and leaving
-                        jokes all over the place: under the king's pillow, in his soup, even in the
-                        royal toilet. The king was furious, but he couldn't seem to stop Jokester. And
-                        then, one day, the people of the kingdom discovered that the jokes left by
-                        Jokester were so funny that they couldn't help but laugh. And once they
-                        started laughing, they couldn't stop.
-                        Jokester began sneaking into the castle in the middle of the night and leaving
-                        jokes all over the place: under the king's pillow, in his soup, even in the
-                        royal toilet. The king was furious, but he couldn't seem to stop Jokester. And
-                        then, one day, the people of the kingdom discovered that the jokes left by
-                        Jokester were so funny that they couldn't help but laugh. And once they
-                        started laughing, they couldn't stop. END
                     </div>
                 </ScrollArea>
             </div>

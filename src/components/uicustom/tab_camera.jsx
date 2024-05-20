@@ -15,16 +15,16 @@ import { Input } from "@/components/ui/input"
 
 class TabCamera extends Component {
 
-    handleClickCameraButtonUpdateControls() {
-        console.log("handleClickCameraButtonUpdateControls")
-        Emitter.emit(Constants.EVENT_CAMERA_UPDATE_CONTROLS, {});
+    handleClickCameraUpdate() {
+        console.log("handleClickCameraUpdate")
+        Emitter.emit(Constants.EVENT_CAMERA_UPDATE, {});
     }
 
     render() {
         return (
             <div className="flex flex-col h-full">
                 <div className="p-2 bg-secondary">
-                    <Button className="w-full" onClick={this.handleClickCameraButtonUpdateControls}>update</Button>
+                    <Button className="w-full" onClick={this.handleClickCameraUpdate}>update</Button>
                 </div>
                 <ScrollArea className="flex-1 overflow-y-auto">
                     <div className="pl-2 pr-4 pb-2">
@@ -46,7 +46,6 @@ class TabCamera extends Component {
                                         name="UI_STATE_CAMERA_CONTROLS_ZOOMSPEED"
                                         labelText={"zoom speed"}
                                     />
-                                    <Button onClick={this.handleClickCameraButtonUpdateControls}>update controls</Button>
                                 </AccordionContent>
                             </AccordionItem>
                         </Accordion>

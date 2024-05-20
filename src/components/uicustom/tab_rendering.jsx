@@ -15,22 +15,16 @@ import { Input } from "@/components/ui/input"
 
 class TabRendering extends Component {
 
-    handleClickRenderingUpdateBodies() {
-        console.log("handleClickRenderingUpdateBodies")
-        Emitter.emit(Constants.EVENT_RENDERING_UPDATE_BODIES, {});
-    }
-
-    handleClickRenderingUpdateClickedPosition() {
-        console.log("handleClickRenderingUpdateClickedPosition")
-        Emitter.emit(Constants.EVENT_RENDERING_UPDATE_CLICKED_POSITION, {});
-    }
-    
+    handleClickRenderingUpdate() {
+        console.log("handleClickRenderingUpdate")
+        Emitter.emit(Constants.EVENT_RENDERING_UPDATE, {});
+    }  
 
     render() {
         return (
             <div className="flex flex-col h-full">
                 <div className="p-2 bg-secondary">
-                    <Button className="w-full" onClick={this.handleClickRenderingUpdateBodies}>update</Button>
+                    <Button className="w-full" onClick={this.handleClickRenderingUpdate}>update</Button>
                 </div>
                 <ScrollArea className="flex-1 overflow-y-auto">
                     <div className="pl-2 pr-4 pb-2">
@@ -44,7 +38,6 @@ class TabRendering extends Component {
                                         name="UI_STATE_RENDERING_BODIES_MAX_RADIUS_BODIES"
                                         labelText={"max radius bodies"}
                                     />
-                                    <Button onClick={this.handleClickRenderingUpdateBodies}>update bodies</Button>
                                 </AccordionContent>
                             </AccordionItem>
                             <AccordionItem value="bodies">
@@ -54,7 +47,6 @@ class TabRendering extends Component {
                                         name="UI_STATE_RENDERING_CLICKED_POSITION_RADIUS"
                                         labelText={"radius clicked position"}
                                     />
-                                    <Button onClick={this.handleClickRenderingUpdateClickedPosition}>update clicked position</Button>
                                 </AccordionContent>
                             </AccordionItem>
                         </Accordion>

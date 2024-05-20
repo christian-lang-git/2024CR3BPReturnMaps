@@ -68,12 +68,8 @@ class ThreeContainer extends Component {
         window.addEventListener("resize", this.handleResize);
         Emitter.on(Constants.EVENT_RESIZE_PANEL, this.handleResize);
         Emitter.on(Constants.EVENT_DATA_UPDATE, this.handleEventDataUpdate);
-        Emitter.on(Constants.EVENT_DATA_UPDATE_PHYSICS, this.handleEventDataUpdatePhysics);
-        Emitter.on(Constants.EVENT_DATA_UPDATE_DOMAIN, this.handleEventDataUpdateDomain);
-        Emitter.on(Constants.EVENT_CALCULATE_FTLE, this.handleEventCalculateFTLE);
-        Emitter.on(Constants.EVENT_CAMERA_UPDATE_CONTROLS, this.handleEventCameraUpdateControls);
-        Emitter.on(Constants.EVENT_RENDERING_UPDATE_BODIES, this.handleEventRenderingUpdateBodies);
-        Emitter.on(Constants.EVENT_RENDERING_UPDATE_CLICKED_POSITION, this.handleEventRenderingUpdateClickedPosition);
+        Emitter.on(Constants.EVENT_CAMERA_UPDATE, this.handleEventCameraUpdate);
+        Emitter.on(Constants.EVENT_RENDERING_UPDATE, this.handleEventRenderingUpdate);
     }
 
 
@@ -96,12 +92,8 @@ class ThreeContainer extends Component {
         this.updateCanvasSize();
     }
 
-    handleEventCalculateFTLE = () => {
-        console.log("handleEventCalculateFTLE");
-    }
-
-    handleEventCameraUpdateControls = () => {
-        console.log("handleEventCameraUpdateControls");
+    handleEventCameraUpdate = () => {
+        console.log("handleEventCameraUpdate");
         this.updateControls();
     }
 
@@ -111,23 +103,9 @@ class ThreeContainer extends Component {
         this.updateParametersDomain();
     }
 
-    handleEventDataUpdatePhysics = () => {
-        console.log("handleEventDataUpdatePhysics");
-        this.updateParametersPhysics();
-    }
-
-    handleEventDataUpdateDomain = () => {
-        console.log("handleEventDataUpdateDomain");
-        this.updateParametersDomain();
-    }
-
-    handleEventRenderingUpdateBodies = () => {
-        console.log("handleEventRenderingUpdateBodies");
+    handleEventRenderingUpdate = () => {
+        console.log("handleEventRenderingUpdate");
         this.updateParametersBodies();
-    }
-
-    handleEventRenderingUpdateClickedPosition = () => {
-        console.log("handleEventRenderingUpdateClickedPosition");
         this.updateParametersClickedPosition();
     }
 
