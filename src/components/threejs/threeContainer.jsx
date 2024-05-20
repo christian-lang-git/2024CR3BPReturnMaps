@@ -67,6 +67,7 @@ class ThreeContainer extends Component {
     initializeEventHandlers() {
         window.addEventListener("resize", this.handleResize);
         Emitter.on(Constants.EVENT_RESIZE_PANEL, this.handleResize);
+        Emitter.on(Constants.EVENT_DATA_UPDATE, this.handleEventDataUpdate);
         Emitter.on(Constants.EVENT_DATA_UPDATE_PHYSICS, this.handleEventDataUpdatePhysics);
         Emitter.on(Constants.EVENT_DATA_UPDATE_DOMAIN, this.handleEventDataUpdateDomain);
         Emitter.on(Constants.EVENT_CALCULATE_FTLE, this.handleEventCalculateFTLE);
@@ -102,6 +103,12 @@ class ThreeContainer extends Component {
     handleEventCameraUpdateControls = () => {
         console.log("handleEventCameraUpdateControls");
         this.updateControls();
+    }
+
+    handleEventDataUpdate = () => {
+        console.log("handleEventDataUpdate");
+        this.updateParametersPhysics();
+        this.updateParametersDomain();
     }
 
     handleEventDataUpdatePhysics = () => {
@@ -171,7 +178,11 @@ class ThreeContainer extends Component {
     updateParametersPhysics() {
         const { uiState } = this.context;
         var mu = uiState.UI_STATE_DATA_PHYSICS_MU;
-        this.sceneWrapper.updateParametersPhysics(mu);
+        var seed_energy = uiState.UI_STATE_DATA_PHYSICS_SEED_ENERGY;
+        var seed_direction_x = uiState.UI_STATE_DATA_PHYSICS_SEED_DIRECTION_X;
+        var seed_direction_y = uiState.UI_STATE_DATA_PHYSICS_SEED_DIRECTION_Y;
+        var seed_direction_z = uiState.UI_STATE_DATA_PHYSICS_SEED_DIRECTION_Z;
+        this.sceneWrapper.updateParametersPhysics(mu, seed_energy, seed_direction_x, seed_direction_y, seed_direction_z);
         this.sceneWrapper.updateBodies();
     }
 

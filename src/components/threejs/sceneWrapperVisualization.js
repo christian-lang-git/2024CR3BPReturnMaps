@@ -183,8 +183,12 @@ class SceneWrapperVisualization {
 
 
 
-    updateParametersPhysics(mu) {
-        this.simulationParameters.mu = mu;
+    updateParametersPhysics(mu, seed_energy, seed_direction_x, seed_direction_y, seed_direction_z) {
+        this.simulationParameters.mu = parseFloat(mu);
+        this.simulationParameters.seed_energy = parseFloat(seed_energy);
+        this.simulationParameters.seed_direction_x = parseFloat(seed_direction_x);
+        this.simulationParameters.seed_direction_y = parseFloat(seed_direction_y);
+        this.simulationParameters.seed_direction_z = parseFloat(seed_direction_z);
     }
 
     updateParametersDomain(domain_min_x, domain_max_x, domain_pixels_x, domain_min_y, domain_max_y, domain_pixels_y){       

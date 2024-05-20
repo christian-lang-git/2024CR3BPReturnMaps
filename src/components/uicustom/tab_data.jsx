@@ -20,8 +20,14 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
+import { Label } from '@radix-ui/react-label';
 
 class TabData extends Component {
+
+    handleClickDataUpdate() {
+        console.log("handleClickDataUpdate")
+        Emitter.emit(Constants.EVENT_DATA_UPDATE, {});
+    }
 
     handleClickDataUpdatePhysics() {
         console.log("handleClickDataUpdatePhysics")
@@ -45,6 +51,7 @@ class TabData extends Component {
             <TabsContent value="data" className="flex-1 overflow-hidden">
                 <ScrollArea className="h-full overflow-y-auto">
                     <div className="pl-2 pr-4 pb-2">
+                        <Button onClick={this.handleClickDataUpdate}>update</Button>
                         <Accordion type="multiple" className="w-full" collapsible="true"
                             defaultValue={["physics", "integration", "domain", "streamline", "ftle", "geometry"]}
                         >
@@ -55,6 +62,27 @@ class TabData extends Component {
                                         name="UI_STATE_DATA_PHYSICS_MU"
                                         labelText={"mu (mass of secondary)"}
                                     />
+                                    <LabeledField
+                                        name="UI_STATE_DATA_PHYSICS_SEED_ENERGY"
+                                        labelText={"seed energy"}
+                                    />
+                                    <Label className="font-medium">seed direction</Label>
+                                    <div className="grid grid-cols-3">
+                                    <LabeledField
+                                        name="UI_STATE_DATA_PHYSICS_SEED_DIRECTION_X"
+                                        labelText={"x"}
+                                    />
+                                    <LabeledField
+                                        name="UI_STATE_DATA_PHYSICS_SEED_DIRECTION_Y"
+                                        labelText={"y"}
+                                    />
+                                    <LabeledField
+                                        name="UI_STATE_DATA_PHYSICS_SEED_DIRECTION_Z"
+                                        labelText={"z"}
+                                    />
+                                    </div>
+                                    
+
                                     <Button onClick={this.handleClickDataUpdatePhysics}>update physics</Button>
                                 </AccordionContent>
                             </AccordionItem>
