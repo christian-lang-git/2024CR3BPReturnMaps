@@ -13,13 +13,13 @@ class LeftPanel extends Component {
                     <TabsTrigger value="rendering">Rendering</TabsTrigger>
                     <TabsTrigger value="camera">Camera</TabsTrigger>
                 </TabsList>
-                <TabsContent value="data" className="flex-1 overflow-hidden">
+                <TabsContent value="data" className="mt-0 flex-1 overflow-hidden">
                     <TabData />
                 </TabsContent>
-                <TabsContent value="rendering" className="flex-1 overflow-hidden">
+                <TabsContent value="rendering" className="mt-0 flex-1 overflow-hidden">
                     <TabRendering />
                 </TabsContent>
-                <TabsContent value="camera" className="flex-1 overflow-hidden">
+                <TabsContent value="camera" className="mt-0 flex-1 overflow-hidden">
                     <TabCamera />
                 </TabsContent>
             </Tabs>

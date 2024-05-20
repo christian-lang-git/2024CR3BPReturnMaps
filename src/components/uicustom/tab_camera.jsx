@@ -23,8 +23,8 @@ class TabCamera extends Component {
     render() {
         return (
             <div className="flex flex-col h-full">
-                <div className="pl-2 pr-4 pb-2">
-                    <Button onClick={this.handleClickCameraButtonUpdateControls}>update</Button>
+                <div className="p-2 bg-secondary">
+                    <Button className="w-full" onClick={this.handleClickCameraButtonUpdateControls}>update</Button>
                 </div>
                 <ScrollArea className="flex-1 overflow-y-auto">
                     <div className="pl-2 pr-4 pb-2">
