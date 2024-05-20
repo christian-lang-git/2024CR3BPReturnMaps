@@ -1,6 +1,23 @@
 import * as THREE from "three";
 import { vec3 } from "gl-matrix/esm";
 
+/**
+ * TODO
+ * The resulting texture stores first and second return positions and directions as well as advection time and arc length for both returns:
+ * 
+ * size 2*domain_pixel_x, 2*domain_pixel_y
+ * 
+ * --> 4 vec4 per grid node
+ * 
+ * 1. vec4: 3 floats for first end position (in case we do not terminate on the plane)
+ *          1 float for advection time
+ * 2. vec4: 3 floats for second end position (in case we do not terminate on the plane)
+ *          1 float for advection time
+ * 3. vec4: 3 floats for first end direction
+ *          1 float for arc length
+ * 4. vec4: 3 floats for second end direction
+ *          1 float for arc length
+ */
 class OffscreenRendererFlowMap {
 
     constructor(renderer) {
