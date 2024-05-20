@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { vec3 } from "gl-matrix/esm";
+import { OffscreenRenderer } from "@/components/threejs/offscreen_renderer"
 
 /**
  * TODO
@@ -11,96 +12,34 @@ import { vec3 } from "gl-matrix/esm";
  * 
  * 1. vec4: 3 floats for first end position (in case we do not terminate on the plane)
  *          1 float for advection time
- * 2. vec4: 3 floats for second end position (in case we do not terminate on the plane)
- *          1 float for advection time
- * 3. vec4: 3 floats for first end direction
+ * 2. vec4: 3 floats for first end direction
  *          1 float for arc length
+ * 3. vec4: 3 floats for second end position (in case we do not terminate on the plane)
+ *          1 float for advection time
  * 4. vec4: 3 floats for second end direction
  *          1 float for arc length
  */
-class OffscreenRendererFlowMap {
+class OffscreenRendererFlowMap extends OffscreenRenderer{
 
-    constructor(renderer) {
-        this.renderer = renderer;
-        this.initialize();
+    constructor(renderer, simulationParameters) {
+        super(renderer, simulationParameters)
     }
 
-    initialize() {
-        console.warn("INITIALIZE OffscreenRendererFlowMap");
+    getNumPixelsPerNodeX(){
+        return 1;
+    }
 
-        this.width = 100;
-        this.height = 100;
-        this.bufferScene = new THREE.Scene();
-        this.renderTarget = new THREE.WebGLRenderTarget(this.width, this.height, {
-            minFilter: THREE.LinearFilter,
-            magFilter: THREE.NearestFilter,//THREE.LinearFilter
-            format: THREE.RGBAFormat,
-            type: THREE.FloatType
-        });
-        this.bufferCamera = new THREE.PerspectiveCamera(70, this.width / this.height, 0.1, 100);
-        this.bufferCamera.position.z = 5;
+    getNumPixelsPerNodeY(){
+        return 1;
+    }
 
-        this.dummy_plane_geometry = new THREE.PlaneGeometry(100, 100);
-        //this.dummy_plane_material = new THREE.MeshBasicMaterial({ color: 0x500000, side: THREE.DoubleSide });
-
+    generateUniforms() {
         this.uniforms = {
             planeCenter: { type: 'vec2', value: new THREE.Vector2(0,0) },
             planeCornerBL: { type: 'vec2', value: new THREE.Vector2(-1,-1) },
             planeDimensions: { type: 'vec2', value: new THREE.Vector2(2,2) },
             planeDimensionsPixel: { type: 'vec2', value: new THREE.Vector2(100,100) }
         }
-        this.dummy_plane_material = new THREE.ShaderMaterial({
-            uniforms: this.uniforms,
-            fragmentShader: this.fragmentShader(),
-            vertexShader: this.vertexShader(),
-        })
-
-
-        this.dummy_plane_mesh = new THREE.Mesh(this.dummy_plane_geometry, this.dummy_plane_material);
-        this.bufferScene.add(this.dummy_plane_mesh);
-
-        this.compute();
-    }
-
-    updateTexturedPlane(simulationParameters){           
-        this.dummy_plane_mesh.material.uniforms.planeCornerBL.value.x = simulationParameters.domain_min_x;
-        this.dummy_plane_mesh.material.uniforms.planeCornerBL.value.y = simulationParameters.domain_min_y;
-        this.dummy_plane_mesh.material.uniforms.planeDimensions.value.x = simulationParameters.domain_dimension_x;
-        this.dummy_plane_mesh.material.uniforms.planeDimensions.value.y = simulationParameters.domain_dimension_y;
-        this.dummy_plane_mesh.material.uniforms.planeDimensionsPixel.value.x = simulationParameters.domain_pixels_x;
-        this.dummy_plane_mesh.material.uniforms.planeDimensionsPixel.value.y = simulationParameters.domain_pixels_y;
-        
-        var update_size = false;
-        if(simulationParameters.domain_pixels_x != this.width){
-            this.width = simulationParameters.domain_pixels_x;
-            update_size = true;
-        }
-        if(simulationParameters.domain_pixels_y != this.height){
-            this.height = simulationParameters.domain_pixels_y;
-            update_size = true;
-        }
-        if(update_size){
-            console.warn("UPDATE TEXTURE SIZE");
-            this.renderTarget = new THREE.WebGLRenderTarget(this.width, this.height, {
-                minFilter: THREE.LinearFilter,
-                magFilter: THREE.NearestFilter,//THREE.LinearFilter
-                format: THREE.RGBAFormat,
-                type: THREE.FloatType
-            });
-        }
-
-        return update_size;
-
-    }
-
-    compute() {
-        this.renderer.setRenderTarget(this.renderTarget);
-        this.renderer.render(this.bufferScene, this.bufferCamera);
-        this.renderer.setRenderTarget(null);
-
-        const pixelBuffer = new Float32Array(this.width * this.height * 4);
-        this.renderer.readRenderTargetPixels(this.renderTarget, 0, 0, this.width, this.height, pixelBuffer);
-        console.log("pixelBuffer", pixelBuffer);
     }
 
     vertexShader() {
@@ -142,7 +81,7 @@ class OffscreenRendererFlowMap {
             }
 
             if(x_pixel < 1.0){
-                gl_FragColor = vec4(0.42, 8.0, -10.0, 9999.0);
+                gl_FragColor = vec4(0.42, 7.0, -10.0, 9999.0);
             }
 
             if(x_coord > -0.1 && x_coord < 0.1 && y_coord > -0.1 && y_coord < 0.1){

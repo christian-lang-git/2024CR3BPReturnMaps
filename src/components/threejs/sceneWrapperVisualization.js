@@ -5,6 +5,7 @@ import { SimulationParameters } from "@/components/logic/simulation_parameters";
 import { getMousePositionInCanvasNDC } from "@/components/utility/mouseHelper";
 import * as Constants from "@/components/utility/constants";
 import { OffscreenRendererFlowMap } from "./offscreen_renderer_flow_map";
+import { OffscreenRendererSeeds} from "./offscreen_renderer_seeds";
 
 /**
  * This class is responsible for the scene that shows the main visualization
@@ -20,11 +21,12 @@ class SceneWrapperVisualization {
         this.camera = camera;
         this.controls = controls;
         this.raycaster = raycaster;
-        this.offscreenRendererFlowMap = new OffscreenRendererFlowMap(renderer);
+        this.simulationParameters = new SimulationParameters();
+        this.offscreenRendererFlowMap = new OffscreenRendererFlowMap(renderer, this.simulationParameters);
+        this.offscreenRendererSeeds = new OffscreenRendererSeeds(renderer, this.simulationParameters);
     }
 
     initialize() {
-        this.initializeSimulationParameters();
         this.initializeLight();
         this.initializeAxesArrows();
         this.initializePlane();
@@ -32,11 +34,6 @@ class SceneWrapperVisualization {
         this.initializeBodies();
         this.initializeClickedPositionMarker();
         this.initializeEventListeners();
-    }
-
-    initializeSimulationParameters() {
-        this.simulationParameters = new SimulationParameters();
-        console.log("this.simulationParameters.mu", this.simulationParameters.mu);
     }
 
     initializeExampleCube() {
@@ -237,21 +234,30 @@ class SceneWrapperVisualization {
         var scale_y = max_y - min_y;
         var pos_x = 0.5 * (min_x + max_x);
         var pos_y = 0.5 * (min_y + max_y);
-        var update_size = this.offscreenRendererFlowMap.updateTexturedPlane(this.simulationParameters);
+        var update_size = this.offscreenRendererSeeds.updateTexturedPlane();
+        this.offscreenRendererSeeds.compute();
+        this.offscreenRendererFlowMap.updateTexturedPlane();
         this.offscreenRendererFlowMap.compute();
-
-        if(update_size){
-            console.warn("offscreenRendererFlowMap texture changed --> new plane");
-            this.scene.remove(this.textured_plane_mesh);
-            this.textured_plane_geometry = new THREE.PlaneGeometry(1, 1);
-            this.textured_plane_material = new THREE.MeshBasicMaterial({map:this.offscreenRendererFlowMap.renderTarget.texture});
-            this.textured_plane_mesh = new THREE.Mesh(this.textured_plane_geometry, this.textured_plane_material);
-            this.scene.add(this.textured_plane_mesh);
-        }
 
         this.textured_plane_mesh.scale.set(scale_x, scale_y, 1);
         this.textured_plane_mesh.position.set(pos_x, pos_y, 0);
+        this.changeDisplayedTexture();
 
+        if(update_size){
+            console.warn("offscreenRendererSeeds texture changed --> new plane");
+            //this.scene.remove(this.textured_plane_mesh);
+            //this.textured_plane_geometry = new THREE.PlaneGeometry(1, 1);
+            //this.textured_plane_material = new THREE.MeshBasicMaterial({map:this.offscreenRendererFlowMap.renderTarget.texture});
+            //this.textured_plane_mesh = new THREE.Mesh(this.textured_plane_geometry, this.textured_plane_material);
+            //this.scene.add(this.textured_plane_mesh);
+        }
+
+
+    }
+
+    changeDisplayedTexture(){
+        this.textured_plane_material = new THREE.MeshBasicMaterial({map:this.offscreenRendererSeeds.renderTarget.texture});
+        this.textured_plane_mesh.material = this.textured_plane_material;
     }
 
     updateClickedPosition() {
@@ -278,7 +284,6 @@ class SceneWrapperVisualization {
             this.newClickedPosition = false;            
             this.rayCastAndMovePosition(this.clickedMousePositionNDC);
         }
-        //this.offscreenRendererFlowMap.compute();
     }
 }
 

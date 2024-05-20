@@ -4,6 +4,10 @@ class SimulationParameters {
     constructor() {
         //physics
         this.mu = 0.1;//mass of secondary
+        this.seed_direction_x = 1;
+        this.seed_direction_y = 0;
+        this.seed_direction_z = 1;
+        this.seed_energy = 0.25;//used to calculate seed velocity (varies with position)
 
         //RK4
         this.steps = 15000;
