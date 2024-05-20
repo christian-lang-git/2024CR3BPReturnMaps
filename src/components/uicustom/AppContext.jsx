@@ -6,7 +6,7 @@ export const AppContext = createContext();
 export const AppProvider = ({ children }) => {
     const [uiState, setUiState] = useState({
         UI_STATE_DATA_PHYSICS_MU: "0.1",
-        UI_STATE_DATA_PHYSICS_SEED_ENERGY: "1.0",
+        UI_STATE_DATA_PHYSICS_SEED_ENERGY: "0.5",
         UI_STATE_DATA_PHYSICS_SEED_DIRECTION_X: "1.0",
         UI_STATE_DATA_PHYSICS_SEED_DIRECTION_Y: "1.0",
         UI_STATE_DATA_PHYSICS_SEED_DIRECTION_Z: "1.0",
