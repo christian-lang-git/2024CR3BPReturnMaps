@@ -74,3 +74,10 @@
       @apply bg-background text-foreground;
     }
   }
+
+  /* this solves the problem where clicking on the select breaks the layout */
+  /* see: https://github.com/shadcn-ui/ui/issues/110#issuecomment-1633856446 */
+  body {
+    position: relative;
+    min-height: 100vh;
+  }
