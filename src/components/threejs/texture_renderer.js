@@ -96,7 +96,8 @@ class TextureRenderer {
 
         const float G = 1.0;//TODO
   
-        void RenderSpecializedMode();
+        void RenderSpecializedMode(float x_frac, float y_frac);
+        float InterpolateScalar(float x_frac, float y_frac, int x_virtual, int y_virtual, int component);
 
         void main() {
 
@@ -116,7 +117,7 @@ class TextureRenderer {
             gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
             switch (rendering_texture_mode) {
                 case 0://specialized
-                    RenderSpecializedMode();
+                    RenderSpecializedMode(x_frac, y_frac);
                     break;
                 case 1://raw texture output of virtual texture
                     pointer = ivec2(x_pixel, y_pixel);
@@ -134,16 +135,54 @@ class TextureRenderer {
             `
         }   
         
-        void RenderSpecializedMode(){
+        void RenderSpecializedMode(float x_frac, float y_frac){
             gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
             switch (rendering_specialized_mode) {
                 case 0://gravitational force
-                    gl_FragColor = vec4(1.0, 0.5, 1.0, 1.0);
+                    gl_FragColor = vec4(x_frac, y_frac, 1.0, 1.0);
                     break;
                 case 1://gravitational force magnitude
-                    gl_FragColor = vec4(1.0, 1.0, 0.5, 1.0);
+                    int x_virtual = 0;
+                    int y_virtual = 0;
+                    int component = 3;
+                    float value = InterpolateScalar(x_frac, y_frac, x_virtual, y_virtual, component);
+                    gl_FragColor = vec4(value, value, value, 1.0);
                     break;
             }
+        }
+
+        // x_virtual, y_virtual: which virtual texture is used?
+        // component: the index to access the element of the vec4
+        float InterpolateScalar(float x_frac, float y_frac, int x_virtual, int y_virtual, int component){
+            
+            int x_offset = int(planeDimensionsPixel.x) * x_virtual;
+            int y_offset = int(planeDimensionsPixel.y) * y_virtual;
+
+            float dx = 1.0 / (planeDimensionsPixel.x-1.0);
+            float dy = 1.0 / (planeDimensionsPixel.y-1.0);
+
+            float x = x_frac;
+            float y = y_frac;
+
+            int i = int(floor(x / dx));
+            int j = int(floor(y / dy));
+
+            float t_x = (x - (float(i) * dx)) / dx;
+            float t_y = (y - (float(j) * dy)) / dy;
+
+            float v_00 = texelFetch(displayedTexture, ivec2(i+0+x_offset, j+0+y_offset), 0)[component];
+            float v_01 = texelFetch(displayedTexture, ivec2(i+0+x_offset, j+1+y_offset), 0)[component];
+            float v_10 = texelFetch(displayedTexture, ivec2(i+1+x_offset, j+0+y_offset), 0)[component];
+            float v_11 = texelFetch(displayedTexture, ivec2(i+1+x_offset, j+1+y_offset), 0)[component];
+
+            //interpolate 2 points along y axis using t_y
+            float v_0 = mix(v_00, v_01, t_y);
+            float v_1 = mix(v_10, v_11, t_y);
+
+            //interpolate 1 points along x axis using t_x
+            float v = mix(v_0, v_1, t_x);
+            
+            return v;
         }
 
         `
