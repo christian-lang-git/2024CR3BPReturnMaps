@@ -51,6 +51,16 @@ class TabRendering extends Component {
                                 <AccordionContent>
                                     <LabeledSelectTextureMode/>
                                     <LabeledSelectSpecializedMode/>
+                                    <div className="grid grid-cols-2">
+                                        <LabeledField
+                                            name="UI_STATE_RENDERING_SCALAR_MIN"
+                                            labelText={"min scalar"}
+                                        />
+                                        <LabeledField
+                                            name="UI_STATE_RENDERING_SCALAR_MAX"
+                                            labelText={"max scalar"}
+                                        />
+                                    </div>
                                 </AccordionContent>
                             </AccordionItem>
                         </Accordion>

@@ -190,8 +190,6 @@ class TextureRenderer {
         }
 
         vec4 mapScalarToColor(float scalar){
-            float scalar_min = 0.0;
-            float scalar_max = 1.0;
             int bin_count = 256;
 
             float t = (scalar - scalar_min) / (scalar_max - scalar_min);
@@ -295,7 +293,12 @@ class TextureRenderer {
         this.uniforms["displayedTexture"] = { type: 'sampler2D', value: null};
         this.uniforms["colorMapsTexture"] = { type: 'sampler2D', value: null};
         this.uniforms["rendering_texture_mode"] = { type: 'int', value: parseInt(Constants.TEXTURE_MODE_SPECIALIZED)};      
-        this.uniforms["rendering_specialized_mode"] = { type: 'int', value: parseInt(Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE)};              
+        this.uniforms["rendering_specialized_mode"] = { type: 'int', value: parseInt(Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE)};      
+        
+        this.uniforms["scalar_min"] = { type: 'float', value: 0.0};
+        this.uniforms["scalar_max"] = { type: 'float', value: 1.0};
+        
+        
     }
 
     setAdditionalUniforms() {
@@ -303,6 +306,8 @@ class TextureRenderer {
         this.textured_plane_mesh.material.uniforms.colorMapsTexture.value = this.colorMaps.texture;
         this.textured_plane_mesh.material.uniforms.rendering_texture_mode.value = this.simulationParameters.rendering_texture_mode;
         this.textured_plane_mesh.material.uniforms.rendering_specialized_mode.value = this.simulationParameters.rendering_specialized_mode;
+        this.textured_plane_mesh.material.uniforms.scalar_min.value = this.simulationParameters.scalar_min;
+        this.textured_plane_mesh.material.uniforms.scalar_max.value = this.simulationParameters.scalar_max;
         
         console.warn("this.uniforms", this.uniforms);
     }
