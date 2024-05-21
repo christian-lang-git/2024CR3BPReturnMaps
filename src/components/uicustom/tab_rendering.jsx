@@ -13,6 +13,7 @@ import * as Constants from "@/components/utility/constants";
 import LabeledField from "@/components/uicustom/labeledfield";
 import { Input } from "@/components/ui/input"
 import LabeledSelectTextureMode from './labeledSelectTextureMode';
+import LabeledSelectSpecializedMode from './labeledSelectSpecializedMode';
 
 class TabRendering extends Component {
 
@@ -49,6 +50,7 @@ class TabRendering extends Component {
                                 <AccordionTrigger>Plane</AccordionTrigger>
                                 <AccordionContent>
                                     <LabeledSelectTextureMode/>
+                                    <LabeledSelectSpecializedMode/>
                                 </AccordionContent>
                             </AccordionItem>
                         </Accordion>

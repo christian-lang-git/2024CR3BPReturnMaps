@@ -96,6 +96,8 @@ class TextureRenderer {
 
         const float G = 1.0;//TODO
   
+        void RenderSpecializedMode();
+
         void main() {
 
             //coordinates as fractions of texture starting bottom left
@@ -114,7 +116,7 @@ class TextureRenderer {
             gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
             switch (rendering_texture_mode) {
                 case 0://specialized
-                    gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
+                    RenderSpecializedMode();
                     break;
                 case 1://raw texture output of virtual texture
                     pointer = ivec2(x_pixel, y_pixel);
@@ -130,7 +132,20 @@ class TextureRenderer {
         `
             + this.fragmentShaderMethodComputation() +
             `
-        }    
+        }   
+        
+        void RenderSpecializedMode(){
+            gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
+            switch (rendering_specialized_mode) {
+                case 0://gravitational force
+                    gl_FragColor = vec4(1.0, 0.5, 1.0, 1.0);
+                    break;
+                case 1://gravitational force magnitude
+                    gl_FragColor = vec4(1.0, 1.0, 0.5, 1.0);
+                    break;
+            }
+        }
+
         `
             ;
     }
@@ -223,12 +238,15 @@ class TextureRenderer {
     addAdditionalUniforms() {        
         this.uniforms["displayedTexture"] = { type: 'sampler2D', value: null};
         this.uniforms["rendering_texture_mode"] = { type: 'int', value: parseInt(Constants.TEXTURE_MODE_SPECIALIZED)};      
+        this.uniforms["rendering_specialized_mode"] = { type: 'int', value: parseInt(Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE)};              
     }
 
     setAdditionalUniforms() {
         this.textured_plane_mesh.material.uniforms.displayedTexture.value = this.displayedTexture;
         this.textured_plane_mesh.material.uniforms.rendering_texture_mode.value = this.simulationParameters.rendering_texture_mode;
-        console.log("this.uniforms", this.uniforms)
+        this.textured_plane_mesh.material.uniforms.rendering_specialized_mode.value = this.simulationParameters.rendering_specialized_mode;
+        
+        console.log("this.uniforms", this.uniforms);
     }
 
 }
