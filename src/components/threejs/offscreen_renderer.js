@@ -6,7 +6,6 @@ class OffscreenRenderer {
     constructor(renderer, simulationParameters) {
         this.renderer = renderer;
         this.simulationParameters = simulationParameters;
-        this.initialize();
     }
 
     initialize() {
@@ -39,7 +38,12 @@ class OffscreenRenderer {
     }
 
     updateTexturedPlane() {
-        this.setAdditionalUniforms();
+        this.setAdditionalUniforms();        
+        this.dummy_plane_mesh.material.uniforms.mu.value = this.simulationParameters.mu;
+        this.dummy_plane_mesh.material.uniforms.primary_x.value = this.simulationParameters.getPrimaryX();
+        this.dummy_plane_mesh.material.uniforms.secondary_x.value = this.simulationParameters.getSecondaryX();
+        this.dummy_plane_mesh.material.uniforms.primary_mass.value = this.simulationParameters.getPrimaryMass();
+        this.dummy_plane_mesh.material.uniforms.secondary_mass.value = this.simulationParameters.getSecondaryMass();
         this.dummy_plane_mesh.material.uniforms.planeCornerBL.value.x = this.simulationParameters.domain_min_x;
         this.dummy_plane_mesh.material.uniforms.planeCornerBL.value.y = this.simulationParameters.domain_min_y;
         this.dummy_plane_mesh.material.uniforms.planeDimensions.value.x = this.simulationParameters.domain_dimension_x;
@@ -86,6 +90,11 @@ class OffscreenRenderer {
 
     generateUniforms() {
         this.uniforms = {
+            mu: { type: 'float', value: 0.1 },
+            primary_x: { type: 'float', value: 0.0 },
+            secondary_x: { type: 'float', value: 0.0 },
+            primary_mass: { type: 'float', value: 0.0 },
+            secondary_mass: { type: 'float', value: 0.0 },
             planeCenter: { type: 'vec2', value: new THREE.Vector2(0, 0) },
             planeCornerBL: { type: 'vec2', value: new THREE.Vector2(-1, -1) },
             planeDimensions: { type: 'vec2', value: new THREE.Vector2(2, 2) },
@@ -112,6 +121,8 @@ class OffscreenRenderer {
             this.getUniformsString() +
             `
         varying vec3 vUv;
+
+        const float G = 1.0;
   
         void main() {
             //coordinates in pixel in total texture starting bottom left

@@ -33,15 +33,6 @@ class OffscreenRendererFlowMap extends OffscreenRenderer{
         return 1;
     }
 
-    generateUniforms() {
-        this.uniforms = {
-            planeCenter: { type: 'vec2', value: new THREE.Vector2(0,0) },
-            planeCornerBL: { type: 'vec2', value: new THREE.Vector2(-1,-1) },
-            planeDimensions: { type: 'vec2', value: new THREE.Vector2(2,2) },
-            planeDimensionsPixel: { type: 'vec2', value: new THREE.Vector2(100,100) }
-        }
-    }
-
     vertexShader() {
         return `
         varying vec3 vUv; 

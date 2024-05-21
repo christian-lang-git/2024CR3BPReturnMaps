@@ -6,6 +6,7 @@ import { getMousePositionInCanvasNDC } from "@/components/utility/mouseHelper";
 import * as Constants from "@/components/utility/constants";
 import { OffscreenRendererFlowMap } from "./offscreen_renderer_flow_map";
 import { OffscreenRendererSeeds} from "./offscreen_renderer_seeds";
+import { OffscreenRendererGravitationalForce} from "./offscreen_renderer_gravitational_force";
 
 /**
  * This class is responsible for the scene that shows the main visualization
@@ -24,6 +25,14 @@ class SceneWrapperVisualization {
         this.simulationParameters = new SimulationParameters();
         this.offscreenRendererFlowMap = new OffscreenRendererFlowMap(renderer, this.simulationParameters);
         this.offscreenRendererSeeds = new OffscreenRendererSeeds(renderer, this.simulationParameters);
+        this.offscreenRendererGravitationalForce = new OffscreenRendererGravitationalForce(renderer, this.simulationParameters);
+
+        this.offscreenRendererGravitationalForce.link(this.offscreenRendererSeeds);
+
+        this.offscreenRendererSeeds.initialize();
+        this.offscreenRendererGravitationalForce.initialize();
+        this.offscreenRendererFlowMap.initialize();
+
     }
 
     initialize() {
@@ -238,29 +247,21 @@ class SceneWrapperVisualization {
         var scale_y = max_y - min_y;
         var pos_x = 0.5 * (min_x + max_x);
         var pos_y = 0.5 * (min_y + max_y);
-        var update_size = this.offscreenRendererSeeds.updateTexturedPlane();
+        this.offscreenRendererSeeds.updateTexturedPlane();
         this.offscreenRendererSeeds.compute();
+        this.offscreenRendererGravitationalForce.updateTexturedPlane();
+        this.offscreenRendererGravitationalForce.compute();
         this.offscreenRendererFlowMap.updateTexturedPlane();
         this.offscreenRendererFlowMap.compute();
 
         this.textured_plane_mesh.scale.set(scale_x, scale_y, 1);
         this.textured_plane_mesh.position.set(pos_x, pos_y, 0);
         this.changeDisplayedTexture();
-
-        if(update_size){
-            console.warn("offscreenRendererSeeds texture changed --> new plane");
-            //this.scene.remove(this.textured_plane_mesh);
-            //this.textured_plane_geometry = new THREE.PlaneGeometry(1, 1);
-            //this.textured_plane_material = new THREE.MeshBasicMaterial({map:this.offscreenRendererFlowMap.renderTarget.texture});
-            //this.textured_plane_mesh = new THREE.Mesh(this.textured_plane_geometry, this.textured_plane_material);
-            //this.scene.add(this.textured_plane_mesh);
-        }
-
-
     }
 
     changeDisplayedTexture(){
-        this.textured_plane_material = new THREE.MeshBasicMaterial({map:this.offscreenRendererSeeds.renderTarget.texture});
+        //this.textured_plane_material = new THREE.MeshBasicMaterial({map:this.offscreenRendererSeeds.renderTarget.texture});
+        this.textured_plane_material = new THREE.MeshBasicMaterial({map:this.offscreenRendererGravitationalForce.renderTarget.texture});
         this.textured_plane_mesh.material = this.textured_plane_material;
     }
 
