@@ -7,6 +7,7 @@ import * as Constants from "@/components/utility/constants";
 import { OffscreenRendererFlowMap } from "./offscreen_renderer_flow_map";
 import { OffscreenRendererSeeds} from "./offscreen_renderer_seeds";
 import { OffscreenRendererGravitationalForce} from "./offscreen_renderer_gravitational_force";
+import { TextureRenderer } from "@/components/threejs/texture_renderer";
 
 /**
  * This class is responsible for the scene that shows the main visualization
@@ -32,6 +33,8 @@ class SceneWrapperVisualization {
         this.offscreenRendererSeeds.initialize();
         this.offscreenRendererGravitationalForce.initialize();
         this.offscreenRendererFlowMap.initialize();
+
+        this.textureRenderer = new TextureRenderer(renderer, this.simulationParameters, scene);
 
     }
 
@@ -90,10 +93,14 @@ class SceneWrapperVisualization {
     }
 
     initializeTexturedPlane() {
+        /*
         this.textured_plane_geometry = new THREE.PlaneGeometry(1, 1);
         this.textured_plane_material = new THREE.MeshBasicMaterial({map:this.offscreenRendererFlowMap.renderTarget.texture});
         this.textured_plane_mesh = new THREE.Mesh(this.textured_plane_geometry, this.textured_plane_material);
         this.scene.add(this.textured_plane_mesh);
+        */
+
+        this.textureRenderer.initialize();
         /*
         this.textured_plane_material.transparent = true;
         this.textured_plane_material.opacity = 0.5;
@@ -254,15 +261,14 @@ class SceneWrapperVisualization {
         this.offscreenRendererFlowMap.updateTexturedPlane();
         this.offscreenRendererFlowMap.compute();
 
-        this.textured_plane_mesh.scale.set(scale_x, scale_y, 1);
-        this.textured_plane_mesh.position.set(pos_x, pos_y, 0);
+        this.textureRenderer.updateTransform(pos_x, pos_y, scale_x, scale_y);
         this.changeDisplayedTexture();
+        this.textureRenderer.updateTexturedPlane();
     }
 
     changeDisplayedTexture(){
-        //this.textured_plane_material = new THREE.MeshBasicMaterial({map:this.offscreenRendererSeeds.renderTarget.texture});
-        this.textured_plane_material = new THREE.MeshBasicMaterial({map:this.offscreenRendererGravitationalForce.renderTarget.texture});
-        this.textured_plane_mesh.material = this.textured_plane_material;
+        this.textureRenderer.changeDisplayedTexture(this.offscreenRendererGravitationalForce.renderTarget.texture);
+        //this.textureRenderer.changeDisplayedTexture(this.offscreenRendererSeeds.renderTarget.texture);
     }
 
     updateClickedPosition() {
