@@ -9,6 +9,8 @@ import { OffscreenRendererSeeds} from "./offscreen_renderer_seeds";
 import { OffscreenRendererGravitationalForce} from "./offscreen_renderer_gravitational_force";
 import { TextureRenderer } from "@/components/threejs/texture_renderer";
 
+import { ColorMaps } from "@/components/colormaps/colormaps"
+
 /**
  * This class is responsible for the scene that shows the main visualization
  * 
@@ -24,6 +26,7 @@ class SceneWrapperVisualization {
         this.controls = controls;
         this.raycaster = raycaster;
         this.simulationParameters = new SimulationParameters();
+        this.colorMaps = new ColorMaps();
         this.offscreenRendererFlowMap = new OffscreenRendererFlowMap(renderer, this.simulationParameters);
         this.offscreenRendererSeeds = new OffscreenRendererSeeds(renderer, this.simulationParameters);
         this.offscreenRendererGravitationalForce = new OffscreenRendererGravitationalForce(renderer, this.simulationParameters);
@@ -34,7 +37,7 @@ class SceneWrapperVisualization {
         this.offscreenRendererGravitationalForce.initialize();
         this.offscreenRendererFlowMap.initialize();
 
-        this.textureRenderer = new TextureRenderer(renderer, this.simulationParameters, scene);
+        this.textureRenderer = new TextureRenderer(renderer, this.simulationParameters, this.colorMaps, scene);
 
     }
 

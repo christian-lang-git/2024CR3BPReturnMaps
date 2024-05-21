@@ -12,9 +12,10 @@ import * as Constants from "../utility/constants";
  */
 class TextureRenderer {
 
-    constructor(renderer, simulationParameters, scene) {
+    constructor(renderer, simulationParameters, colorMaps, scene) {
         this.renderer = renderer;
         this.simulationParameters = simulationParameters;
+        this.colorMaps = colorMaps;
         this.scene = scene;
     }
 
@@ -33,6 +34,7 @@ class TextureRenderer {
         })
         this.textured_plane_mesh = new THREE.Mesh(this.textured_plane_geometry, this.textured_plane_material);
         this.scene.add(this.textured_plane_mesh);
+        //console.warn(this.fragmentShader())
     }
 
     updateTransform(pos_x, pos_y, scale_x, scale_y){
@@ -98,6 +100,7 @@ class TextureRenderer {
   
         void RenderSpecializedMode(float x_frac, float y_frac);
         float InterpolateScalar(float x_frac, float y_frac, int x_virtual, int y_virtual, int component);
+        vec4 mapScalarToColor(float scalar);
 
         void main() {
 
@@ -146,7 +149,8 @@ class TextureRenderer {
                     int y_virtual = 0;
                     int component = 3;
                     float value = InterpolateScalar(x_frac, y_frac, x_virtual, y_virtual, component);
-                    gl_FragColor = vec4(value, value, value, 1.0);
+                    gl_FragColor = mapScalarToColor(value);
+                    //gl_FragColor = mapScalarToColor(x_frac);
                     break;
             }
         }
@@ -183,6 +187,19 @@ class TextureRenderer {
             float v = mix(v_0, v_1, t_x);
             
             return v;
+        }
+
+        vec4 mapScalarToColor(float scalar){
+            float scalar_min = 0.0;
+            float scalar_max = 1.0;
+            int bin_count = 256;
+
+            float t = (scalar - scalar_min) / (scalar_max - scalar_min);
+            int bin_index = int(t * float(bin_count-1));
+            bin_index = clamp(bin_index, 0, bin_count-1);
+            vec3 color = texelFetch(colorMapsTexture, ivec2(bin_index, 0), 0).rgb;
+
+            return vec4(color, 1.0);
         }
 
         `
@@ -276,16 +293,18 @@ class TextureRenderer {
      */
     addAdditionalUniforms() {        
         this.uniforms["displayedTexture"] = { type: 'sampler2D', value: null};
+        this.uniforms["colorMapsTexture"] = { type: 'sampler2D', value: null};
         this.uniforms["rendering_texture_mode"] = { type: 'int', value: parseInt(Constants.TEXTURE_MODE_SPECIALIZED)};      
         this.uniforms["rendering_specialized_mode"] = { type: 'int', value: parseInt(Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE)};              
     }
 
     setAdditionalUniforms() {
         this.textured_plane_mesh.material.uniforms.displayedTexture.value = this.displayedTexture;
+        this.textured_plane_mesh.material.uniforms.colorMapsTexture.value = this.colorMaps.texture;
         this.textured_plane_mesh.material.uniforms.rendering_texture_mode.value = this.simulationParameters.rendering_texture_mode;
         this.textured_plane_mesh.material.uniforms.rendering_specialized_mode.value = this.simulationParameters.rendering_specialized_mode;
         
-        console.log("this.uniforms", this.uniforms);
+        console.warn("this.uniforms", this.uniforms);
     }
 
 }
