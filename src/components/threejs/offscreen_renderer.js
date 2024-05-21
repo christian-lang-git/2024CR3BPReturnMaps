@@ -122,7 +122,7 @@ class OffscreenRenderer {
             `
         varying vec3 vUv;
 
-        const float G = 1.0;
+        const float G = 1.0;//TODO
   
         void main() {
             //coordinates in pixel in total texture starting bottom left
