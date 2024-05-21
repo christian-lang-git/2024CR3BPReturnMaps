@@ -218,12 +218,9 @@ class SceneWrapperVisualization {
         this.simulationParameters.domain_pixels_y = parseFloat(domain_pixels_y);
     }
 
-    updateParametersBodies(max_radius_bodies, radius_center_of_mass) {
+    updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position) {
         this.simulationParameters.max_radius_bodies = max_radius_bodies;
         this.simulationParameters.radius_center_of_mass = radius_center_of_mass;
-    }
-
-    updateParametersClickedPosition(radius_clicked_position) {
         this.simulationParameters.radius_clicked_position = radius_clicked_position;
     }
 

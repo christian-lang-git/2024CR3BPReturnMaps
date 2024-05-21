@@ -105,8 +105,7 @@ class ThreeContainer extends Component {
 
     handleEventRenderingUpdate = () => {
         console.log("handleEventRenderingUpdate");
-        this.updateParametersBodies();
-        this.updateParametersClickedPosition();
+        this.updateParametersRendering();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -148,8 +147,7 @@ class ThreeContainer extends Component {
     updateParameters() {
         this.updateParametersPhysics();
         this.updateParametersDomain();
-        this.updateParametersBodies();
-        this.updateParametersClickedPosition();
+        this.updateParametersRendering();
         this.updateParametersActiveBehavior();
     }
 
@@ -176,18 +174,14 @@ class ThreeContainer extends Component {
         this.sceneWrapper.updateTexturedPlane();
     }
 
-    updateParametersBodies() {
+    updateParametersRendering(){
         const { uiState } = this.context;
         var max_radius_bodies = uiState.UI_STATE_RENDERING_BODIES_MAX_RADIUS_BODIES;
         var radius_center_of_mass = uiState.UI_STATE_RENDERING_BODIES_RADIUS_CENTER_OF_MASS;
-        this.sceneWrapper.updateParametersBodies(max_radius_bodies, radius_center_of_mass);
-        this.sceneWrapper.updateBodies();
-    }
-
-    updateParametersClickedPosition() {
-        const { uiState } = this.context;
         var radius_clicked_position = uiState.UI_STATE_RENDERING_CLICKED_POSITION_RADIUS;
-        this.sceneWrapper.updateParametersClickedPosition(radius_clicked_position);
+
+        this.sceneWrapper.updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position);       
+        this.sceneWrapper.updateBodies();
         this.sceneWrapper.updateClickedPosition();
     }
 
