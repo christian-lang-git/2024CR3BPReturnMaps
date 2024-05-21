@@ -13,16 +13,16 @@ class LabeledSelect extends Component {
 
     static contextType = AppContext;
     handleChange = (newValue) => {
+        const { setUiStateKey } = this.props;
         const { setUiState } = this.context;
-        setUiState({ ["UI_STATE_DATA_INTEGRATION_TERMINATION_METHOD"]: newValue });
+        setUiState({ [setUiStateKey]: newValue });
     };
 
     render() {
 
-        const { name, labelText } = this.props;
+        const { name, labelText, setUiStateKey, options } = this.props;
         const { uiState } = this.context;
-        const value = uiState[name];
-
+        const value = uiState[setUiStateKey];
 
         return (
             <div className="w-full p-2">
@@ -30,14 +30,17 @@ class LabeledSelect extends Component {
                     <Select 
                         name={name}
                         value={value}
+                        defaultValue={value}
                         onValueChange={this.handleChange}>
                         <SelectTrigger >
-                            <SelectValue placeholder="Theme" />
+                            <SelectValue/>
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="first">first return</SelectItem>
-                            <SelectItem value="second">second return</SelectItem>
-                            <SelectItem value="time">advection time</SelectItem>
+                            {options.map((option) => (
+                                <SelectItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
                 </Label>

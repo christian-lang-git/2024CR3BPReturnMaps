@@ -12,6 +12,7 @@ import Emitter from "@/components/utility/emitter";
 import * as Constants from "@/components/utility/constants";
 import LabeledField from "@/components/uicustom/labeledfield";
 import { Input } from "@/components/ui/input"
+import LabeledSelectTextureMode from './labeledSelectTextureMode';
 
 class TabRendering extends Component {
 
@@ -29,24 +30,25 @@ class TabRendering extends Component {
                 <ScrollArea className="flex-1 overflow-y-auto">
                     <div className="pl-2 pr-4 pb-2">
                         <Accordion type="multiple" className="w-full" collapsible="true"
-                            defaultValue={["bodies"]}
+                            defaultValue={["spheres", "plane"]}
                         >
-                            <AccordionItem value="bodies">
-                                <AccordionTrigger>Bodies</AccordionTrigger>
+                            <AccordionItem value="spheres">
+                                <AccordionTrigger>Spheres</AccordionTrigger>
                                 <AccordionContent>
                                     <LabeledField
                                         name="UI_STATE_RENDERING_BODIES_MAX_RADIUS_BODIES"
                                         labelText={"max radius bodies"}
                                     />
-                                </AccordionContent>
-                            </AccordionItem>
-                            <AccordionItem value="bodies">
-                                <AccordionTrigger>Clicked Position</AccordionTrigger>
-                                <AccordionContent>
                                     <LabeledField
                                         name="UI_STATE_RENDERING_CLICKED_POSITION_RADIUS"
                                         labelText={"radius clicked position"}
                                     />
+                                </AccordionContent>
+                            </AccordionItem>
+                            <AccordionItem value="plane">
+                                <AccordionTrigger>Plane</AccordionTrigger>
+                                <AccordionContent>
+                                    <LabeledSelectTextureMode/>
                                 </AccordionContent>
                             </AccordionItem>
                         </Accordion>

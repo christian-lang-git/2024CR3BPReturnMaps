@@ -12,6 +12,7 @@ import Emitter from "@/components/utility/emitter";
 import * as Constants from "@/components/utility/constants";
 import LabeledField from "@/components/uicustom/labeledfield";
 import LabeledSelect from "@/components/uicustom/labeledSelect";
+import LabeledSelectTerminationMethod from "@/components/uicustom/labeledSelectTerminationMethod";
 import { Input } from "@/components/ui/input"
 import {
     Select,
@@ -77,10 +78,7 @@ class TabData extends Component {
                                     />
                                 </AccordionContent>
                                 <AccordionContent>
-                                    <LabeledSelect
-                                        name="UI_STATE_DATA_INTEGRATION_TERMINATION_METHOD"
-                                        labelText={"termination method"}
-                                    />
+                                    <LabeledSelectTerminationMethod/>
                                 </AccordionContent>
                             </AccordionItem>
                             <AccordionItem value="domain">
