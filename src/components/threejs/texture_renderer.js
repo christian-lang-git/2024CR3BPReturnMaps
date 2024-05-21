@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { vec3 } from "gl-matrix/esm";
+import * as Constants from "../utility/constants";
 
 /**
  * TODO
@@ -107,12 +108,11 @@ class TextureRenderer {
             int x_pixel_total = int(round(x_frac * (2.0*planeDimensionsPixel.x-1.0)));//TODO: const 2.0
             int y_pixel_total = int(round(y_frac * (2.0*planeDimensionsPixel.y-1.0)));//TODO: const 2.0
 
-            int render_mode = 1;
 
             ivec2 pointer;
             vec4 data;
             gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-            switch (render_mode) {
+            switch (rendering_texture_mode) {
                 case 0://specialized
                     gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
                     break;
@@ -220,14 +220,15 @@ class TextureRenderer {
      * 
      * Additional uniforms can be created in this method
      */
-    addAdditionalUniforms() {
+    addAdditionalUniforms() {        
         this.uniforms["displayedTexture"] = { type: 'sampler2D', value: null};
-
+        this.uniforms["rendering_texture_mode"] = { type: 'int', value: parseInt(Constants.TEXTURE_MODE_SPECIALIZED)};      
     }
 
     setAdditionalUniforms() {
         this.textured_plane_mesh.material.uniforms.displayedTexture.value = this.displayedTexture;
-
+        this.textured_plane_mesh.material.uniforms.rendering_texture_mode.value = this.simulationParameters.rendering_texture_mode;
+        console.log("this.uniforms", this.uniforms)
     }
 
 }

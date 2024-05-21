@@ -31,6 +31,7 @@ class SimulationParameters {
 
         this.activeBehavior = Constants.BEHAVIOR_CONTROL_CAMERA;
         this.activeBehaviorLastFrame = Constants.BEHAVIOR_CONTROL_CAMERA;
+        this.rendering_texture_mode = Constants.TEXTURE_MODE_SPECIALIZED;
 
         this.print();
     }
