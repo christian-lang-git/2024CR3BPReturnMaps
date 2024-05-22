@@ -101,8 +101,8 @@ class TextureRenderer {
         void RenderSpecializedMode(float x_frac, float y_frac);
         float InterpolateScalar(float x_frac, float y_frac, int x_virtual, int y_virtual, int component);
         vec4 InterpolateVec4(float x_frac, float y_frac, int x_virtual, int y_virtual);
-        vec4 mapScalarToColor(float scalar);
-        vec4 normalMappingVec2(vec2 vector);
+        vec3 mapScalarToColor(float scalar);
+        vec3 normalMappingVec2(vec2 vector);
 
         void main() {
 
@@ -150,15 +150,14 @@ class TextureRenderer {
                     x_virtual = 0;
                     y_virtual = 0;
                     vec4 data = InterpolateVec4(x_frac, y_frac, x_virtual, y_virtual);
-                    gl_FragColor = normalMappingVec2(vec2(data.x, data.y));
+                    gl_FragColor = vec4(normalMappingVec2(vec2(data.x, data.y)), 1.0);
                     break;
                 case 1://gravitational force (magnitude)
                     x_virtual = 0;
                     y_virtual = 0;
                     component = 3;
                     float value = InterpolateScalar(x_frac, y_frac, x_virtual, y_virtual, component);
-                    gl_FragColor = mapScalarToColor(value);
-                    //gl_FragColor = mapScalarToColor(x_frac);
+                    gl_FragColor = vec4(mapScalarToColor(value), 1.0);
                     break;
             }
         }
@@ -231,7 +230,7 @@ class TextureRenderer {
             return v;
         }
 
-        vec4 mapScalarToColor(float scalar){
+        vec3 mapScalarToColor(float scalar){
             int bin_count = 256;
 
             float t = (scalar - scalar_min) / (scalar_max - scalar_min);
@@ -239,15 +238,15 @@ class TextureRenderer {
             bin_index = clamp(bin_index, 0, bin_count-1);
             vec3 color = texelFetch(colorMapsTexture, ivec2(bin_index, 0), 0).rgb;
 
-            return vec4(color, 1.0);
+            return vec3(color);
         }
 
-        vec4 normalMappingVec2(vec2 vector){
+        vec3 normalMappingVec2(vec2 vector){
 
             vec2 normal = normalize(vector);
             vec2 mapped = 0.5 * normal + 0.5;
 
-            return vec4(mapped.x, mapped.y, 0.0, 1.0);
+            return vec3(mapped.x, mapped.y, 0.0);
         }
 
         `
