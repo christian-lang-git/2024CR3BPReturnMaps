@@ -12,12 +12,14 @@ import { OffscreenRenderer } from "@/components/threejs/offscreen_renderer"
  * 
  * 1. vec4: 3 floats for first end position (in case we do not terminate on the plane)
  *          1 float for advection time
- * 2. vec4: 3 floats for first end direction
- *          1 float for arc length
- * 3. vec4: 3 floats for second end position (in case we do not terminate on the plane)
+ * 2. vec4: 3 floats for second end position (in case we do not terminate on the plane)
  *          1 float for advection time
- * 4. vec4: 3 floats for second end direction
- *          1 float for arc length
+ * 3. vec4: 3 floats for last return end position (in case we do not terminate on the plane)
+ *          1 float for advection time
+ * 3. vec4: 1 float for arc lenght of first return
+ *          1 float for arc lenght of second return
+ *          1 float for arc lenght of last return
+ *          1 float for number of succesfull returns to reach last return (this might be an interesting number to plot as scalar field)
  */
 class OffscreenRendererFlowMap extends OffscreenRenderer{
 
