@@ -143,10 +143,22 @@ class SceneWrapperVisualization {
     initializeClickedPositionMarker() {
         var radius = 1.0;
         this.clicked_geometry = new THREE.SphereGeometry(radius);
-        this.clicked_material = new THREE.MeshStandardMaterial({ color: 0xff00ff });
+        this.clicked_material = new THREE.MeshStandardMaterial({ color: 0x000000 });
         this.clicked_mesh = new THREE.Mesh(this.clicked_geometry, this.clicked_material);
         this.clicked_mesh.position.set(0, 0, 10000);
         this.scene.add(this.clicked_mesh);
+
+        this.return_1_geometry = new THREE.SphereGeometry(radius);
+        this.return_1_material = new THREE.MeshStandardMaterial({ color: 0xff00ff });
+        this.return_1_mesh = new THREE.Mesh(this.return_1_geometry, this.return_1_material);
+        this.return_1_mesh.position.set(0, 0, 10000);
+        this.scene.add(this.return_1_mesh);
+
+        this.return_2_geometry = new THREE.SphereGeometry(radius);
+        this.return_2_material = new THREE.MeshStandardMaterial({ color: 0x00ffff });
+        this.return_2_mesh = new THREE.Mesh(this.return_2_geometry, this.return_2_material);
+        this.return_2_mesh.position.set(0, 0, 10000);
+        this.scene.add(this.return_2_mesh);
     }
 
     initializeEventListeners() {
@@ -195,6 +207,21 @@ class SceneWrapperVisualization {
             this.clicked_mesh.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
             
             this.streamlineGenerator.recalculateStreamline(0, intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+
+            if(this.streamlineGenerator.list_streamlines[0].list_point_data_returns.length > 0){
+                var point_data = this.streamlineGenerator.list_streamlines[0].list_point_data_returns[0];
+                this.return_1_mesh.position.set(point_data.position[0], point_data.position[1], 0);
+            }
+            else{
+                this.return_1_mesh.position.set(0, 0, 10000);
+            }
+            if(this.streamlineGenerator.list_streamlines[0].list_point_data_returns.length > 1){
+                var point_data = this.streamlineGenerator.list_streamlines[0].list_point_data_returns[1];
+                this.return_2_mesh.position.set(point_data.position[0], point_data.position[1], 0);
+            }
+            else{
+                this.return_2_mesh.position.set(0, 0, 10000);
+            }
         }
         else {
             console.log("no plane intersection");
@@ -292,6 +319,8 @@ class SceneWrapperVisualization {
     updateClickedPosition() {
         var radius = this.simulationParameters.getClickedPositionRadius();
         this.clicked_mesh.scale.set(radius, radius, radius);
+        this.return_1_mesh.scale.set(radius, radius, radius);
+        this.return_2_mesh.scale.set(radius, radius, radius);
     }
 
     updateBehavior() {

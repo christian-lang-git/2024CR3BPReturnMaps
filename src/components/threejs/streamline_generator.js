@@ -19,6 +19,7 @@ class Streamline {
         console.log("Streamline: initialize");
         this.streamline_generator = streamline_generator;
         this.list_point_data = [];
+        this.list_point_data_returns = [];
         this.path = null;
         this.signum = 1;
         this.arc_length = 0;
@@ -44,6 +45,7 @@ class Streamline {
 
     calculate() {
         this.list_point_data = [];
+        this.list_point_data_returns = [];
         this.arc_length = 0;
         this.t = 0;
 
@@ -164,6 +166,7 @@ class Streamline {
                 if(next_position_data.position[2] < 0){
                     isOnPositiveZ = false;
                     termination_method -= 1;
+                    this.list_point_data_returns.push(next_position_data);
                     if(termination_method == 0){//termination_method starts at 0 for unlimited --> -1
                         return;//stop early
                     }
@@ -173,6 +176,7 @@ class Streamline {
                 if(next_position_data.position[2] > 0){
                     isOnPositiveZ = true;
                     termination_method -= 1;
+                    this.list_point_data_returns.push(next_position_data);
                     if(termination_method == 0){//termination_method starts at 0 for unlimited --> -1
                         return;//stop early
                     }
