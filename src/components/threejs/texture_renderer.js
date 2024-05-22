@@ -51,6 +51,7 @@ class TextureRenderer {
     updateTexturedPlane() {
         this.setAdditionalUniforms();        
         this.textured_plane_mesh.material.uniforms.mu.value = this.simulationParameters.mu;
+        this.textured_plane_mesh.material.uniforms.angular_velocity.value = this.simulationParameters.angular_velocity;        
         this.textured_plane_mesh.material.uniforms.primary_x.value = this.simulationParameters.getPrimaryX();
         this.textured_plane_mesh.material.uniforms.secondary_x.value = this.simulationParameters.getSecondaryX();
         this.textured_plane_mesh.material.uniforms.primary_mass.value = this.simulationParameters.getPrimaryMass();
@@ -67,6 +68,7 @@ class TextureRenderer {
     generateUniforms() {
         this.uniforms = {
             mu: { type: 'float', value: 0.1 },
+            angular_velocity: { type: 'float', value: 1.0 },
             primary_x: { type: 'float', value: 0.0 },
             secondary_x: { type: 'float', value: 0.0 },
             primary_mass: { type: 'float', value: 0.0 },

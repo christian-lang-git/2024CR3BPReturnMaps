@@ -192,7 +192,7 @@ class Streamline {
 
     build() {
         this.path = new THREE.CurvePath();
-        console.log(this.list_point_data);
+        //console.log(this.list_point_data);
         for (var point_index = 1; point_index < this.list_point_data.length; point_index++) {
             var point_data_A = this.list_point_data[point_index - 1];
             var point_data_B = this.list_point_data[point_index];
@@ -261,7 +261,7 @@ class StreamlineGenerator {
     }
 
     f_position(position, direction, signum) {
-        var n = 1;
+        var n = this.simulationParameters.angular_velocity;
 
         var x = position[0];
         var y = position[1];
@@ -284,7 +284,7 @@ class StreamlineGenerator {
     }
 
     f_direction(position, direction, signum) {
-        var n = 1;
+        var n = this.simulationParameters.angular_velocity;
         var mu = this.simulationParameters.mu;
 
         var x = position[0];

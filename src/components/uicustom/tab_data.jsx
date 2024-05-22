@@ -46,8 +46,13 @@ class TabData extends Component {
                                 <AccordionContent>
                                     <LabeledField
                                         name="UI_STATE_DATA_PHYSICS_MU"
-                                        labelText={"mu (mass of secondary)"}
+                                        labelText={"mass of secondary: mu"}
                                     />
+                                    <LabeledField
+                                        name="UI_STATE_DATA_PHYSICS_ANGULAR_VELOCITY"
+                                        labelText={"angular velocity: n"}
+                                    />
+                                    
                                     <LabeledField
                                         name="UI_STATE_DATA_PHYSICS_SEED_ENERGY"
                                         labelText={"seed energy"}

@@ -196,14 +196,14 @@ class SceneWrapperVisualization {
 
     rayCastAndMovePosition(mousePositionNDC){
         
-        console.log("CLICK NDC:", mousePositionNDC.x, mousePositionNDC.y);
+        //console.log("CLICK NDC:", mousePositionNDC.x, mousePositionNDC.y);
         var mouse = new THREE.Vector2();
         mouse.x = mousePositionNDC.x;
         mouse.y = mousePositionNDC.y;
         this.raycaster.setFromCamera(mouse, this.camera);
         const intersects = this.raycaster.intersectObject(this.plane_mesh);
         if (intersects.length > 0) {
-            console.log("plane intersection", intersects[0].point);
+            //console.log("plane intersection", intersects[0].point);
             this.clicked_mesh.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
             
             this.streamlineGenerator.recalculateStreamline(0, intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
@@ -224,7 +224,7 @@ class SceneWrapperVisualization {
             }
         }
         else {
-            console.log("no plane intersection");
+            //console.log("no plane intersection");
             this.clicked_mesh.position.set(0, 0, 10000);
         }
     }
@@ -234,8 +234,9 @@ class SceneWrapperVisualization {
 
 
 
-    updateParametersData(mu, seed_energy, seed_direction_x, seed_direction_y, seed_direction_z, step_size, termination_method, domain_min_x, domain_max_x, domain_pixels_x, domain_min_y, domain_max_y, domain_pixels_y) {
+    updateParametersData(mu, angular_velocity, seed_energy, seed_direction_x, seed_direction_y, seed_direction_z, step_size, termination_method, domain_min_x, domain_max_x, domain_pixels_x, domain_min_y, domain_max_y, domain_pixels_y) {
         this.simulationParameters.mu = parseFloat(mu);
+        this.simulationParameters.angular_velocity = parseFloat(angular_velocity);
         this.simulationParameters.seed_energy = parseFloat(seed_energy);
         this.simulationParameters.seed_direction_x = parseFloat(seed_direction_x);
         this.simulationParameters.seed_direction_y = parseFloat(seed_direction_y);

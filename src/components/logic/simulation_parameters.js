@@ -4,6 +4,7 @@ class SimulationParameters {
     constructor() {
         //physics
         this.mu = 0.1;//mass of secondary
+        this.angular_velocity = 1;//n in the equations of motion
         this.seed_direction_x = 1;
         this.seed_direction_y = 0;
         this.seed_direction_z = 1;
