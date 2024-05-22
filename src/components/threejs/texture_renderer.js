@@ -100,7 +100,9 @@ class TextureRenderer {
   
         void RenderSpecializedMode(float x_frac, float y_frac);
         float InterpolateScalar(float x_frac, float y_frac, int x_virtual, int y_virtual, int component);
+        vec4 InterpolateVec4(float x_frac, float y_frac, int x_virtual, int y_virtual);
         vec4 mapScalarToColor(float scalar);
+        vec4 normalMappingVec2(vec2 vector);
 
         void main() {
 
@@ -139,15 +141,21 @@ class TextureRenderer {
         }   
         
         void RenderSpecializedMode(float x_frac, float y_frac){
+            int x_virtual = 0;
+            int y_virtual = 0;
+            int component = 0;
             gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
             switch (rendering_specialized_mode) {
-                case 0://gravitational force
-                    gl_FragColor = vec4(x_frac, y_frac, 1.0, 1.0);
+                case 0://gravitational force (normal)
+                    x_virtual = 0;
+                    y_virtual = 0;
+                    vec4 data = InterpolateVec4(x_frac, y_frac, x_virtual, y_virtual);
+                    gl_FragColor = normalMappingVec2(vec2(data.x, data.y));
                     break;
-                case 1://gravitational force magnitude
-                    int x_virtual = 0;
-                    int y_virtual = 0;
-                    int component = 3;
+                case 1://gravitational force (magnitude)
+                    x_virtual = 0;
+                    y_virtual = 0;
+                    component = 3;
                     float value = InterpolateScalar(x_frac, y_frac, x_virtual, y_virtual, component);
                     gl_FragColor = mapScalarToColor(value);
                     //gl_FragColor = mapScalarToColor(x_frac);
@@ -189,6 +197,40 @@ class TextureRenderer {
             return v;
         }
 
+        // x_virtual, y_virtual: which virtual texture is used?
+        // component: the index to access the element of the vec4
+        vec4 InterpolateVec4(float x_frac, float y_frac, int x_virtual, int y_virtual){
+            
+            int x_offset = int(planeDimensionsPixel.x) * x_virtual;
+            int y_offset = int(planeDimensionsPixel.y) * y_virtual;
+
+            float dx = 1.0 / (planeDimensionsPixel.x-1.0);
+            float dy = 1.0 / (planeDimensionsPixel.y-1.0);
+
+            float x = x_frac;
+            float y = y_frac;
+
+            int i = int(floor(x / dx));
+            int j = int(floor(y / dy));
+
+            float t_x = (x - (float(i) * dx)) / dx;
+            float t_y = (y - (float(j) * dy)) / dy;
+
+            vec4 v_00 = texelFetch(displayedTexture, ivec2(i+0+x_offset, j+0+y_offset), 0);
+            vec4 v_01 = texelFetch(displayedTexture, ivec2(i+0+x_offset, j+1+y_offset), 0);
+            vec4 v_10 = texelFetch(displayedTexture, ivec2(i+1+x_offset, j+0+y_offset), 0);
+            vec4 v_11 = texelFetch(displayedTexture, ivec2(i+1+x_offset, j+1+y_offset), 0);
+
+            //interpolate 2 points along y axis using t_y
+            vec4 v_0 = mix(v_00, v_01, t_y);
+            vec4 v_1 = mix(v_10, v_11, t_y);
+
+            //interpolate 1 points along x axis using t_x
+            vec4 v = mix(v_0, v_1, t_x);
+            
+            return v;
+        }
+
         vec4 mapScalarToColor(float scalar){
             int bin_count = 256;
 
@@ -198,6 +240,14 @@ class TextureRenderer {
             vec3 color = texelFetch(colorMapsTexture, ivec2(bin_index, 0), 0).rgb;
 
             return vec4(color, 1.0);
+        }
+
+        vec4 normalMappingVec2(vec2 vector){
+
+            vec2 normal = normalize(vector);
+            vec2 mapped = 0.5 * normal + 0.5;
+
+            return vec4(mapped.x, mapped.y, 0.0, 1.0);
         }
 
         `

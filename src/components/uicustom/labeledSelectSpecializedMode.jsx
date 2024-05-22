@@ -3,8 +3,8 @@ import LabeledSelect from './labeledSelect';
 import * as Constants from "@/components/utility/constants";
 
 const options = [
-    { value: Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE, label: 'gravitational force' },
-    { value: Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE_MAGNITUDE, label: 'gravitational force magnitude' }
+    { value: Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE, label: 'gravitational force (normal)' },
+    { value: Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE_MAGNITUDE, label: 'gravitational force (magnitude)' }
 ];
 
 const LabeledSelectSpecializedMode = () => (
