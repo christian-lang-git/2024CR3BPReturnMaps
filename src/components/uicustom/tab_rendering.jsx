@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { AppContext } from "@/components/uicustom/AppContext"
 import {
     Accordion,
     AccordionContent,
@@ -17,10 +18,17 @@ import LabeledSelectSpecializedMode from './labeledSelectSpecializedMode';
 
 class TabRendering extends Component {
 
+    static contextType = AppContext;
+
     handleClickRenderingUpdate() {
         console.log("handleClickRenderingUpdate")
         Emitter.emit(Constants.EVENT_RENDERING_UPDATE, {});
     }  
+
+    shouldRenderSpecializedMode = () => {
+        const { uiState } = this.context;
+        return uiState.UI_STATE_RENDERING_TEXTURE_MODE === Constants.TEXTURE_MODE_SPECIALIZED;
+    };
 
     render() {
         return (
@@ -50,7 +58,9 @@ class TabRendering extends Component {
                                 <AccordionTrigger>Plane</AccordionTrigger>
                                 <AccordionContent>
                                     <LabeledSelectTextureMode/>
-                                    <LabeledSelectSpecializedMode/>
+                                    {this.shouldRenderSpecializedMode() && (
+                                        <LabeledSelectSpecializedMode/>
+                                    )}
                                     <div className="grid grid-cols-2">
                                         <LabeledField
                                             name="UI_STATE_RENDERING_SCALAR_MIN"
