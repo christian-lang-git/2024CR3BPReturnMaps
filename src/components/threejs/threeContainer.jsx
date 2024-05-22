@@ -183,8 +183,9 @@ class ThreeContainer extends Component {
         var rendering_specialized_mode = uiState.UI_STATE_RENDERING_SPECIALIZED_MODE;
         var scalar_min = uiState.UI_STATE_RENDERING_SCALAR_MIN;
         var scalar_max = uiState.UI_STATE_RENDERING_SCALAR_MAX;
+        var opacity = uiState.UI_STATE_RENDERING_OPACITY;
 
-        this.sceneWrapper.updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position, rendering_texture_mode, rendering_specialized_mode, scalar_min, scalar_max);       
+        this.sceneWrapper.updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position, rendering_texture_mode, rendering_specialized_mode, scalar_min, scalar_max, opacity);       
         this.sceneWrapper.updateBodies();
         this.sceneWrapper.updateClickedPosition();     
         this.sceneWrapper.updateTexturedPlane();

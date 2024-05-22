@@ -61,6 +61,10 @@ class TabRendering extends Component {
                                             labelText={"max scalar"}
                                         />
                                     </div>
+                                    <LabeledField
+                                        name="UI_STATE_RENDERING_OPACITY"
+                                        labelText={"opacity"}
+                                    />                                    
                                 </AccordionContent>
                             </AccordionItem>
                         </Accordion>

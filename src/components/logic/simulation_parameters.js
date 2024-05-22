@@ -36,6 +36,7 @@ class SimulationParameters {
 
         this.scalar_min = 0.0;
         this.scalar_max = 1.0;
+        this.opacity = 1.0;
 
         this.print();
     }

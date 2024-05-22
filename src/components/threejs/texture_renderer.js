@@ -32,6 +32,8 @@ class TextureRenderer {
             fragmentShader: this.fragmentShader(),
             vertexShader: this.vertexShader(),
         })
+        this.textured_plane_material.transparent = true;
+        this.textured_plane_material.opacity = 0.5;
         this.textured_plane_mesh = new THREE.Mesh(this.textured_plane_geometry, this.textured_plane_material);
         this.scene.add(this.textured_plane_mesh);
         //console.warn(this.fragmentShader())
@@ -150,14 +152,14 @@ class TextureRenderer {
                     x_virtual = 0;
                     y_virtual = 0;
                     vec4 data = InterpolateVec4(x_frac, y_frac, x_virtual, y_virtual);
-                    gl_FragColor = vec4(normalMappingVec2(vec2(data.x, data.y)), 1.0);
+                    gl_FragColor = vec4(normalMappingVec2(vec2(data.x, data.y)), opacity);
                     break;
                 case 1://gravitational force (magnitude)
                     x_virtual = 0;
                     y_virtual = 0;
                     component = 3;
                     float value = InterpolateScalar(x_frac, y_frac, x_virtual, y_virtual, component);
-                    gl_FragColor = vec4(mapScalarToColor(value), 1.0);
+                    gl_FragColor = vec4(mapScalarToColor(value), opacity);
                     break;
             }
         }
@@ -346,6 +348,7 @@ class TextureRenderer {
         
         this.uniforms["scalar_min"] = { type: 'float', value: 0.0};
         this.uniforms["scalar_max"] = { type: 'float', value: 1.0};
+        this.uniforms["opacity"] = { type: 'float', value: 1.0};
         
         
     }
@@ -357,6 +360,7 @@ class TextureRenderer {
         this.textured_plane_mesh.material.uniforms.rendering_specialized_mode.value = this.simulationParameters.rendering_specialized_mode;
         this.textured_plane_mesh.material.uniforms.scalar_min.value = this.simulationParameters.scalar_min;
         this.textured_plane_mesh.material.uniforms.scalar_max.value = this.simulationParameters.scalar_max;
+        this.textured_plane_mesh.material.uniforms.opacity.value = this.simulationParameters.opacity;        
         
         console.warn("this.uniforms", this.uniforms);
     }
