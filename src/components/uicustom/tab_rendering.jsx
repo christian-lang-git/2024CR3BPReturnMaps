@@ -39,21 +39,8 @@ class TabRendering extends Component {
                 <ScrollArea className="flex-1 overflow-y-auto">
                     <div className="pl-2 pr-4 pb-2">
                         <Accordion type="multiple" className="w-full" collapsible="true"
-                            defaultValue={["spheres", "plane"]}
+                            defaultValue={["plane", "spheres"]}
                         >
-                            <AccordionItem value="spheres">
-                                <AccordionTrigger>Spheres</AccordionTrigger>
-                                <AccordionContent>
-                                    <LabeledField
-                                        name="UI_STATE_RENDERING_BODIES_MAX_RADIUS_BODIES"
-                                        labelText={"max radius bodies"}
-                                    />
-                                    <LabeledField
-                                        name="UI_STATE_RENDERING_CLICKED_POSITION_RADIUS"
-                                        labelText={"radius clicked position"}
-                                    />
-                                </AccordionContent>
-                            </AccordionItem>
                             <AccordionItem value="plane">
                                 <AccordionTrigger>Plane</AccordionTrigger>
                                 <AccordionContent>
@@ -77,6 +64,20 @@ class TabRendering extends Component {
                                     />                                    
                                 </AccordionContent>
                             </AccordionItem>
+                            <AccordionItem value="spheres">
+                                <AccordionTrigger>Spheres</AccordionTrigger>
+                                <AccordionContent>
+                                    <LabeledField
+                                        name="UI_STATE_RENDERING_BODIES_MAX_RADIUS_BODIES"
+                                        labelText={"max radius bodies"}
+                                    />
+                                    <LabeledField
+                                        name="UI_STATE_RENDERING_CLICKED_POSITION_RADIUS"
+                                        labelText={"radius clicked position"}
+                                    />
+                                </AccordionContent>
+                            </AccordionItem>
+                            
                         </Accordion>
                     </div>
                 </ScrollArea>
