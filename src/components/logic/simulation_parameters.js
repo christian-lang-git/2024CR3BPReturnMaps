@@ -29,6 +29,8 @@ class SimulationParameters {
         this.tube_radius = 0.0025;
         this.tube_num_sides = 20;
         this.tube_num_segments = 20000;
+        this.tube_segment_length = 0.001;
+        this.tube_max_segments = 10000;
 
         this.activeBehavior = Constants.BEHAVIOR_CONTROL_CAMERA;
         this.activeBehaviorLastFrame = Constants.BEHAVIOR_CONTROL_CAMERA;

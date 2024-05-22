@@ -21,6 +21,7 @@ class Streamline {
         this.list_point_data = [];
         this.path = null;
         this.signum = 1;
+        this.arc_length = 0;
 
         this.seed_position = vec3.fromValues(0.75, 0.4, 0);
         this.seed_direction = vec3.fromValues(0, 0, 0.1);
@@ -155,6 +156,8 @@ class Streamline {
             next_position_data.arc_length = current_position_data.arc_length + segment_length;
             next_position_data.t = current_position_data.t + step_size;
 
+            this.arc_length = next_position_data.arc_length;
+
             //check if there is a plane intersection
             if(isOnPositiveZ){
                 //we are currently at z > 0
@@ -195,7 +198,10 @@ class Streamline {
 
         var radius = this.streamline_generator.simulationParameters.tube_radius;
         var num_sides = this.streamline_generator.simulationParameters.tube_num_sides;
-        var num_segments = this.streamline_generator.simulationParameters.tube_num_segments;
+
+        var tube_segment_length = this.streamline_generator.simulationParameters.tube_segment_length;
+        var num_segments = Math.ceil(this.arc_length / tube_segment_length);
+        num_segments = Math.min(num_segments, this.streamline_generator.simulationParameters.tube_max_segments); 
 
         this.geometry = new THREE.TubeGeometry(this.path, num_segments, radius, num_sides, false);
         this.material = new THREE.MeshStandardMaterial({ color: 0xff0000 });

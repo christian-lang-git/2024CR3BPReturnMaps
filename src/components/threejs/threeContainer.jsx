@@ -183,8 +183,10 @@ class ThreeContainer extends Component {
         var scalar_min = uiState.UI_STATE_RENDERING_SCALAR_MIN;
         var scalar_max = uiState.UI_STATE_RENDERING_SCALAR_MAX;
         var opacity = uiState.UI_STATE_RENDERING_OPACITY;
+        var tube_segment_length = uiState.UI_STATE_RENDERING_TUBE_SEGMENT_LENGTH;
+        var tube_max_segments = uiState.UI_STATE_RENDERING_TUBE_MAX_SEGMENTS;
 
-        this.sceneWrapper.updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position, rendering_texture_mode, rendering_specialized_mode, scalar_min, scalar_max, opacity);       
+        this.sceneWrapper.updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position, rendering_texture_mode, rendering_specialized_mode, scalar_min, scalar_max, opacity, tube_segment_length, tube_max_segments);       
         this.sceneWrapper.updateBodies();
         this.sceneWrapper.updateClickedPosition();     
         this.sceneWrapper.updateTexturedPlane();

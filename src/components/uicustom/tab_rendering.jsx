@@ -77,7 +77,21 @@ class TabRendering extends Component {
                                     />
                                 </AccordionContent>
                             </AccordionItem>
-                            
+                            <AccordionItem value="spheres">
+                                <AccordionTrigger>Tubes</AccordionTrigger>
+                                <AccordionContent>
+                                    <div className="grid grid-cols-2">
+                                        <LabeledField
+                                            name="UI_STATE_RENDERING_TUBE_SEGMENT_LENGTH"
+                                            labelText={"segment length"}
+                                        />
+                                        <LabeledField
+                                            name="UI_STATE_RENDERING_TUBE_MAX_SEGMENTS"
+                                            labelText={"max segments"}
+                                        />
+                                    </div>
+                                </AccordionContent>
+                            </AccordionItem>
                         </Accordion>
                     </div>
                 </ScrollArea>
