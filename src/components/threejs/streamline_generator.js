@@ -85,6 +85,8 @@ class Streamline {
 
         var steps = this.streamline_generator.simulationParameters.steps;
         var step_size = this.streamline_generator.simulationParameters.step_size;
+        var termination_method = this.streamline_generator.simulationParameters.termination_method;
+        var isOnPositiveZ = this.seed_direction[2] >= 0;
 
         for (var i = 0; i < steps; i++) {
             //reference to the current position (result from last iteration)
@@ -152,6 +154,27 @@ class Streamline {
             var segment_length = vec3.length(difference);
             next_position_data.arc_length = current_position_data.arc_length + segment_length;
             next_position_data.t = current_position_data.t + step_size;
+
+            //check if there is a plane intersection
+            if(isOnPositiveZ){
+                //we are currently at z > 0
+                if(next_position_data.position[2] < 0){
+                    isOnPositiveZ = false;
+                    termination_method -= 1;
+                    if(termination_method == 0){//termination_method starts at 0 for unlimited --> -1
+                        return;//stop early
+                    }
+                }
+            }else{
+                //we are currently at z < 0
+                if(next_position_data.position[2] > 0){
+                    isOnPositiveZ = true;
+                    termination_method -= 1;
+                    if(termination_method == 0){//termination_method starts at 0 for unlimited --> -1
+                        return;//stop early
+                    }
+                }
+            }
 
             //---------- END OF RK4 ----------
             //prepare next iteration
