@@ -99,8 +99,7 @@ class ThreeContainer extends Component {
 
     handleEventDataUpdate = () => {
         console.log("handleEventDataUpdate");
-        this.updateParametersPhysics();
-        this.updateParametersDomain();
+        this.updateParametersData();
     }
 
     handleEventRenderingUpdate = () => {
@@ -145,31 +144,29 @@ class ThreeContainer extends Component {
     }
 
     updateParameters() {
-        this.updateParametersPhysics();
-        this.updateParametersDomain();
+        this.updateParametersData();
         this.updateParametersRendering();
         this.updateParametersActiveBehavior();
     }
 
-    updateParametersPhysics() {
+    updateParametersData() {
         const { uiState } = this.context;
         var mu = uiState.UI_STATE_DATA_PHYSICS_MU;
         var seed_energy = uiState.UI_STATE_DATA_PHYSICS_SEED_ENERGY;
         var seed_direction_x = uiState.UI_STATE_DATA_PHYSICS_SEED_DIRECTION_X;
         var seed_direction_y = uiState.UI_STATE_DATA_PHYSICS_SEED_DIRECTION_Y;
         var seed_direction_z = uiState.UI_STATE_DATA_PHYSICS_SEED_DIRECTION_Z;
-        this.sceneWrapper.updateParametersPhysics(mu, seed_energy, seed_direction_x, seed_direction_y, seed_direction_z);
-        this.sceneWrapper.updateBodies();
-    }
-
-    updateParametersDomain() {
-        const { uiState } = this.context;
+        
         var domain_min_x = uiState.UI_STATE_DATA_DOMAIN_MIN_X;
         var domain_max_x = uiState.UI_STATE_DATA_DOMAIN_MAX_X;
         var domain_pixels_x = uiState.UI_STATE_DATA_DOMAIN_PIXELS_X;
         var domain_min_y = uiState.UI_STATE_DATA_DOMAIN_MIN_Y;
         var domain_max_y = uiState.UI_STATE_DATA_DOMAIN_MAX_Y;
         var domain_pixels_y = uiState.UI_STATE_DATA_DOMAIN_PIXELS_Y;
+
+        this.sceneWrapper.updateParametersPhysics(mu, seed_energy, seed_direction_x, seed_direction_y, seed_direction_z);
+        this.sceneWrapper.updateBodies();
+
         this.sceneWrapper.updateParametersDomain(domain_min_x, domain_max_x, domain_pixels_x, domain_min_y, domain_max_y, domain_pixels_y);
         this.sceneWrapper.updateTexturedPlane();
     }
