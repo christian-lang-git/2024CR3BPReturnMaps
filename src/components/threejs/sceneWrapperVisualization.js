@@ -8,6 +8,7 @@ import { OffscreenRendererFlowMap } from "./offscreen_renderer_flow_map";
 import { OffscreenRendererSeeds} from "./offscreen_renderer_seeds";
 import { OffscreenRendererGravitationalForce} from "./offscreen_renderer_gravitational_force";
 import { TextureRenderer } from "@/components/threejs/texture_renderer";
+import { StreamlineGenerator } from "@/components/threejs/streamline_generator";
 
 import { ColorMaps } from "@/components/colormaps/colormaps"
 
@@ -27,6 +28,8 @@ class SceneWrapperVisualization {
         this.raycaster = raycaster;
         this.simulationParameters = new SimulationParameters();
         this.colorMaps = new ColorMaps();
+        this.streamlineGenerator = new StreamlineGenerator(this.simulationParameters, scene);
+        this.streamlineGenerator.initialize();
         this.offscreenRendererFlowMap = new OffscreenRendererFlowMap(renderer, this.simulationParameters);
         this.offscreenRendererSeeds = new OffscreenRendererSeeds(renderer, this.simulationParameters);
         this.offscreenRendererGravitationalForce = new OffscreenRendererGravitationalForce(renderer, this.simulationParameters);
@@ -190,6 +193,8 @@ class SceneWrapperVisualization {
         if (intersects.length > 0) {
             console.log("plane intersection", intersects[0].point);
             this.clicked_mesh.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+            
+            this.streamlineGenerator.recalculateStreamline(0, intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
         }
         else {
             console.log("no plane intersection");
