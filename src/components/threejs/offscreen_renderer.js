@@ -27,6 +27,7 @@ class OffscreenRenderer {
             uniforms: this.uniforms,
             fragmentShader: this.fragmentShader(),
             vertexShader: this.vertexShader(),
+            glslVersion: THREE.GLSL3
         })
 
         console.log(this.fragmentShader())
@@ -125,6 +126,7 @@ class OffscreenRenderer {
         varying vec3 vUv;
 
         const float G = 1.0;//TODO
+        out vec4 outputColor;
   
         void main() {
             //coordinates in pixel in total texture starting bottom left

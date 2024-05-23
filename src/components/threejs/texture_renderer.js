@@ -31,6 +31,7 @@ class TextureRenderer {
             uniforms: this.uniforms,
             fragmentShader: this.fragmentShader(),
             vertexShader: this.vertexShader(),
+            glslVersion: THREE.GLSL3
         })
         this.textured_plane_material.transparent = true;
         this.textured_plane_material.opacity = 0.5;
@@ -99,6 +100,7 @@ class TextureRenderer {
             this.getUniformsString() +
             `
         varying vec2 vUv;
+        out vec4 outputColor;
 
         const float G = 1.0;//TODO
   
@@ -123,7 +125,7 @@ class TextureRenderer {
 
             ivec2 pointer;
             vec4 data;
-            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+            outputColor = vec4(0.0, 0.0, 0.0, 1.0);
             switch (rendering_texture_mode) {
                 case 0://specialized
                     RenderSpecializedMode(x_frac, y_frac);
@@ -131,12 +133,12 @@ class TextureRenderer {
                 case 1://raw texture output of virtual texture
                     pointer = ivec2(x_pixel, y_pixel);
                     data = texelFetch(displayedTexture, pointer, 0);
-                    gl_FragColor = vec4(data.x, data.y, data.z, data.a);
+                    outputColor = vec4(data.x, data.y, data.z, data.a);
                     break;
                 case 2://raw texture output of all virtual textures
                     pointer = ivec2(x_pixel_total, y_pixel_total);
                     data = texelFetch(displayedTexture, pointer, 0);
-                    gl_FragColor = vec4(data.x, data.y, data.z, data.a);
+                    outputColor = vec4(data.x, data.y, data.z, data.a);
                     break;
             }
         `
@@ -148,20 +150,20 @@ class TextureRenderer {
             int x_virtual = 0;
             int y_virtual = 0;
             int component = 0;
-            gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
+            outputColor = vec4(1.0, 0.0, 1.0, 1.0);
             switch (rendering_specialized_mode) {
                 case 0://gravitational force (normal)
                     x_virtual = 0;
                     y_virtual = 0;
                     vec4 data = InterpolateVec4(x_frac, y_frac, x_virtual, y_virtual);
-                    gl_FragColor = vec4(normalMappingVec2(vec2(data.x, data.y)), opacity);
+                    outputColor = vec4(normalMappingVec2(vec2(data.x, data.y)), opacity);
                     break;
                 case 1://gravitational force (magnitude)
                     x_virtual = 0;
                     y_virtual = 0;
                     component = 3;
                     float value = InterpolateScalar(x_frac, y_frac, x_virtual, y_virtual, component);
-                    gl_FragColor = vec4(mapScalarToColor(value), opacity);
+                    outputColor = vec4(mapScalarToColor(value), opacity);
                     break;
             }
         }

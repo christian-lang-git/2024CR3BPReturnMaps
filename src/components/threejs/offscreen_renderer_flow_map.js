@@ -54,6 +54,7 @@ class OffscreenRendererFlowMap extends OffscreenRenderer{
         uniform vec2 planeDimensions; 
         uniform vec2 planeDimensionsPixel; 
         varying vec3 vUv;
+        out vec4 outputColor;
   
         void main() {
             //coordinates in pixel starting bottom left
@@ -63,21 +64,21 @@ class OffscreenRendererFlowMap extends OffscreenRenderer{
             float y_coord = planeCornerBL.y + (y_pixel / planeDimensionsPixel.y) * planeDimensions.y;
 
             if(x_pixel>50.0){
-                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                outputColor = vec4(1.0, 0.0, 0.0, 1.0);
             }
             else{
-                gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+                outputColor = vec4(0.0, 1.0, 0.0, 1.0);
             }
             if(y_pixel>75.0){
-                gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
+                outputColor = vec4(0.0, 0.0, 1.0, 1.0);
             }
 
             if(x_pixel < 1.0){
-                gl_FragColor = vec4(0.42, 7.0, -10.0, 9999.0);
+                outputColor = vec4(0.42, 7.0, -10.0, 9999.0);
             }
 
             if(x_coord > -0.1 && x_coord < 0.1 && y_coord > -0.1 && y_coord < 0.1){
-                gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
+                outputColor = vec4(1.0, 0.0, 1.0, 1.0);
             }
         }    
         `

@@ -68,7 +68,7 @@ class OffscreenRendererGravitationalForce extends OffscreenRenderer {
             vec2 F = F1 + F2;
             float force_magnitude = length(F);
 
-            gl_FragColor = vec4(F.x, F.y, 0.0, force_magnitude);
+            outputColor = vec4(F.x, F.y, 0.0, force_magnitude);
         `
     }
 
