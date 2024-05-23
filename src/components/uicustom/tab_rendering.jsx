@@ -15,6 +15,9 @@ import LabeledField from "@/components/uicustom/labeledfield";
 import { Input } from "@/components/ui/input"
 import LabeledSelectTextureMode from './labeledSelectTextureMode';
 import LabeledSelectSpecializedMode from './labeledSelectSpecializedMode';
+import LabeledSelectRawMode from './labeledSelectRawMode';
+
+
 
 class TabRendering extends Component {
 
@@ -23,12 +26,20 @@ class TabRendering extends Component {
     handleClickRenderingUpdate() {
         console.log("handleClickRenderingUpdate")
         Emitter.emit(Constants.EVENT_RENDERING_UPDATE, {});
-    }  
+    }
 
     shouldRenderSpecializedMode = () => {
         const { uiState } = this.context;
         return uiState.UI_STATE_RENDERING_TEXTURE_MODE === Constants.TEXTURE_MODE_SPECIALIZED;
     };
+
+    shouldRenderRawMode = () => {
+        const { uiState } = this.context;
+        return uiState.UI_STATE_RENDERING_TEXTURE_MODE === Constants.TEXTURE_MODE_RAW_TEXTURE
+            || uiState.UI_STATE_RENDERING_TEXTURE_MODE === Constants.TEXTURE_MODE_RAW_VIRTUAL;
+    };
+
+
 
     render() {
         return (
@@ -44,9 +55,12 @@ class TabRendering extends Component {
                             <AccordionItem value="plane">
                                 <AccordionTrigger>Plane</AccordionTrigger>
                                 <AccordionContent>
-                                    <LabeledSelectTextureMode/>
+                                    <LabeledSelectTextureMode />
                                     {this.shouldRenderSpecializedMode() && (
-                                        <LabeledSelectSpecializedMode/>
+                                        <LabeledSelectSpecializedMode />
+                                    )}
+                                    {this.shouldRenderRawMode() && (
+                                        <LabeledSelectRawMode />
                                     )}
                                     <div className="grid grid-cols-2">
                                         <LabeledField
@@ -61,7 +75,7 @@ class TabRendering extends Component {
                                     <LabeledField
                                         name="UI_STATE_RENDERING_OPACITY"
                                         labelText={"opacity"}
-                                    />                                    
+                                    />
                                 </AccordionContent>
                             </AccordionItem>
                             <AccordionItem value="spheres">

@@ -256,12 +256,14 @@ class SceneWrapperVisualization {
         this.simulationParameters.domain_pixels_y = parseFloat(domain_pixels_y);
     }
 
-    updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position, rendering_texture_mode, rendering_specialized_mode, scalar_min, scalar_max, opacity, tube_segment_length, tube_max_segments) {
+    updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position, rendering_texture_mode, rendering_specialized_mode, rendering_raw_mode, scalar_min, scalar_max, opacity, tube_segment_length, tube_max_segments) {
         this.simulationParameters.max_radius_bodies = max_radius_bodies;
         this.simulationParameters.radius_center_of_mass = radius_center_of_mass;
         this.simulationParameters.radius_clicked_position = radius_clicked_position;
         this.simulationParameters.rendering_texture_mode = parseInt(rendering_texture_mode);
         this.simulationParameters.rendering_specialized_mode = parseInt(rendering_specialized_mode);
+        this.simulationParameters.rendering_raw_mode = parseInt(rendering_raw_mode);
+        
 
         this.simulationParameters.scalar_min = parseFloat(scalar_min);
         this.simulationParameters.scalar_max = parseFloat(scalar_max);
@@ -314,8 +316,58 @@ class SceneWrapperVisualization {
     }
 
     changeDisplayedTexture(){
-        this.textureRenderer.changeDisplayedTexture(this.offscreenRendererGravitationalForce.renderTarget.texture);
         //this.textureRenderer.changeDisplayedTexture(this.offscreenRendererSeeds.renderTarget.texture);
+        switch (this.simulationParameters.rendering_texture_mode) {
+            case Constants.TEXTURE_MODE_SPECIALIZED:
+                this.changeDisplayedTextureSpecialized();
+                break;
+            case Constants.TEXTURE_MODE_RAW_VIRTUAL:
+                this.changeDisplayedTextureRaw();
+                break;
+            case Constants.TEXTURE_MODE_RAW_TEXTURE:
+                this.changeDisplayedTextureRaw();
+                break;
+            default:
+                console.error("Error: Unknown rendering_texture_mode", this.simulationParameters.rendering_texture_mode);
+                break;
+        }
+    }
+
+    changeDisplayedTextureSpecialized(){
+        var offscreenRenderer;
+        switch (this.simulationParameters.rendering_specialized_mode) {
+            case Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE:
+                offscreenRenderer = this.offscreenRendererGravitationalForce;
+                break;
+            case Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE_MAGNITUDE:
+                offscreenRenderer = this.offscreenRendererGravitationalForce;
+                break;
+            default:
+                console.error("Error: Unknown rendering_specialized_mode", this.simulationParameters.rendering_specialized_mode);
+                break;
+        }
+        this.textureRenderer.changeDisplayedTexture(offscreenRenderer.renderTarget.texture);
+    }
+
+    changeDisplayedTextureRaw(){
+        var offscreenRenderer;
+        offscreenRenderer = this.offscreenRendererSeeds;
+        
+        switch (this.simulationParameters.rendering_raw_mode) {
+            case Constants.OFFSCREEN_RENDERER_SEEDS:
+                offscreenRenderer = this.offscreenRendererSeeds;
+                break;
+            case Constants.OFFSCREEN_RENDERER_GRAVITATIONAL_FORCE:
+                offscreenRenderer = this.offscreenRendererGravitationalForce;
+                break;            
+            case Constants.OFFSCREEN_RENDERER_FLOW_MAP:
+                offscreenRenderer = this.offscreenRendererFlowMap;
+                break;                
+            default:
+                console.error("Error: Unknown rendering_raw_mode", this.simulationParameters.rendering_raw_mode);
+                break;
+        }
+        this.textureRenderer.changeDisplayedTexture(offscreenRenderer.renderTarget.texture);
     }
 
     updateClickedPosition() {

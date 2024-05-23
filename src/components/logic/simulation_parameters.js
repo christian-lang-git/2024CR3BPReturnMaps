@@ -37,6 +37,7 @@ class SimulationParameters {
         this.activeBehaviorLastFrame = Constants.BEHAVIOR_CONTROL_CAMERA;
         this.rendering_texture_mode = Constants.TEXTURE_MODE_SPECIALIZED;
         this.rendering_specialized_mode = Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE;
+        this.rendering_raw_mode = Constants.OFFSCREEN_RENDERER_GRAVITATIONAL_FORCE;
 
         this.scalar_min = 0.0;
         this.scalar_max = 1.0;
