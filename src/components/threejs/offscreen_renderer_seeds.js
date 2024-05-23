@@ -4,14 +4,19 @@ import { OffscreenRenderer } from "@/components/threejs/offscreen_renderer"
 
 /**
  * TODO
- * The resulting texture stores positions and velocities of the seeds:
+ * The resulting texture stores positions and velocities of the seeds and is padded with additional values to have the same layout as flow map:
  * 
- * size 2*domain_pixel_x, 1*domain_pixel_y
+ * size 2*domain_pixel_x, 2*domain_pixel_y
  * 
- * --> 2 vec4 per grid node
+ * --> 4 vec4 per grid node
  * 
- * 1. vec4: 3 floats for position (do not use the z coordinate for something else, this way it has the same format as flow map)
+ * 1. vec4: 3 floats for position
  * 2. vec4: 3 floats for velocity
+ * 3. vec4: [value=0] to have same layout as flowmap
+ *          [value=0] to have same layout as flowmap
+ *          [value=0] to have same layout as flowmap
+ *          [value=0] to have same layout as flowmap
+ * 4. vec4: placeholder to have same layout as flowmap
  */
 class OffscreenRendererSeeds extends OffscreenRenderer {
 
@@ -24,7 +29,7 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
     }
 
     getNumPixelsPerNodeY() {
-        return 1;
+        return 2;
     }
 
     addAdditionalUniforms() {

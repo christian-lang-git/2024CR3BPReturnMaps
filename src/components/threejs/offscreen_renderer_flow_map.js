@@ -4,22 +4,21 @@ import { OffscreenRenderer } from "@/components/threejs/offscreen_renderer"
 
 /**
  * TODO
- * The resulting texture stores first and second return positions and directions as well as advection time and arc length for both returns:
+ * This class computes a single return map.
+ * Input can be either seeds, or the result of a previous return map.
+ * The resulting texture stores return position and direction as well as success indicator, advection time, arc length and step counter:
  * 
  * size 2*domain_pixel_x, 2*domain_pixel_y
  * 
  * --> 4 vec4 per grid node
  * 
- * 1. vec4: 3 floats for first end position (in case we do not terminate on the plane)
+ * 1. vec4: 3 floats for end position (in case we do not terminate on the plane)
+ * 2. vec4: 3 floats for end velocity
+ * 3. vec4: 1 float for success indicator (0=no return, 1=return) --> for first slice: later in a second step: overwrite this with number of succesfull returns (this might be an interesting number to plot as scalar field)
  *          1 float for advection time
- * 2. vec4: 3 floats for second end position (in case we do not terminate on the plane)
- *          1 float for advection time
- * 3. vec4: 3 floats for last return end position (in case we do not terminate on the plane)
- *          1 float for advection time
- * 3. vec4: 1 float for arc lenght of first return
- *          1 float for arc lenght of second return
- *          1 float for arc lenght of last return
- *          1 float for number of succesfull returns to reach last return (this might be an interesting number to plot as scalar field)
+ *          1 float for arc length
+ *          1 float for step counter
+ * 4. vec4: placeholder
  */
 class OffscreenRendererFlowMap extends OffscreenRenderer{
 
@@ -28,11 +27,11 @@ class OffscreenRendererFlowMap extends OffscreenRenderer{
     }
 
     getNumPixelsPerNodeX(){
-        return 1;
+        return 2;
     }
 
     getNumPixelsPerNodeY(){
-        return 1;
+        return 2;
     }
 
     vertexShader() {
