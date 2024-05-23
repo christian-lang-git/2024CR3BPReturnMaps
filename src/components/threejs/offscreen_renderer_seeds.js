@@ -32,6 +32,10 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
         return 2;
     }
 
+    getNumLayers(){
+        return 3;
+    }
+
     addAdditionalUniforms() {
         this.uniforms["seed_direction"] = { type: 'vec3', value: new THREE.Vector3(0, 0, 0) };
         this.uniforms["seed_energy"] = { type: 'float', value: 1.0 };

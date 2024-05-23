@@ -35,6 +35,10 @@ class OffscreenRendererFlowMap extends OffscreenRenderer {
         return 2;
     }
 
+    getNumLayers(){
+        return 3;
+    }
+
     addAdditionalUniforms() {
         //this.uniforms["seed_direction"] = { type: 'vec3', value: new THREE.Vector3(0, 0, 0) };
         //this.uniforms["seed_energy"] = { type: 'float', value: 1.0 };
@@ -46,6 +50,10 @@ class OffscreenRendererFlowMap extends OffscreenRenderer {
         //this.dummy_plane_mesh.material.uniforms.seed_direction.value.z = this.simulationParameters.seed_direction_z;
         //this.dummy_plane_mesh.material.uniforms.seed_energy.value = this.simulationParameters.seed_energy;
         
+    }
+
+    compute(){
+        this.computeLayer(1);
     }
 
     fragmentShaderMethodComputation() {

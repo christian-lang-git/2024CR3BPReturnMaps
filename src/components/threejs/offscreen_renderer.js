@@ -88,27 +88,62 @@ class OffscreenRenderer {
             this.renderTarget = this.offscreen_renderer_for_external_render_target.renderTarget;
         }
         else{
+            /*
             this.renderTarget = new THREE.WebGLRenderTarget(this.width * this.getNumPixelsPerNodeX(), this.height * this.getNumPixelsPerNodeY(), {
                 minFilter: THREE.LinearFilter,
                 magFilter: THREE.NearestFilter,//THREE.LinearFilter
                 format: THREE.RGBAFormat,
                 type: THREE.FloatType
             });
+            */
+            
+            var total_w = this.width * this.getNumPixelsPerNodeX();
+            var total_h = this.height * this.getNumPixelsPerNodeY();
+            var total_z = this.getNumLayers();
+
+            this.renderTarget = new THREE.WebGL3DRenderTarget(total_w, total_h, total_z, {
+                minFilter: THREE.LinearFilter,
+                magFilter: THREE.NearestFilter,//THREE.LinearFilter
+                format: THREE.RGBAFormat,
+                type: THREE.FloatType
+            });
+
+            
+            const size = total_w * total_h * total_z * 4; // RGBA
+            const data = new Float32Array(size);
+            const texture = new THREE.Data3DTexture(data, total_w, total_h, total_z);            
+            texture.format = THREE.RGBAFormat;
+            texture.type = THREE.FloatType;
+            texture.minFilter = THREE.LinearFilter;
+            texture.magFilter = THREE.NearestFilter;
+            texture.unpackAlignment = 1;
+
+            this.renderTarget.texture = texture;
+            
         }
     }
 
     compute() {
-        this.renderer.setRenderTarget(this.renderTarget);
+        this.computeLayer(0);
+        //this.renderer.setRenderTarget(this.renderTarget, 0);
+        //this.renderer.render(this.bufferScene, this.bufferCamera);
+        //this.renderer.setRenderTarget(null);
+
+        //const pixelBuffer = new Float32Array(this.width * this.getNumPixelsPerNodeX() * this.height * this.getNumPixelsPerNodeY() * 4);
+        //this.renderer.readRenderTargetPixels(this.renderTarget, 0, 0, this.width * this.getNumPixelsPerNodeX(), this.height * this.getNumPixelsPerNodeY(), pixelBuffer);
+        //console.log("pixelBuffer", pixelBuffer);
+    }
+
+    computeLayer(targetLayerIndex){
+        this.dummy_plane_mesh.material.uniforms.target_layer_index.value = targetLayerIndex;
+        this.renderer.setRenderTarget(this.renderTarget, targetLayerIndex);
         this.renderer.render(this.bufferScene, this.bufferCamera);
         this.renderer.setRenderTarget(null);
-
-        const pixelBuffer = new Float32Array(this.width * this.getNumPixelsPerNodeX() * this.height * this.getNumPixelsPerNodeY() * 4);
-        this.renderer.readRenderTargetPixels(this.renderTarget, 0, 0, this.width * this.getNumPixelsPerNodeX(), this.height * this.getNumPixelsPerNodeY(), pixelBuffer);
-        console.log("pixelBuffer", pixelBuffer);
     }
 
     generateUniforms() {
         this.uniforms = {
+            target_layer_index: { type: 'int', value: 0 },
             mu: { type: 'float', value: 0.1 },
             angular_velocity: { type: 'float', value: 1.0 },
             primary_x: { type: 'float', value: 0.0 },
@@ -219,6 +254,15 @@ class OffscreenRenderer {
      * @returns the number of "virtual textures" on the y axis, setting this value to 2 doubles the available data per node
      */
     getNumPixelsPerNodeY() {
+        return 1;
+    }
+
+    /**
+     * How many layers of 2D textures make up the 3D texture
+     * 
+     * @returns the number of layers
+     */
+    getNumLayers(){
         return 1;
     }
 

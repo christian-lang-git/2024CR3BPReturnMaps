@@ -256,13 +256,16 @@ class SceneWrapperVisualization {
         this.simulationParameters.domain_pixels_y = parseFloat(domain_pixels_y);
     }
 
-    updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position, rendering_texture_mode, rendering_specialized_mode, rendering_raw_mode, scalar_min, scalar_max, opacity, tube_segment_length, tube_max_segments) {
+    updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position, rendering_texture_mode, rendering_specialized_mode, rendering_raw_mode, rendering_raw_mode_layer, scalar_min, scalar_max, opacity, tube_segment_length, tube_max_segments) {
         this.simulationParameters.max_radius_bodies = max_radius_bodies;
         this.simulationParameters.radius_center_of_mass = radius_center_of_mass;
         this.simulationParameters.radius_clicked_position = radius_clicked_position;
         this.simulationParameters.rendering_texture_mode = parseInt(rendering_texture_mode);
         this.simulationParameters.rendering_specialized_mode = parseInt(rendering_specialized_mode);
         this.simulationParameters.rendering_raw_mode = parseInt(rendering_raw_mode);
+        this.simulationParameters.rendering_raw_mode_layer = parseInt(rendering_raw_mode_layer);
+
+        
         
 
         this.simulationParameters.scalar_min = parseFloat(scalar_min);

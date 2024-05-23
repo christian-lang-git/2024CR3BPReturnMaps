@@ -105,8 +105,8 @@ class TextureRenderer {
         const float G = 1.0;//TODO
   
         void RenderSpecializedMode(float x_frac, float y_frac);
-        float InterpolateScalar(float x_frac, float y_frac, int x_virtual, int y_virtual, int component);
-        vec4 InterpolateVec4(float x_frac, float y_frac, int x_virtual, int y_virtual);
+        float InterpolateScalar(float x_frac, float y_frac, int x_virtual, int y_virtual, int z_layer, int component);
+        vec4 InterpolateVec4(float x_frac, float y_frac, int x_virtual, int y_virtual, int z_layer);
         vec3 mapScalarToColor(float scalar);
         vec3 normalMappingVec2(vec2 vector);
 
@@ -123,7 +123,7 @@ class TextureRenderer {
             int y_pixel_total = int(round(y_frac * (2.0*planeDimensionsPixel.y-1.0)));//TODO: const 2.0
 
 
-            ivec2 pointer;
+            ivec3 pointer;
             vec4 data;
             outputColor = vec4(0.0, 0.0, 0.0, 1.0);
             switch (rendering_texture_mode) {
@@ -131,12 +131,12 @@ class TextureRenderer {
                     RenderSpecializedMode(x_frac, y_frac);
                     break;
                 case 1://raw texture output of virtual texture
-                    pointer = ivec2(x_pixel, y_pixel);
+                    pointer = ivec3(x_pixel, y_pixel, rendering_raw_mode_layer);
                     data = texelFetch(displayedTexture, pointer, 0);
                     outputColor = vec4(data.x, data.y, data.z, data.a);
                     break;
                 case 2://raw texture output of all virtual textures
-                    pointer = ivec2(x_pixel_total, y_pixel_total);
+                    pointer = ivec3(x_pixel_total, y_pixel_total, rendering_raw_mode_layer);
                     data = texelFetch(displayedTexture, pointer, 0);
                     outputColor = vec4(data.x, data.y, data.z, data.a);
                     break;
@@ -149,20 +149,23 @@ class TextureRenderer {
         void RenderSpecializedMode(float x_frac, float y_frac){
             int x_virtual = 0;
             int y_virtual = 0;
+            int z_layer = 0;
             int component = 0;
             outputColor = vec4(1.0, 0.0, 1.0, 1.0);
             switch (rendering_specialized_mode) {
                 case 0://gravitational force (normal)
                     x_virtual = 0;
                     y_virtual = 0;
-                    vec4 data = InterpolateVec4(x_frac, y_frac, x_virtual, y_virtual);
+                    z_layer = 0;
+                    vec4 data = InterpolateVec4(x_frac, y_frac, x_virtual, y_virtual, z_layer);
                     outputColor = vec4(normalMappingVec2(vec2(data.x, data.y)), opacity);
                     break;
                 case 1://gravitational force (magnitude)
                     x_virtual = 0;
                     y_virtual = 0;
+                    z_layer = 0;
                     component = 3;
-                    float value = InterpolateScalar(x_frac, y_frac, x_virtual, y_virtual, component);
+                    float value = InterpolateScalar(x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
                     outputColor = vec4(mapScalarToColor(value), opacity);
                     break;
             }
@@ -170,7 +173,7 @@ class TextureRenderer {
 
         // x_virtual, y_virtual: which virtual texture is used?
         // component: the index to access the element of the vec4
-        float InterpolateScalar(float x_frac, float y_frac, int x_virtual, int y_virtual, int component){
+        float InterpolateScalar(float x_frac, float y_frac, int x_virtual, int y_virtual, int z_layer, int component){
             
             int x_offset = int(planeDimensionsPixel.x) * x_virtual;
             int y_offset = int(planeDimensionsPixel.y) * y_virtual;
@@ -187,10 +190,10 @@ class TextureRenderer {
             float t_x = (x - (float(i) * dx)) / dx;
             float t_y = (y - (float(j) * dy)) / dy;
 
-            float v_00 = texelFetch(displayedTexture, ivec2(i+0+x_offset, j+0+y_offset), 0)[component];
-            float v_01 = texelFetch(displayedTexture, ivec2(i+0+x_offset, j+1+y_offset), 0)[component];
-            float v_10 = texelFetch(displayedTexture, ivec2(i+1+x_offset, j+0+y_offset), 0)[component];
-            float v_11 = texelFetch(displayedTexture, ivec2(i+1+x_offset, j+1+y_offset), 0)[component];
+            float v_00 = texelFetch(displayedTexture, ivec3(i+0+x_offset, j+0+y_offset, z_layer), 0)[component];
+            float v_01 = texelFetch(displayedTexture, ivec3(i+0+x_offset, j+1+y_offset, z_layer), 0)[component];
+            float v_10 = texelFetch(displayedTexture, ivec3(i+1+x_offset, j+0+y_offset, z_layer), 0)[component];
+            float v_11 = texelFetch(displayedTexture, ivec3(i+1+x_offset, j+1+y_offset, z_layer), 0)[component];
 
             //interpolate 2 points along y axis using t_y
             float v_0 = mix(v_00, v_01, t_y);
@@ -204,7 +207,7 @@ class TextureRenderer {
 
         // x_virtual, y_virtual: which virtual texture is used?
         // component: the index to access the element of the vec4
-        vec4 InterpolateVec4(float x_frac, float y_frac, int x_virtual, int y_virtual){
+        vec4 InterpolateVec4(float x_frac, float y_frac, int x_virtual, int y_virtual, int z_layer){
             
             int x_offset = int(planeDimensionsPixel.x) * x_virtual;
             int y_offset = int(planeDimensionsPixel.y) * y_virtual;
@@ -221,10 +224,10 @@ class TextureRenderer {
             float t_x = (x - (float(i) * dx)) / dx;
             float t_y = (y - (float(j) * dy)) / dy;
 
-            vec4 v_00 = texelFetch(displayedTexture, ivec2(i+0+x_offset, j+0+y_offset), 0);
-            vec4 v_01 = texelFetch(displayedTexture, ivec2(i+0+x_offset, j+1+y_offset), 0);
-            vec4 v_10 = texelFetch(displayedTexture, ivec2(i+1+x_offset, j+0+y_offset), 0);
-            vec4 v_11 = texelFetch(displayedTexture, ivec2(i+1+x_offset, j+1+y_offset), 0);
+            vec4 v_00 = texelFetch(displayedTexture, ivec3(i+0+x_offset, j+0+y_offset, z_layer), 0);
+            vec4 v_01 = texelFetch(displayedTexture, ivec3(i+0+x_offset, j+1+y_offset, z_layer), 0);
+            vec4 v_10 = texelFetch(displayedTexture, ivec3(i+1+x_offset, j+0+y_offset, z_layer), 0);
+            vec4 v_11 = texelFetch(displayedTexture, ivec3(i+1+x_offset, j+1+y_offset, z_layer), 0);
 
             //interpolate 2 points along y axis using t_y
             vec4 v_0 = mix(v_00, v_01, t_y);
@@ -345,10 +348,11 @@ class TextureRenderer {
      * Additional uniforms can be created in this method
      */
     addAdditionalUniforms() {        
-        this.uniforms["displayedTexture"] = { type: 'sampler2D', value: null};
+        this.uniforms["displayedTexture"] = { type: 'sampler3D', value: null};
         this.uniforms["colorMapsTexture"] = { type: 'sampler2D', value: null};
         this.uniforms["rendering_texture_mode"] = { type: 'int', value: parseInt(Constants.TEXTURE_MODE_SPECIALIZED)};      
-        this.uniforms["rendering_specialized_mode"] = { type: 'int', value: parseInt(Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE)};      
+        this.uniforms["rendering_specialized_mode"] = { type: 'int', value: parseInt(Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE)};    
+        this.uniforms["rendering_raw_mode_layer"] = { type: 'int', value: 0};    
         
         this.uniforms["scalar_min"] = { type: 'float', value: 0.0};
         this.uniforms["scalar_max"] = { type: 'float', value: 1.0};
@@ -362,6 +366,7 @@ class TextureRenderer {
         this.textured_plane_mesh.material.uniforms.colorMapsTexture.value = this.colorMaps.texture;
         this.textured_plane_mesh.material.uniforms.rendering_texture_mode.value = this.simulationParameters.rendering_texture_mode;
         this.textured_plane_mesh.material.uniforms.rendering_specialized_mode.value = this.simulationParameters.rendering_specialized_mode;
+        this.textured_plane_mesh.material.uniforms.rendering_raw_mode_layer.value = this.simulationParameters.rendering_raw_mode_layer;
         this.textured_plane_mesh.material.uniforms.scalar_min.value = this.simulationParameters.scalar_min;
         this.textured_plane_mesh.material.uniforms.scalar_max.value = this.simulationParameters.scalar_max;
         this.textured_plane_mesh.material.uniforms.opacity.value = this.simulationParameters.opacity;        

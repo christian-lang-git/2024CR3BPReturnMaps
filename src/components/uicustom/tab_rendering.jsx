@@ -60,7 +60,13 @@ class TabRendering extends Component {
                                         <LabeledSelectSpecializedMode />
                                     )}
                                     {this.shouldRenderRawMode() && (
+                                    <div className="grid grid-cols-2">
                                         <LabeledSelectRawMode />
+                                        <LabeledField
+                                            name="UI_STATE_RENDERING_RAW_MODE_LAYER"
+                                            labelText={"layer"}
+                                        />
+                                    </div>
                                     )}
                                     <div className="grid grid-cols-2">
                                         <LabeledField
