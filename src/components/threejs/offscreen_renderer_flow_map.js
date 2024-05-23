@@ -4,7 +4,8 @@ import { OffscreenRenderer } from "@/components/threejs/offscreen_renderer"
 
 /**
  * TODO
- * This class computes a single return map.
+ * SHARES RenderTarget with seeds
+ * One render call computes a single return map.
  * Input can be either seeds, or the result of a previous return map.
  * The resulting texture stores return position and direction as well as success indicator, advection time, arc length and step counter:
  * 
@@ -20,67 +21,37 @@ import { OffscreenRenderer } from "@/components/threejs/offscreen_renderer"
  *          1 float for step counter
  * 4. vec4: placeholder
  */
-class OffscreenRendererFlowMap extends OffscreenRenderer{
+class OffscreenRendererFlowMap extends OffscreenRenderer {
 
     constructor(renderer, simulationParameters) {
         super(renderer, simulationParameters)
     }
 
-    getNumPixelsPerNodeX(){
+    getNumPixelsPerNodeX() {
         return 2;
     }
 
-    getNumPixelsPerNodeY(){
+    getNumPixelsPerNodeY() {
         return 2;
     }
 
-    vertexShader() {
-        return `
-        varying vec3 vUv; 
-    
-        void main() {
-          vUv = position; 
-    
-          vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
-          gl_Position = projectionMatrix * modelViewPosition; 
-        }
-        `
+    addAdditionalUniforms() {
+        //this.uniforms["seed_direction"] = { type: 'vec3', value: new THREE.Vector3(0, 0, 0) };
+        //this.uniforms["seed_energy"] = { type: 'float', value: 1.0 };
     }
 
-    fragmentShader() {
+    setAdditionalUniforms() {
+        //this.dummy_plane_mesh.material.uniforms.seed_direction.value.x = this.simulationParameters.seed_direction_x;
+        //this.dummy_plane_mesh.material.uniforms.seed_direction.value.y = this.simulationParameters.seed_direction_y;
+        //this.dummy_plane_mesh.material.uniforms.seed_direction.value.z = this.simulationParameters.seed_direction_z;
+        //this.dummy_plane_mesh.material.uniforms.seed_energy.value = this.simulationParameters.seed_energy;
+        
+    }
+
+    fragmentShaderMethodComputation() {
         return `
-        uniform vec2 planeCenter; 
-        uniform vec2 planeCornerBL; 
-        uniform vec2 planeDimensions; 
-        uniform vec2 planeDimensionsPixel; 
-        varying vec3 vUv;
-        out vec4 outputColor;
-  
-        void main() {
-            //coordinates in pixel starting bottom left
-            float x_pixel = gl_FragCoord[0];//x
-            float y_pixel = gl_FragCoord[1];//y
-            float x_coord = planeCornerBL.x + (x_pixel / planeDimensionsPixel.x) * planeDimensions.x;
-            float y_coord = planeCornerBL.y + (y_pixel / planeDimensionsPixel.y) * planeDimensions.y;
-
-            if(x_pixel>50.0){
-                outputColor = vec4(1.0, 0.0, 0.0, 1.0);
-            }
-            else{
-                outputColor = vec4(0.0, 1.0, 0.0, 1.0);
-            }
-            if(y_pixel>75.0){
-                outputColor = vec4(0.0, 0.0, 1.0, 1.0);
-            }
-
-            if(x_pixel < 1.0){
-                outputColor = vec4(0.42, 7.0, -10.0, 9999.0);
-            }
-
-            if(x_coord > -0.1 && x_coord < 0.1 && y_coord > -0.1 && y_coord < 0.1){
-                outputColor = vec4(1.0, 0.0, 1.0, 1.0);
-            }
-        }    
+            outputColor = vec4(float(virtual_texture_x), float(virtual_texture_y), 0.0, 1.0); 
+            
         `
     }
 

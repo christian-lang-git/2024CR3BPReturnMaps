@@ -30,10 +30,11 @@ class SceneWrapperVisualization {
         this.colorMaps = new ColorMaps();
         this.streamlineGenerator = new StreamlineGenerator(this.simulationParameters, scene);
         this.streamlineGenerator.initialize();
-        this.offscreenRendererFlowMap = new OffscreenRendererFlowMap(renderer, this.simulationParameters);
         this.offscreenRendererSeeds = new OffscreenRendererSeeds(renderer, this.simulationParameters);
+        this.offscreenRendererFlowMap = new OffscreenRendererFlowMap(renderer, this.simulationParameters);
         this.offscreenRendererGravitationalForce = new OffscreenRendererGravitationalForce(renderer, this.simulationParameters);
 
+        this.offscreenRendererFlowMap.setExternalRenderTarget(this.offscreenRendererSeeds);
         this.offscreenRendererGravitationalForce.link(this.offscreenRendererSeeds);
 
         this.offscreenRendererSeeds.initialize();

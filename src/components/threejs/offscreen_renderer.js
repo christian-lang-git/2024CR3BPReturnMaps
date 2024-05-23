@@ -6,6 +6,18 @@ class OffscreenRenderer {
     constructor(renderer, simulationParameters) {
         this.renderer = renderer;
         this.simulationParameters = simulationParameters;
+        this.use_external_render_target = false;
+        this.offscreen_renderer_for_external_render_target = null;
+    }
+
+    /**
+     * By calling this function THIS offscreenRenderer will not generate a renderTarget.
+     * Instead it will use the same renderTarget as the one used by the parameter targetOffscreenRenderer
+     * @param {OffscreenRenderer} targetOffscreenRenderer 
+     */
+    setExternalRenderTarget(targetOffscreenRenderer){
+        this.use_external_render_target = true;
+        this.offscreen_renderer_for_external_render_target = targetOffscreenRenderer;
     }
 
     initialize() {
@@ -72,12 +84,17 @@ class OffscreenRenderer {
 
     updateRenderTarget() {
         console.warn("UPDATE RENDER TARGET SIZE");
-        this.renderTarget = new THREE.WebGLRenderTarget(this.width * this.getNumPixelsPerNodeX(), this.height * this.getNumPixelsPerNodeY(), {
-            minFilter: THREE.LinearFilter,
-            magFilter: THREE.NearestFilter,//THREE.LinearFilter
-            format: THREE.RGBAFormat,
-            type: THREE.FloatType
-        });
+        if(this.use_external_render_target){
+            this.renderTarget = this.offscreen_renderer_for_external_render_target.renderTarget;
+        }
+        else{
+            this.renderTarget = new THREE.WebGLRenderTarget(this.width * this.getNumPixelsPerNodeX(), this.height * this.getNumPixelsPerNodeY(), {
+                minFilter: THREE.LinearFilter,
+                magFilter: THREE.NearestFilter,//THREE.LinearFilter
+                format: THREE.RGBAFormat,
+                type: THREE.FloatType
+            });
+        }
     }
 
     compute() {
