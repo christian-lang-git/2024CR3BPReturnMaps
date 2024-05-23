@@ -51,11 +51,16 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
 
     fragmentShaderMethodComputation() {
         return `
-            if(virtual_texture_x == 0)
-                outputColor = vec4(world_x, world_y, 0.0, x_pixel);          
-            if(virtual_texture_x == 1){
-                vec3 seed_velocity = vec3(seed_direction) * seed_energy;//TODO placeholder
-                outputColor = vec4(seed_velocity.x, seed_velocity.y, seed_velocity.z, y_pixel);
+            if(virtual_texture_y == 0){
+                if(virtual_texture_x == 0)
+                    outputColor = vec4(world_x, world_y, 0.0, x_pixel);          
+                if(virtual_texture_x == 1){
+                    vec3 seed_velocity = normalize(seed_direction) * seed_energy;//TODO placeholder
+                    outputColor = vec4(seed_velocity.x, seed_velocity.y, seed_velocity.z, 1.0);
+                }
+            }
+            else{
+                outputColor = vec4(1.0, 0.75, 1.0, 1.0);         
             }
         `
     }
