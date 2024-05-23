@@ -20,8 +20,8 @@ class OffscreenRendererGravitationalForce extends OffscreenRenderer {
         super(renderer, simulationParameters)
     }
 
-    link(offscreenRendererSeeds){
-        this.offscreenRendererSeeds = offscreenRendererSeeds;
+    link(offscreenRendererSeedsAndReturns){
+        this.offscreenRendererSeedsAndReturns = offscreenRendererSeedsAndReturns;
     }
 
     getNumPixelsPerNodeX() {
@@ -33,12 +33,14 @@ class OffscreenRendererGravitationalForce extends OffscreenRenderer {
     }
 
     addAdditionalUniforms() {
-        this.uniforms["texture_seeds"] = { type: 'sampler3D', value: this.offscreenRendererSeeds.renderTarget.texture};
+        //this.uniforms["texture_seeds"] = { type: 'sampler3D', value: this.offscreenRendererSeeds.renderTarget.texture};
+        this.uniforms["texture_seeds_and_returns"] = { type: 'sampler3D', value: this.offscreenRendererSeedsAndReturns.renderTarget.texture};
 
     }
 
     setAdditionalUniforms() {
-        this.dummy_plane_mesh.material.uniforms.texture_seeds.value = this.offscreenRendererSeeds.renderTarget.texture;
+        //this.dummy_plane_mesh.material.uniforms.texture_seeds.value = this.offscreenRendererSeeds.renderTarget.texture;
+        this.dummy_plane_mesh.material.uniforms.texture_seeds_and_returns.value = this.offscreenRendererSeedsAndReturns.renderTarget.texture;   
         
     }
 
@@ -52,7 +54,7 @@ class OffscreenRendererGravitationalForce extends OffscreenRenderer {
             float m2 = secondary_mass;
 
             ivec3 pointer = ivec3(x_pixel_mod, y_pixel_mod, 0);
-            vec2 seed_position = texelFetch(texture_seeds, pointer, 0).xy;
+            vec2 seed_position = texelFetch(texture_seeds_and_returns, pointer, 0).xy;
             float x = seed_position.x;
             float y = seed_position.y;
             vec2 primary_position = vec2(x1, 0.0);

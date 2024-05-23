@@ -33,7 +33,7 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
     }
 
     getNumLayers(){
-        return 3;
+        return 1;
     }
 
     addAdditionalUniforms() {

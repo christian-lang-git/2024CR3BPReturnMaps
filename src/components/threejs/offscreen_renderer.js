@@ -141,6 +141,26 @@ class OffscreenRenderer {
         this.renderer.setRenderTarget(null);
     }
 
+    /**
+     * Computes a 2D texture at layer 0 of this texture but for layer targetLayerIndex
+     * @param {*} targetLayerIndex the target layer in the 3D texture
+     */
+    computeTargetLayerAt0(targetLayerIndex){
+        this.dummy_plane_mesh.material.uniforms.target_layer_index.value = targetLayerIndex;
+        this.renderer.setRenderTarget(this.renderTarget, 0);
+        this.renderer.render(this.bufferScene, this.bufferCamera);
+        this.renderer.setRenderTarget(null);
+    }
+    
+    copyTextureToLayer(texture_input, targetLayerIndex){
+        console.warn("texture_input", texture_input);
+        this.dummy_plane_mesh.material.uniforms.texture_input.value = texture_input;      
+        this.dummy_plane_mesh.material.uniforms.target_layer_index.value = targetLayerIndex;
+        this.renderer.setRenderTarget(this.renderTarget, targetLayerIndex);
+        this.renderer.render(this.bufferScene, this.bufferCamera);
+        this.renderer.setRenderTarget(null);
+    }
+
     generateUniforms() {
         this.uniforms = {
             target_layer_index: { type: 'int', value: 0 },

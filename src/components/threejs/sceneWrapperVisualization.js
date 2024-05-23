@@ -4,8 +4,9 @@ import { vec3 } from "gl-matrix/esm";
 import { SimulationParameters } from "@/components/logic/simulation_parameters";
 import { getMousePositionInCanvasNDC } from "@/components/utility/mouseHelper";
 import * as Constants from "@/components/utility/constants";
-import { OffscreenRendererFlowMap } from "./offscreen_renderer_flow_map";
+import { OffscreenRendererSeedsAndReturns} from "./offscreen_renderer_seeds_and_returns";
 import { OffscreenRendererSeeds} from "./offscreen_renderer_seeds";
+import { OffscreenRendererFlowMap } from "./offscreen_renderer_flow_map";
 import { OffscreenRendererGravitationalForce} from "./offscreen_renderer_gravitational_force";
 import { TextureRenderer } from "@/components/threejs/texture_renderer";
 import { StreamlineGenerator } from "@/components/threejs/streamline_generator";
@@ -32,14 +33,16 @@ class SceneWrapperVisualization {
         this.streamlineGenerator.initialize();
         this.offscreenRendererSeeds = new OffscreenRendererSeeds(renderer, this.simulationParameters);
         this.offscreenRendererFlowMap = new OffscreenRendererFlowMap(renderer, this.simulationParameters);
+        this.offscreenRendererSeedsAndReturns = new OffscreenRendererSeedsAndReturns(renderer, this.simulationParameters);
         this.offscreenRendererGravitationalForce = new OffscreenRendererGravitationalForce(renderer, this.simulationParameters);
 
-        this.offscreenRendererFlowMap.setExternalRenderTarget(this.offscreenRendererSeeds);
-        this.offscreenRendererGravitationalForce.link(this.offscreenRendererSeeds);
+        this.offscreenRendererFlowMap.link(this.offscreenRendererSeedsAndReturns);
+        this.offscreenRendererGravitationalForce.link(this.offscreenRendererSeedsAndReturns);
 
         this.offscreenRendererSeeds.initialize();
-        this.offscreenRendererGravitationalForce.initialize();
+        this.offscreenRendererSeedsAndReturns.initialize();
         this.offscreenRendererFlowMap.initialize();
+        this.offscreenRendererGravitationalForce.initialize();
 
         this.textureRenderer = new TextureRenderer(renderer, this.simulationParameters, this.colorMaps, scene);
 
@@ -306,12 +309,18 @@ class SceneWrapperVisualization {
         var scale_y = max_y - min_y;
         var pos_x = 0.5 * (min_x + max_x);
         var pos_y = 0.5 * (min_y + max_y);
+
         this.offscreenRendererSeeds.updateTexturedPlane();
         this.offscreenRendererSeeds.compute();
+        this.offscreenRendererSeedsAndReturns.updateTexturedPlane();
+        this.offscreenRendererSeedsAndReturns.copyTextureToLayer(this.offscreenRendererSeeds.renderTarget.texture, 0);
+
+        this.offscreenRendererFlowMap.updateTexturedPlane();
+        this.offscreenRendererFlowMap.computeTargetLayerAt0(1);
+        this.offscreenRendererSeedsAndReturns.copyTextureToLayer(this.offscreenRendererFlowMap.renderTarget.texture, 1);
+
         this.offscreenRendererGravitationalForce.updateTexturedPlane();
         this.offscreenRendererGravitationalForce.compute();
-        this.offscreenRendererFlowMap.updateTexturedPlane();
-        this.offscreenRendererFlowMap.compute();
 
         this.textureRenderer.updateTransform(pos_x, pos_y, scale_x, scale_y);
         this.changeDisplayedTexture();
@@ -365,7 +374,10 @@ class SceneWrapperVisualization {
                 break;            
             case Constants.OFFSCREEN_RENDERER_FLOW_MAP:
                 offscreenRenderer = this.offscreenRendererFlowMap;
-                break;                
+                break;       
+            case Constants.OFFSCREEN_RENDERER_SEEDS_AND_RETURNS:                   
+                offscreenRenderer = this.offscreenRendererSeedsAndReturns;
+                break;      
             default:
                 console.error("Error: Unknown rendering_raw_mode", this.simulationParameters.rendering_raw_mode);
                 break;

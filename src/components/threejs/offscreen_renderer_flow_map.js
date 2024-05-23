@@ -27,6 +27,10 @@ class OffscreenRendererFlowMap extends OffscreenRenderer {
         super(renderer, simulationParameters)
     }
 
+    link(offscreenRendererSeedsAndReturns){
+        this.offscreenRendererSeedsAndReturns = offscreenRendererSeedsAndReturns;
+    }
+
     getNumPixelsPerNodeX() {
         return 2;
     }
@@ -36,29 +40,54 @@ class OffscreenRendererFlowMap extends OffscreenRenderer {
     }
 
     getNumLayers(){
-        return 3;
+        return 1;
     }
 
     addAdditionalUniforms() {
-        //this.uniforms["seed_direction"] = { type: 'vec3', value: new THREE.Vector3(0, 0, 0) };
-        //this.uniforms["seed_energy"] = { type: 'float', value: 1.0 };
+        this.uniforms["texture_seeds_and_returns"] = { type: 'sampler3D', value: this.offscreenRendererSeedsAndReturns.renderTarget.texture};
     }
 
     setAdditionalUniforms() {
-        //this.dummy_plane_mesh.material.uniforms.seed_direction.value.x = this.simulationParameters.seed_direction_x;
-        //this.dummy_plane_mesh.material.uniforms.seed_direction.value.y = this.simulationParameters.seed_direction_y;
-        //this.dummy_plane_mesh.material.uniforms.seed_direction.value.z = this.simulationParameters.seed_direction_z;
-        //this.dummy_plane_mesh.material.uniforms.seed_energy.value = this.simulationParameters.seed_energy;
-        
-    }
-
-    compute(){
-        this.computeLayer(1);
+        this.dummy_plane_mesh.material.uniforms.texture_seeds_and_returns.value = this.offscreenRendererSeedsAndReturns.renderTarget.texture;        
     }
 
     fragmentShaderMethodComputation() {
         return `
-            outputColor = vec4(float(virtual_texture_x), float(virtual_texture_y), 0.0, 1.0); 
+            //renaming for convenience
+            float x1 = primary_x;
+            float x2 = secondary_x;
+            float m1 = primary_mass;
+            float m2 = secondary_mass;
+
+            ivec3 pointer = ivec3(x_pixel_mod, y_pixel_mod, 0);
+            vec2 seed_position = texelFetch(texture_seeds_and_returns, pointer, target_layer_index-1).xy;
+            float x = seed_position.x;
+            float y = seed_position.y;
+            vec2 primary_position = vec2(x1, 0.0);
+            vec2 secondary_position = vec2(x2, 0.0);
+
+            
+
+
+            
+
+            if(virtual_texture_y == 1){
+                outputColor = vec4(float(virtual_texture_x), float(virtual_texture_y), 0.0, 1.0); 
+            }
+            else{
+                if(x > 0.5){
+                    outputColor = vec4(float(virtual_texture_x), float(virtual_texture_y), 0.0, 1.0); 
+                    outputColor = vec4(1.0, 0.0, 0.0, 1.0); 
+                }
+                /*
+                if(x > 0.5){
+                    outputColor = vec4(1.0, 0.0, 0.0, 1.0); 
+                }else{
+                    outputColor = vec4(0.0, 0.0, 1.0, 1.0); 
+                }
+                */
+            }
+
             
         `
     }
