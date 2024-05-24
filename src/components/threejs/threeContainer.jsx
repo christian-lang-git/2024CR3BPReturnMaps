@@ -183,13 +183,18 @@ class ThreeContainer extends Component {
         var rendering_specialized_mode = uiState.UI_STATE_RENDERING_SPECIALIZED_MODE;
         var rendering_raw_mode = uiState.UI_STATE_RENDERING_RAW_MODE;
         var rendering_raw_mode_layer = uiState.UI_STATE_RENDERING_RAW_MODE_LAYER;
+        var rendering_raw_mode_x_texture_index = uiState.UI_STATE_RENDERING_RAW_MODE_X_TEXTURE_INDEX;
+        var rendering_raw_mode_y_texture_index = uiState.UI_STATE_RENDERING_RAW_MODE_Y_TEXTURE_INDEX;
         var scalar_min = uiState.UI_STATE_RENDERING_SCALAR_MIN;
         var scalar_max = uiState.UI_STATE_RENDERING_SCALAR_MAX;
         var opacity = uiState.UI_STATE_RENDERING_OPACITY;
         var tube_segment_length = uiState.UI_STATE_RENDERING_TUBE_SEGMENT_LENGTH;
         var tube_max_segments = uiState.UI_STATE_RENDERING_TUBE_MAX_SEGMENTS;
 
-        this.sceneWrapper.updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position, rendering_texture_mode, rendering_specialized_mode, rendering_raw_mode, rendering_raw_mode_layer, scalar_min, scalar_max, opacity, tube_segment_length, tube_max_segments);       
+        this.sceneWrapper.updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position, 
+            rendering_texture_mode, rendering_specialized_mode, rendering_raw_mode, 
+            rendering_raw_mode_layer, rendering_raw_mode_x_texture_index, rendering_raw_mode_y_texture_index,
+            scalar_min, scalar_max, opacity, tube_segment_length, tube_max_segments);       
         this.sceneWrapper.updateBodies();
         this.sceneWrapper.updateClickedPosition();     
         this.sceneWrapper.updateTexturedPlane();

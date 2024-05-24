@@ -39,6 +39,8 @@ class SimulationParameters {
         this.rendering_specialized_mode = Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE;
         this.rendering_raw_mode = Constants.OFFSCREEN_RENDERER_GRAVITATIONAL_FORCE;
         this.rendering_raw_mode_layer = 0;
+        this.rendering_raw_mode_x_texture_index = 0;
+        this.rendering_raw_mode_y_texture_index = 0;
 
         this.scalar_min = 0.0;
         this.scalar_max = 1.0;

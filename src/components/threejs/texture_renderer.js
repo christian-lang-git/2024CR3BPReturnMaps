@@ -122,6 +122,8 @@ class TextureRenderer {
             int x_pixel_total = int(round(x_frac * (2.0*planeDimensionsPixel.x-1.0)));//TODO: const 2.0
             int y_pixel_total = int(round(y_frac * (2.0*planeDimensionsPixel.y-1.0)));//TODO: const 2.0
 
+            int x_offset = rendering_raw_mode_x_texture_index * int(planeDimensionsPixel.x);
+            int y_offset = rendering_raw_mode_y_texture_index * int(planeDimensionsPixel.y);
 
             ivec3 pointer;
             vec4 data;
@@ -131,7 +133,7 @@ class TextureRenderer {
                     RenderSpecializedMode(x_frac, y_frac);
                     break;
                 case 1://raw texture output of virtual texture
-                    pointer = ivec3(x_pixel, y_pixel, rendering_raw_mode_layer);
+                    pointer = ivec3(x_pixel+x_offset, y_pixel+y_offset, rendering_raw_mode_layer);
                     data = texelFetch(displayedTexture, pointer, 0);
                     outputColor = vec4(data.x, data.y, data.z, data.a);
                     break;
@@ -394,6 +396,8 @@ class TextureRenderer {
         this.uniforms["rendering_texture_mode"] = { type: 'int', value: parseInt(Constants.TEXTURE_MODE_SPECIALIZED)};      
         this.uniforms["rendering_specialized_mode"] = { type: 'int', value: parseInt(Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE)};    
         this.uniforms["rendering_raw_mode_layer"] = { type: 'int', value: 0};    
+        this.uniforms["rendering_raw_mode_x_texture_index"] = { type: 'int', value: 0};    
+        this.uniforms["rendering_raw_mode_y_texture_index"] = { type: 'int', value: 0};            
         
         this.uniforms["scalar_min"] = { type: 'float', value: 0.0};
         this.uniforms["scalar_max"] = { type: 'float', value: 1.0};
@@ -408,6 +412,8 @@ class TextureRenderer {
         this.textured_plane_mesh.material.uniforms.rendering_texture_mode.value = this.simulationParameters.rendering_texture_mode;
         this.textured_plane_mesh.material.uniforms.rendering_specialized_mode.value = this.simulationParameters.rendering_specialized_mode;
         this.textured_plane_mesh.material.uniforms.rendering_raw_mode_layer.value = this.simulationParameters.rendering_raw_mode_layer;
+        this.textured_plane_mesh.material.uniforms.rendering_raw_mode_x_texture_index.value = this.simulationParameters.rendering_raw_mode_x_texture_index;
+        this.textured_plane_mesh.material.uniforms.rendering_raw_mode_y_texture_index.value = this.simulationParameters.rendering_raw_mode_y_texture_index;
         this.textured_plane_mesh.material.uniforms.scalar_min.value = this.simulationParameters.scalar_min;
         this.textured_plane_mesh.material.uniforms.scalar_max.value = this.simulationParameters.scalar_max;
         this.textured_plane_mesh.material.uniforms.opacity.value = this.simulationParameters.opacity;        

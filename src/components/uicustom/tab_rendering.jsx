@@ -39,7 +39,10 @@ class TabRendering extends Component {
             || uiState.UI_STATE_RENDERING_TEXTURE_MODE === Constants.TEXTURE_MODE_RAW_VIRTUAL;
     };
 
-
+    shouldRenderRawModeVirtual = () => {
+        const { uiState } = this.context;
+        return uiState.UI_STATE_RENDERING_TEXTURE_MODE === Constants.TEXTURE_MODE_RAW_VIRTUAL;
+    };
 
     render() {
         return (
@@ -65,6 +68,18 @@ class TabRendering extends Component {
                                         <LabeledField
                                             name="UI_STATE_RENDERING_RAW_MODE_LAYER"
                                             labelText={"layer"}
+                                        />
+                                    </div>
+                                    )}
+                                    {this.shouldRenderRawModeVirtual() && (
+                                    <div className="grid grid-cols-2">
+                                        <LabeledField
+                                            name="UI_STATE_RENDERING_RAW_MODE_X_TEXTURE_INDEX"
+                                            labelText={"x texture index"}
+                                        />
+                                        <LabeledField
+                                            name="UI_STATE_RENDERING_RAW_MODE_Y_TEXTURE_INDEX"
+                                            labelText={"y texture index"}
                                         />
                                     </div>
                                     )}
