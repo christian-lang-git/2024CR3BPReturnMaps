@@ -53,7 +53,7 @@ class ThreeContainer extends Component {
 
     initializeCamera() {
         this.camera = new THREE.PerspectiveCamera(75, 1.0, 0.01, 100);
-        this.camera.position.z = 5;
+        this.camera.position.z = 11;
         this.scene.add(this.camera);
     }
 
