@@ -193,7 +193,8 @@ class OffscreenRenderer {
 
     fragmentShader() {
         return "" +
-            this.getUniformsString() +
+            this.getUniformsString() + "\n" +
+            this.fragmentShaderAdditionalMethodDeclarations() +
             `
         varying vec3 vUv;
 
@@ -221,7 +222,7 @@ class OffscreenRenderer {
             `
         }    
         `
-            ;
+        + this.fragmentShaderAdditionalMethodDefinitions();
     }
 
     /**
@@ -316,6 +317,14 @@ class OffscreenRenderer {
 
     setAdditionalUniforms() {
 
+    }
+
+    fragmentShaderAdditionalMethodDeclarations(){
+        return "";
+    }
+
+    fragmentShaderAdditionalMethodDefinitions(){
+        return "";
     }
 
 }

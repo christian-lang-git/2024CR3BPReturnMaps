@@ -11,7 +11,7 @@ class SimulationParameters {
         this.seed_energy = 0.25;//used to calculate seed velocity (varies with position)
 
         //RK4
-        this.steps = 15000;
+        this.max_steps = 15000;
         this.step_size = 0.001;
         this.termination_method = Constants.TERMINATION_METHOD_FIRST_RETURN;
 

@@ -209,8 +209,13 @@ class SceneWrapperVisualization {
         if (intersects.length > 0) {
             //console.log("plane intersection", intersects[0].point);
             this.clicked_mesh.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+
+            var dir_x = this.simulationParameters.seed_direction_x;
+            var dir_y = this.simulationParameters.seed_direction_y;
+            var dir_z = this.simulationParameters.seed_direction_z;
+            var energy = this.simulationParameters.seed_energy;
             
-            this.streamlineGenerator.recalculateStreamline(0, intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+            this.streamlineGenerator.recalculateStreamline(0, intersects[0].point.x, intersects[0].point.y, intersects[0].point.z, dir_x, dir_y, dir_z, energy);
 
             if(this.streamlineGenerator.list_streamlines[0].list_point_data_returns.length > 0){
                 var point_data = this.streamlineGenerator.list_streamlines[0].list_point_data_returns[0];
@@ -353,6 +358,12 @@ class SceneWrapperVisualization {
                 break;
             case Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE_MAGNITUDE:
                 offscreenRenderer = this.offscreenRendererGravitationalForce;
+                break;
+            case Constants.TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_ADVECTION_TIME:
+                offscreenRenderer = this.offscreenRendererSeedsAndReturns;
+                break;
+            case Constants.TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_ARC_LENGTH:
+                offscreenRenderer = this.offscreenRendererSeedsAndReturns;
                 break;
             default:
                 console.error("Error: Unknown rendering_specialized_mode", this.simulationParameters.rendering_specialized_mode);

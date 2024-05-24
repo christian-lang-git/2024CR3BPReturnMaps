@@ -55,6 +55,8 @@ class Streamline {
         vec3.copy(current_position_data.direction, this.seed_direction);
         this.list_point_data.push(current_position_data);
 
+        console.warn("SEED DIRECTION: ", this.seed_direction);
+
 
         var difference = vec3.create();//current - previous positions, calculated from k values
         var k1 = vec3.create();
@@ -86,12 +88,12 @@ class Streamline {
         var current_plus_l2_2 = vec3.create();
         var current_plus_l3 = vec3.create();
 
-        var steps = this.streamline_generator.simulationParameters.steps;
+        var max_steps = this.streamline_generator.simulationParameters.max_steps;
         var step_size = this.streamline_generator.simulationParameters.step_size;
         var termination_method = this.streamline_generator.simulationParameters.termination_method;
         var isOnPositiveZ = this.seed_direction[2] >= 0;
 
-        for (var i = 0; i < steps; i++) {
+        for (var i = 0; i < max_steps; i++) {
             //reference to the current position (result from last iteration)
             var current_position = current_position_data.position;
             var current_direction = current_position_data.direction;
@@ -166,7 +168,7 @@ class Streamline {
                 if(next_position_data.position[2] < 0){
                     isOnPositiveZ = false;
                     termination_method -= 1;
-                    this.list_point_data_returns.push(next_position_data);
+                    this.list_point_data_returns.push(current_position_data);
                     if(termination_method == 0){//termination_method starts at 0 for unlimited --> -1
                         return;//stop early
                     }
@@ -176,7 +178,7 @@ class Streamline {
                 if(next_position_data.position[2] > 0){
                     isOnPositiveZ = true;
                     termination_method -= 1;
-                    this.list_point_data_returns.push(next_position_data);
+                    this.list_point_data_returns.push(current_position_data);
                     if(termination_method == 0){//termination_method starts at 0 for unlimited --> -1
                         return;//stop early
                     }
@@ -228,14 +230,18 @@ class StreamlineGenerator {
         this.list_streamlines.push(streamline);
     }
 
-    recalculateStreamline(index, x, y, z) {
+    recalculateStreamline(index, x, y, z, dir_x, dir_y, dir_z, energy) {
         var streamline = this.list_streamlines[index];
         if(streamline.existsInScene){
             this.scene.remove(streamline.mesh);
         }
 
+        var seed_direction = vec3.fromValues(dir_x, dir_y, dir_z);
+        vec3.normalize(seed_direction, seed_direction);
+        vec3.scale(seed_direction, seed_direction, energy);
 
         streamline.setSeedPosition(vec3.fromValues(x, y, z));
+        streamline.setSeedDirection(seed_direction);
         streamline.calculate();
         streamline.build();
 

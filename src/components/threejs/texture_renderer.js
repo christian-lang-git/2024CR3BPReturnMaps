@@ -152,12 +152,15 @@ class TextureRenderer {
             int z_layer = 0;
             int component = 0;
             outputColor = vec4(1.0, 0.0, 1.0, 1.0);
+
+            float scalar;
+            vec4 data;
             switch (rendering_specialized_mode) {
                 case 0://gravitational force (normal)
                     x_virtual = 0;
                     y_virtual = 0;
                     z_layer = 0;
-                    vec4 data = InterpolateVec4(x_frac, y_frac, x_virtual, y_virtual, z_layer);
+                    data = InterpolateVec4(x_frac, y_frac, x_virtual, y_virtual, z_layer);
                     outputColor = vec4(normalMappingVec2(vec2(data.x, data.y)), opacity);
                     break;
                 case 1://gravitational force (magnitude)
@@ -165,8 +168,46 @@ class TextureRenderer {
                     y_virtual = 0;
                     z_layer = 0;
                     component = 3;
-                    float value = InterpolateScalar(x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
-                    outputColor = vec4(mapScalarToColor(value), opacity);
+                    scalar = InterpolateScalar(x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
+                    outputColor = vec4(mapScalarToColor(scalar), opacity);
+                    break;
+                case 2://TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_ADVECTION_TIME
+                    int x_pixel = int(round(x_frac * (planeDimensionsPixel.x-1.0)));
+                    int y_pixel = int(round(y_frac * (planeDimensionsPixel.y-1.0)));
+                    x_virtual = 0;
+                    y_virtual = 1;
+                    z_layer = 1;
+                    component = 1;
+                    scalar = InterpolateScalar(x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
+                    outputColor = vec4(mapScalarToColor(scalar), opacity);
+                    //outputColor = vec4(scalar, 0.0, 0.0, opacity);
+
+                    //ivec3 pointer = ivec3(x_pixel, y_pixel, rendering_raw_mode_layer);
+                    //data = texelFetch(displayedTexture, pointer, 0);
+                    //outputColor = vec4(data.x, data.y, data.z, data.a);
+
+                    //if(scalar < 10.0){                        
+                    //    outputColor = vec4(1.0, 0.0, 0.0, 1.0);
+                    //}
+                    break;
+                case 3://TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_ARC_LENGTH
+                    //int x_pixel = int(round(x_frac * (planeDimensionsPixel.x-1.0)));
+                    //int y_pixel = int(round(y_frac * (planeDimensionsPixel.y-1.0)));
+                    x_virtual = 0;
+                    y_virtual = 1;
+                    z_layer = 1;
+                    component = 2;
+                    scalar = InterpolateScalar(x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
+                    outputColor = vec4(mapScalarToColor(scalar), opacity);
+                    //outputColor = vec4(scalar, 0.0, 0.0, opacity);
+
+                    //ivec3 pointer = ivec3(x_pixel, y_pixel, rendering_raw_mode_layer);
+                    //data = texelFetch(displayedTexture, pointer, 0);
+                    //outputColor = vec4(data.x, data.y, data.z, data.a);
+
+                    //if(scalar < 10.0){                        
+                    //    outputColor = vec4(1.0, 0.0, 0.0, 1.0);
+                    //}
                     break;
             }
         }

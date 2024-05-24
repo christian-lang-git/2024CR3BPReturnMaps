@@ -46,7 +46,7 @@ class OffscreenRendererSeedsAndReturns extends OffscreenRenderer {
 
     fragmentShaderMethodComputation() {
         return `
-            ivec3 pointer = ivec3(int(x_pixel), int(y_pixel), 0);
+            ivec3 pointer = ivec3(int(floor(x_pixel)), int(floor(y_pixel)), 0);
             outputColor = texelFetch(texture_input, pointer, 0);       
             //outputColor = vec4(1.0, 0.0, 0.0, 1.0);      
         `

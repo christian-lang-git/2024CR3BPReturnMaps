@@ -45,50 +45,181 @@ class OffscreenRendererFlowMap extends OffscreenRenderer {
 
     addAdditionalUniforms() {
         this.uniforms["texture_seeds_and_returns"] = { type: 'sampler3D', value: this.offscreenRendererSeedsAndReturns.renderTarget.texture};
+        this.uniforms["max_steps"] = { type: 'int', value: 0};
+        this.uniforms["step_size"] = { type: 'float', value: 0};
+        this.uniforms["signum"] = { type: 'float', value: 1.0};//TODO: must be set when switching to forward/backward direction  
+        
+        console.warn("FLOW MAP uniforms", this.uniforms);
     }
 
     setAdditionalUniforms() {
-        this.dummy_plane_mesh.material.uniforms.texture_seeds_and_returns.value = this.offscreenRendererSeedsAndReturns.renderTarget.texture;        
+        this.dummy_plane_mesh.material.uniforms.texture_seeds_and_returns.value = this.offscreenRendererSeedsAndReturns.renderTarget.texture;     
+        this.dummy_plane_mesh.material.uniforms.max_steps.value = this.simulationParameters.max_steps;       
+        this.dummy_plane_mesh.material.uniforms.step_size.value = this.simulationParameters.step_size;       
+ 
     }
 
     fragmentShaderMethodComputation() {
         return `
-            //renaming for convenience
-            float x1 = primary_x;
-            float x2 = secondary_x;
-            float m1 = primary_mass;
-            float m2 = secondary_mass;
 
             ivec3 pointer = ivec3(x_pixel_mod, y_pixel_mod, 0);
-            vec2 seed_position = texelFetch(texture_seeds_and_returns, pointer, target_layer_index-1).xy;
+            vec3 seed_position = texelFetch(texture_seeds_and_returns, pointer, target_layer_index-1).xyz;
             float x = seed_position.x;
             float y = seed_position.y;
-            vec2 primary_position = vec2(x1, 0.0);
-            vec2 secondary_position = vec2(x2, 0.0);
+            float z = seed_position.z;
+            vec3 seed_direction = texelFetch(texture_seeds_and_returns, pointer+ivec3(int(planeDimensionsPixel.x),0,0), target_layer_index-1).xyz;
+            vec4 data3 = texelFetch(texture_seeds_and_returns, pointer+ivec3(0,int(planeDimensionsPixel.y),0), target_layer_index-1);
+            float advection_time = data3.y;
+            float arc_length = data3.z;
 
-            
+            vec3 current_position = seed_position;
+            vec3 current_direction = seed_direction;
+
+            bool success = false;//do we reach the plane intersection
+            float success_float = 0.0;
+            bool isOnPositiveZ = f_direction(current_position, current_direction, signum).z > 0.0;
+
+            for (int i = 0; i < max_steps; i++) {
+
+                //---------- START OF RK4 ----------
+                vec3 k1 = step_size * f_position(current_position, current_direction, signum);
+                vec3 l1 = step_size * f_direction(current_position, current_direction, signum);
+
+                vec3 k2 = step_size * f_position(current_position + k1/2.0, current_direction + l1/2.0, signum);
+                vec3 l2 = step_size * f_direction(current_position + k1/2.0, current_direction + l1/2.0, signum);
+
+                vec3 k3 = step_size * f_position(current_position + k2/2.0, current_direction + l2/2.0, signum);
+                vec3 l3 = step_size * f_direction(current_position + k2/2.0, current_direction + l2/2.0, signum);
+
+                vec3 k4 = step_size * f_position(current_position + k3, current_direction + l3, signum);
+                vec3 l4 = step_size * f_direction(current_position + k3, current_direction + l3, signum);
+
+                //CALCULATE: vec3 next = current + k1 / 6 + k2 / 3 + k3 / 3 + k4 / 6;
+                vec3 add_position = k1 / 6.0 + k2 / 3.0 + k3 / 3.0 + k4 / 6.0;
+                vec3 add_direction = l1 / 6.0 + l2 / 3.0 + l3 / 3.0 + l4 / 6.0;
+                vec3 next_position = current_position + add_position;
+                vec3 next_direction = current_direction + add_direction;
 
 
-            
+                float segment_length = length(add_position);
+                float next_arc_length = arc_length + segment_length;
+                float next_advection_time = advection_time + step_size;
 
-            if(virtual_texture_y == 1){
-                outputColor = vec4(float(virtual_texture_x), float(virtual_texture_y), 0.0, 1.0); 
+                //TODO check alternative termination conditions
+                if(false){
+                    success = false;//we did not reach the plane
+                    break;
+                }
+                
+                //check plane intersection termination condition
+                if(current_position.z > 0.0){
+                    //we are currently at z > 0
+                    if(next_position.z <= 0.0){
+                        success = true;//we did reach the plane
+                        break;
+                    }
+                }
+                if (current_position.z < 0.0){
+                    //we are currently at z < 0
+                    if(next_position.z >= 0.0){
+                        success = true;//we did reach the plane
+                        break;
+                    }
+                }
+
+
+                //set values for next iteration
+                current_position = next_position;
+                current_direction = next_direction;
+                arc_length = next_arc_length;
+                advection_time = next_advection_time;
+            }
+
+
+            if(success){
+                //TODO find better intersection point with either bisection or interpolation
+                success_float = 1.0;
+            }
+
+            if(virtual_texture_y == 0){
+                if(virtual_texture_x == 0){
+                    outputColor = vec4(current_position, 1.0); 
+                    //outputColor = vec4(0.0, current_position.y, 0.0, 1.0); 
+                }
+                else{
+                    outputColor = vec4(current_direction, 1.0); 
+                }
             }
             else{
-                if(x > 0.5){
-                    outputColor = vec4(float(virtual_texture_x), float(virtual_texture_y), 0.0, 1.0); 
-                    outputColor = vec4(1.0, 0.0, 0.0, 1.0); 
+                if(virtual_texture_x == 0){
+                    outputColor = vec4(success_float, advection_time, arc_length, 1.0); 
                 }
-                /*
-                if(x > 0.5){
-                    outputColor = vec4(1.0, 0.0, 0.0, 1.0); 
-                }else{
-                    outputColor = vec4(0.0, 0.0, 1.0, 1.0); 
+                else{
+                    outputColor = vec4(1.0, 0.5, 1.0, 1.0); 
                 }
-                */
             }
-
             
+        `
+    }
+
+    fragmentShaderAdditionalMethodDeclarations(){
+        return `
+        vec3 f_position(vec3 position, vec3 direction, float signum);
+        vec3 f_direction(vec3 position, vec3 direction, float signum);
+        `;
+    }
+
+    fragmentShaderAdditionalMethodDefinitions(){
+        return`
+        vec3 f_position(vec3 position, vec3 direction, float signum) {
+            float n = angular_velocity;
+    
+            float x = position.x;
+            float y = position.y;
+            //float z = position.z;
+    
+            float px = direction.x;
+            float py = direction.y;
+            float pz = direction.z;
+    
+            //equations of motion
+            float u = px + n * y;
+            float v = py - n * x;
+            float w = pz;
+    
+            return vec3(u * signum, v * signum, w * signum);
+        }
+    
+        vec3 f_direction(vec3 position, vec3 direction, float signum) {
+            float n = angular_velocity;
+            
+    
+            float x = position.x;
+            float y = position.y;
+            float z = position.z;
+    
+            float px = direction.x;
+            float py = direction.y;
+            float pz = direction.z;
+    
+            //helper variables
+            float muplusx = mu + x;
+            float muminusone = mu - 1.0;
+            float muplusxminusone = muplusx - 1.0;
+            float left_denominator = pow((muplusxminusone * muplusxminusone + y * y + z * z), (3.0 / 2.0));
+            float right_denominator = pow((muplusx * muplusx + y * y + z * z), (3.0 / 2.0));
+    
+            float dphi_dx = (mu * muplusxminusone) / left_denominator - (muminusone * muplusx) / right_denominator;
+            float dphi_dy = (mu * y) / left_denominator - (muminusone * y) / right_denominator;
+            float dphi_dz = (mu * z) / left_denominator - (muminusone * z) / right_denominator;
+    
+            //equations of motion
+            float u = n * py - dphi_dx;
+            float v = -n * px - dphi_dy;
+            float w = - dphi_dz;
+    
+            return vec3(u * signum, v * signum, w * signum);
+        }
         `
     }
 
