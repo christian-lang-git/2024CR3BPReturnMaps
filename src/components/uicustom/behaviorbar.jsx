@@ -8,7 +8,7 @@ import {
     Move
 } from "lucide-react"
 
-class ActionsPanel extends Component {
+class BehaviorBar extends Component {
 
     static contextType = AppContext;
     handleToggleChange = (newValue) => {
@@ -40,4 +40,4 @@ class ActionsPanel extends Component {
 
 }
 
-export default ActionsPanel
+export default BehaviorBar

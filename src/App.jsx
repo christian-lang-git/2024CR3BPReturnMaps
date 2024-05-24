@@ -11,7 +11,7 @@ import {
 
 import { useState } from 'react'
 import { AppProvider } from '@/components/uicustom/AppContext'
-import ActionsPanel from "./components/uicustom/actionspanel";
+import BehaviorBar from "./components/uicustom/behaviorbar";
 
 function App() {
 
@@ -36,7 +36,7 @@ function App() {
                             <ResizableHandle />
                             <ResizablePanel defaultSize={25}>
                                 <div className="flex items-center justify-center p-2">
-                                    <ActionsPanel />
+                                    <BehaviorBar />
                                 </div>
                             </ResizablePanel>
                         </ResizablePanelGroup>
