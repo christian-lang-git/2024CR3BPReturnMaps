@@ -162,6 +162,7 @@ class ThreeContainer extends Component {
         this.sceneWrapper.updateBodies();
         this.sceneWrapper.updateClickedPosition();     
         this.sceneWrapper.updateTexturedPlane();
+        this.sceneWrapper.updateAxes();
     }
 
     updateParametersData() {

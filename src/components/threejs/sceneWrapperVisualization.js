@@ -89,7 +89,7 @@ class SceneWrapperVisualization {
         var radius = 0.02;
         var cone_radius_factor = 5.0;
         var cone_fraction = 0.05;
-        this.objectAxes = new ObjectAxes(position, length, radius, cone_radius_factor, cone_fraction);
+        this.objectAxes = new ObjectAxes(position, length, length, length, radius, cone_radius_factor, cone_fraction);
         this.objectAxes.addToScene(this.scene);
     }
 
@@ -333,6 +333,11 @@ class SceneWrapperVisualization {
         this.textureRenderer.updateTransform(pos_x, pos_y, scale_x, scale_y);
         this.changeDisplayedTexture();
         this.textureRenderer.updateTexturedPlane();
+    }
+
+    updateAxes(){
+
+        this.objectAxes.rebuild(this.scene, this.simulationParameters);
     }
 
     changeDisplayedTexture(){
