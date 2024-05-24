@@ -249,6 +249,28 @@ class StreamlineGenerator {
         streamline.existsInScene = true;
     }
 
+    recalculateStreamlineWithLastParameters(index) {
+        var streamline = this.list_streamlines[index];
+        if(streamline.existsInScene){
+            this.scene.remove(streamline.mesh);
+            streamline.calculate();
+            streamline.build();
+    
+            this.scene.add(streamline.mesh);
+            streamline.existsInScene = true;
+        }
+    }
+
+    updateStreamlineModel(index) {
+        var streamline = this.list_streamlines[index];
+        if(streamline.existsInScene){
+            this.scene.remove(streamline.mesh);
+            streamline.build();
+            this.scene.add(streamline.mesh);
+            streamline.existsInScene = true;
+        }   
+    }
+
     f(position, signum) {
         var PI = 3.1415926535897932384626433832795;
 
