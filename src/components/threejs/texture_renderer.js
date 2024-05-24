@@ -109,6 +109,7 @@ class TextureRenderer {
         vec4 InterpolateVec4(float x_frac, float y_frac, int x_virtual, int y_virtual, int z_layer);
         vec3 mapScalarToColor(float scalar);
         vec3 normalMappingVec2(vec2 vector);
+        vec3 normalMappingVec3(vec3 vector);
 
         void main() {
 
@@ -157,6 +158,7 @@ class TextureRenderer {
 
             float scalar;
             vec4 data;
+            vec4 data_seeds;
             switch (rendering_specialized_mode) {
                 case 0://gravitational force (normal)
                     x_virtual = 0;
@@ -211,7 +213,40 @@ class TextureRenderer {
                     //    outputColor = vec4(1.0, 0.0, 0.0, 1.0);
                     //}
                     break;
+                case 4://TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_POSITION
+                    x_virtual = 0;
+                    y_virtual = 0;
+                    z_layer = 1;
+                    data = InterpolateVec4(x_frac, y_frac, x_virtual, y_virtual, z_layer);
+                    //outputColor = vec4(normalMappingVec2(data.xy), opacity);
+                    outputColor = vec4(normalMappingVec3(data.xyz), opacity);
+                    break;
+                case 5://TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_POSITION_RELATIVE
+                    x_virtual = 0;
+                    y_virtual = 0;
+                    z_layer = 1;
+                    data = InterpolateVec4(x_frac, y_frac, x_virtual, y_virtual, z_layer);
+                    data_seeds = InterpolateVec4(x_frac, y_frac, x_virtual, y_virtual, z_layer-1);
+                    outputColor = vec4(normalMappingVec3(data.xyz - data_seeds.xyz), opacity);
+                    break;
+                case 6://TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_POSITION_RELATIVE_MAGNITUDE
+                    x_virtual = 0;
+                    y_virtual = 0;
+                    z_layer = 1;
+                    data = InterpolateVec4(x_frac, y_frac, x_virtual, y_virtual, z_layer);
+                    data_seeds = InterpolateVec4(x_frac, y_frac, x_virtual, y_virtual, z_layer-1);
+                    float magnitude = length(data.xyz - data_seeds.xyz);
+                    outputColor = vec4(mapScalarToColor(magnitude), opacity);
+                    break;                    
+                case 7://TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_DIRECTION
+                    x_virtual = 1;
+                    y_virtual = 0;
+                    z_layer = 1;
+                    data = InterpolateVec4(x_frac, y_frac, x_virtual, y_virtual, z_layer);
+                    outputColor = vec4(normalMappingVec3(data.xyz), opacity);
+                    break;
             }
+
         }
 
         // x_virtual, y_virtual: which virtual texture is used?
@@ -299,6 +334,14 @@ class TextureRenderer {
             vec2 mapped = 0.5 * normal + 0.5;
 
             return vec3(mapped.x, mapped.y, 0.0);
+        }
+
+        vec3 normalMappingVec3(vec3 vector){
+
+            vec3 normal = normalize(vector);
+            vec3 mapped = 0.5 * normal + 0.5;
+
+            return mapped;
         }
 
         `

@@ -153,7 +153,7 @@ class OffscreenRenderer {
     }
     
     copyTextureToLayer(texture_input, targetLayerIndex){
-        console.warn("texture_input", texture_input);
+        //console.warn("texture_input", texture_input);
         this.dummy_plane_mesh.material.uniforms.texture_input.value = texture_input;      
         this.dummy_plane_mesh.material.uniforms.target_layer_index.value = targetLayerIndex;
         this.renderer.setRenderTarget(this.renderTarget, targetLayerIndex);

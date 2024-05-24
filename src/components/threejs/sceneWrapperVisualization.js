@@ -365,6 +365,18 @@ class SceneWrapperVisualization {
             case Constants.TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_ARC_LENGTH:
                 offscreenRenderer = this.offscreenRendererSeedsAndReturns;
                 break;
+            case Constants.TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_POSITION:
+                offscreenRenderer = this.offscreenRendererSeedsAndReturns;
+                break;
+            case Constants.TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_POSITION_RELATIVE:
+                offscreenRenderer = this.offscreenRendererSeedsAndReturns;
+                break;
+            case Constants.TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_POSITION_RELATIVE_MAGNITUDE:
+                offscreenRenderer = this.offscreenRendererSeedsAndReturns;
+                break;
+            case Constants.TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_DIRECTION:
+                offscreenRenderer = this.offscreenRendererSeedsAndReturns;
+                break;
             default:
                 console.error("Error: Unknown rendering_specialized_mode", this.simulationParameters.rendering_specialized_mode);
                 break;
