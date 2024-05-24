@@ -26,6 +26,8 @@ class ThreeContainer extends Component {
         this.updateCanvasSize();
         this.updateControls();
         this.updateParameters();
+        this.computeStuff();
+        this.updateVisualElements();
         this.renderLoop();
     }
 
@@ -100,11 +102,14 @@ class ThreeContainer extends Component {
     handleEventDataUpdate = () => {
         console.log("handleEventDataUpdate");
         this.updateParametersData();
+        this.computeStuff();
+        this.updateVisualElements();
     }
 
     handleEventRenderingUpdate = () => {
         console.log("handleEventRenderingUpdate");
         this.updateParametersRendering();
+        this.updateVisualElements();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -149,6 +154,16 @@ class ThreeContainer extends Component {
         this.updateParametersActiveBehavior();
     }
 
+    computeStuff(){
+        this.sceneWrapper.computeStuff();
+    }
+
+    updateVisualElements(){
+        this.sceneWrapper.updateBodies();
+        this.sceneWrapper.updateClickedPosition();     
+        this.sceneWrapper.updateTexturedPlane();
+    }
+
     updateParametersData() {
         const { uiState } = this.context;
         var mu = uiState.UI_STATE_DATA_PHYSICS_MU;
@@ -169,9 +184,6 @@ class ThreeContainer extends Component {
         var domain_pixels_y = uiState.UI_STATE_DATA_DOMAIN_PIXELS_Y;
 
         this.sceneWrapper.updateParametersData(mu, angular_velocity, seed_energy, seed_direction_x, seed_direction_y, seed_direction_z, step_size, termination_method, domain_min_x, domain_max_x, domain_pixels_x, domain_min_y, domain_max_y, domain_pixels_y);
-        
-        this.sceneWrapper.updateBodies();
-        this.sceneWrapper.updateTexturedPlane();
     }
 
     updateParametersRendering(){
@@ -195,9 +207,6 @@ class ThreeContainer extends Component {
             rendering_texture_mode, rendering_specialized_mode, rendering_raw_mode, 
             rendering_raw_mode_layer, rendering_raw_mode_x_texture_index, rendering_raw_mode_y_texture_index,
             scalar_min, scalar_max, opacity, tube_segment_length, tube_max_segments);       
-        this.sceneWrapper.updateBodies();
-        this.sceneWrapper.updateClickedPosition();     
-        this.sceneWrapper.updateTexturedPlane();
     }
 
     updateParametersActiveBehavior() {
