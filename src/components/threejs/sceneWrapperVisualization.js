@@ -94,7 +94,7 @@ class SceneWrapperVisualization {
     }
 
     initializePlane() {
-        this.plane_geometry = new THREE.PlaneGeometry(8, 8);
+        this.plane_geometry = new THREE.PlaneGeometry(256, 256);
         this.plane_material = new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide });
         this.plane_material.transparent = true;
         this.plane_material.opacity = 0.5;
