@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import * as THREE from "three";
-import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+//import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
 
 import Emitter from '../utility/emitter';
 import * as Constants from "../utility/constants";
@@ -72,6 +73,7 @@ class ThreeContainer extends Component {
         Emitter.on(Constants.EVENT_DATA_UPDATE, this.handleEventDataUpdate);
         Emitter.on(Constants.EVENT_CAMERA_UPDATE, this.handleEventCameraUpdate);
         Emitter.on(Constants.EVENT_RENDERING_UPDATE, this.handleEventRenderingUpdate);
+        Emitter.on(Constants.EVENT_ALIGN_CAMERA, this.handleEventAlignCamera);        
     }
 
 
@@ -110,6 +112,11 @@ class ThreeContainer extends Component {
         console.log("handleEventRenderingUpdate");
         this.updateParametersRendering();
         this.updateVisualElements();
+    }
+
+    handleEventAlignCamera = () => {
+        console.log("handleEventAlignCamera");
+        this.alignCameraWithDomain();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -218,10 +225,8 @@ class ThreeContainer extends Component {
     }
 
     alignCameraWithDomain(){
-        this.camera.position.set(0, 0, 11);
-        this.camera.up.set(0, 1, 0);
-        this.camera.rotation.set(0, 0, 0);
-        this.controls.reset();
+        this.sceneWrapper.alignCameraWithDomain(this.camera, this.controls);
+        console.log(this.camera.position)
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

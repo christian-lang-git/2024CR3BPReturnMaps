@@ -336,8 +336,22 @@ class SceneWrapperVisualization {
     }
 
     updateAxes(){
-
         this.objectAxes.rebuild(this.scene, this.simulationParameters);
+    }
+
+    alignCameraWithDomain(camera, controls){
+        var min_x = this.simulationParameters.domain_min_x;
+        var min_y = this.simulationParameters.domain_min_y;
+        var max_x = this.simulationParameters.domain_max_x;
+        var max_y = this.simulationParameters.domain_max_y;
+
+        var x = 0.5 * (min_x + max_x);
+        var y = 0.5 * (min_y + max_y);
+
+        camera.position.set(x, y, 11);
+        controls.target.set(x, y, 0);
+        camera.up.set(0, 1, 0);
+        console.log(camera.position);
     }
 
     changeDisplayedTexture(){
