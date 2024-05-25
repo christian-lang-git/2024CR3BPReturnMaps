@@ -62,22 +62,32 @@ class OffscreenRendererFlowMap extends OffscreenRenderer {
     fragmentShaderMethodComputation() {
         return `
 
-            ivec3 pointer = ivec3(x_pixel_mod, y_pixel_mod, 0);
-            vec3 seed_position = texelFetch(texture_seeds_and_returns, pointer, target_layer_index-1).xyz;
+            ivec3 pointer = ivec3(x_pixel_mod, y_pixel_mod, target_layer_index-1);
+            vec3 seed_position = texelFetch(texture_seeds_and_returns, pointer, 0).xyz;
             float x = seed_position.x;
             float y = seed_position.y;
             float z = seed_position.z;
-            vec3 seed_direction = texelFetch(texture_seeds_and_returns, pointer+ivec3(int(planeDimensionsPixel.x),0,0), target_layer_index-1).xyz;
-            vec4 data3 = texelFetch(texture_seeds_and_returns, pointer+ivec3(0,int(planeDimensionsPixel.y),0), target_layer_index-1);
+            vec3 seed_direction = texelFetch(texture_seeds_and_returns, pointer+ivec3(int(planeDimensionsPixel.x),0,0), 0).xyz;
+            vec4 data3 = texelFetch(texture_seeds_and_returns, pointer+ivec3(0,int(planeDimensionsPixel.y),0),0);
+            float old_success_float = data3.x;
             float advection_time = data3.y;
             float arc_length = data3.z;
 
             vec3 current_position = seed_position;
+            current_position.z = 0.0;
             vec3 current_direction = seed_direction;
 
             bool success = false;//do we reach the plane intersection
             float success_float = 0.0;
             bool isOnPositiveZ = f_direction(current_position, current_direction, signum).z > 0.0;
+
+            if(target_layer_index > 1){
+                //this is not the first return --> only continue if previous was success
+                if(old_success_float < 0.5){
+                    outputColor = vec4(0.0, 0.0, 0.0, 1.0); 
+                    return;
+                }            
+            }
 
             for (int i = 0; i < max_steps; i++) {
 

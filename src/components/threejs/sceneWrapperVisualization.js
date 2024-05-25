@@ -293,6 +293,8 @@ class SceneWrapperVisualization {
         this.offscreenRendererFlowMap.updateTexturedPlane();
         this.offscreenRendererFlowMap.computeTargetLayerAt0(1);
         this.offscreenRendererSeedsAndReturns.copyTextureToLayer(this.offscreenRendererFlowMap.renderTarget.texture, 1);
+        this.offscreenRendererFlowMap.computeTargetLayerAt0(2);
+        this.offscreenRendererSeedsAndReturns.copyTextureToLayer(this.offscreenRendererFlowMap.renderTarget.texture, 2);
 
         this.offscreenRendererGravitationalForce.updateTexturedPlane();
         this.offscreenRendererGravitationalForce.compute();
