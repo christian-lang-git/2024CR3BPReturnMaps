@@ -32,6 +32,7 @@ class SimulationParameters {
         this.tube_num_segments = 20000;
         this.tube_segment_length = 0.001;
         this.tube_max_segments = 10000;
+        this.tube_only_show_successful_returns = true;
 
         this.activeBehavior = Constants.BEHAVIOR_CONTROL_CAMERA;
         this.activeBehaviorLastFrame = Constants.BEHAVIOR_CONTROL_CAMERA;

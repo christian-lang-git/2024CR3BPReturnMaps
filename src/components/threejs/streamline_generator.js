@@ -368,7 +368,7 @@ class MultipleReturnsStreamline {
             }
             var conditio_success = i < this.number_success;
             var condition_computed = i < this.number_computed;
-            var condition = condition_computed;//TODO switch condition depending on parameter
+            var condition = this.simulationParameters.tube_only_show_successful_returns ? conditio_success : condition_computed;
             if (condition){
                 streamline.build();
                 this.scene.add(streamline.mesh);

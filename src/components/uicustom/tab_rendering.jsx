@@ -12,6 +12,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Emitter from "@/components/utility/emitter";
 import * as Constants from "@/components/utility/constants";
 import LabeledField from "@/components/uicustom/labeledfield";
+import LabeledCheckbox from "@/components/uicustom/labeledcheckbox";
 import { Input } from "@/components/ui/input"
 import LabeledSelectTextureMode from './labeledSelectTextureMode';
 import LabeledSelectSpecializedMode from './labeledSelectSpecializedMode';
@@ -145,6 +146,10 @@ class TabRendering extends Component {
                                             labelText={"max segments"}
                                         />
                                     </div>
+                                    <LabeledCheckbox
+                                        name="UI_STATE_RENDERING_TUBE_ONLY_SHOW_SUCCESSFUL_RETURNS"
+                                        labelText={"only show successful returns"}
+                                    />
                                 </AccordionContent>
                             </AccordionItem>
                         </Accordion>
