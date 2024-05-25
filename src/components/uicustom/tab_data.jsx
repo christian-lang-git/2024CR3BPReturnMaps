@@ -77,12 +77,16 @@ class TabData extends Component {
                             <AccordionItem value="integration">
                                 <AccordionTrigger>Integration</AccordionTrigger>
                                 <AccordionContent>
+                                    <div className="grid grid-cols-2">
                                     <LabeledField
                                         name="UI_STATE_DATA_INTEGRATION_STEP_SIZE"
                                         labelText={"step size"}
                                     />
-                                </AccordionContent>
-                                <AccordionContent>
+                                    <LabeledField
+                                        name="UI_STATE_DATA_INTEGRATION_MAX_STEPS"
+                                        labelText={"max steps"}
+                                    />
+                                    </div>    
                                     <LabeledSelectTerminationMethod/>
                                 </AccordionContent>
                             </AccordionItem>
