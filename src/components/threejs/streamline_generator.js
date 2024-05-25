@@ -15,11 +15,14 @@ class PointData {
 }
 
 class Streamline {
-    constructor(streamline_generator) {
+    constructor(streamline_generator, multi) {
         console.log("Streamline: initialize");
         this.streamline_generator = streamline_generator;
+        this.simulationParameters = streamline_generator.simulationParameters;
+        this.scene = streamline_generator.scene;
+        this.multi = multi;
+
         this.list_point_data = [];
-        this.list_point_data_returns = [];
         this.path = null;
         this.signum = 1;
         this.arc_length = 0;
@@ -42,12 +45,54 @@ class Streamline {
     setSeedDirection(direction) {
         vec3.copy(this.seed_direction, direction);
     }
+    /*
+    recalculate(x, y, z, dir_x, dir_y, dir_z, energy) {
+        if(this.existsInScene){
+            this.scene.remove(this.mesh);
+        }
+
+        var seed_direction = vec3.fromValues(dir_x, dir_y, dir_z);
+        vec3.normalize(seed_direction, seed_direction);
+        vec3.scale(seed_direction, seed_direction, energy);
+
+        this.setSeedPosition(vec3.fromValues(x, y, z));
+        this.setSeedDirection(seed_direction);
+        this.calculate();
+        this.build();
+
+        this.scene.add(this.mesh);
+        this.existsInScene = true;
+    }
+    */
+
+    recalculate(x, y, z, dir_x, dir_y, dir_z, energy) {
+        var seed_direction = vec3.fromValues(dir_x, dir_y, dir_z);
+        vec3.normalize(seed_direction, seed_direction);
+        vec3.scale(seed_direction, seed_direction, energy);
+
+        this.setSeedPosition(vec3.fromValues(x, y, z));
+        this.setSeedDirection(seed_direction);
+        this.calculate();
+    }
+
+    recalculateFromOther(other){
+        console.warn("OTHER:", other);
+        var seed_position = vec3.create();
+        var seed_direction = vec3.create();
+        var end_point_data = other.list_point_data[other.list_point_data.length-1];
+        vec3.copy(seed_position, end_point_data.position);
+        vec3.copy(seed_direction, end_point_data.direction);
+
+        this.setSeedPosition(seed_position);
+        this.setSeedDirection(seed_direction);
+        this.calculate();
+    }
 
     calculate() {
         this.list_point_data = [];
-        this.list_point_data_returns = [];
         this.arc_length = 0;
         this.t = 0;
+        this.success = false;
 
         //initial position
         var current_position_data = new PointData();
@@ -163,25 +208,25 @@ class Streamline {
             this.arc_length = next_position_data.arc_length;
 
             //check if there is a plane intersection
-            if(isOnPositiveZ){
+            if (isOnPositiveZ) {
                 //we are currently at z > 0
-                if(next_position_data.position[2] < 0){
+                if (next_position_data.position[2] < 0) {
                     isOnPositiveZ = false;
                     termination_method -= 1;
-                    this.list_point_data_returns.push(current_position_data);
-                    if(termination_method == 0){//termination_method starts at 0 for unlimited --> -1
-                        return;//stop early
-                    }
+                    console.warn("multi a", this.multi);
+                    this.multi.list_point_data_returns.push(current_position_data);
+                    this.success = true;
+                    return;//stop early
                 }
-            }else{
+            } else {
                 //we are currently at z < 0
-                if(next_position_data.position[2] > 0){
+                if (next_position_data.position[2] > 0) {
                     isOnPositiveZ = true;
                     termination_method -= 1;
-                    this.list_point_data_returns.push(current_position_data);
-                    if(termination_method == 0){//termination_method starts at 0 for unlimited --> -1
-                        return;//stop early
-                    }
+                    console.warn("multi b", this.multi);
+                    this.multi.list_point_data_returns.push(current_position_data);
+                    this.success = true;
+                    return;//stop early
                 }
             }
 
@@ -207,11 +252,129 @@ class Streamline {
 
         var tube_segment_length = this.streamline_generator.simulationParameters.tube_segment_length;
         var num_segments = Math.ceil(this.arc_length / tube_segment_length);
-        num_segments = Math.min(num_segments, this.streamline_generator.simulationParameters.tube_max_segments); 
+        num_segments = Math.min(num_segments, this.streamline_generator.simulationParameters.tube_max_segments);
 
         this.geometry = new THREE.TubeGeometry(this.path, num_segments, radius, num_sides, false);
         this.material = new THREE.MeshStandardMaterial({ color: 0xff0000 });
         this.mesh = new THREE.Mesh(this.geometry, this.material);
+    }
+}
+
+class MultipleReturnsStreamline {
+
+    constructor(streamline_generator) {
+        console.log("MultipleReturnsStreamline: initialize");
+        this.streamline_generator = streamline_generator;
+        this.simulationParameters = streamline_generator.simulationParameters;
+        this.scene = streamline_generator.scene;
+        this.initialize();
+    }
+
+    initialize() {
+        this.list_streamlines = [];
+        this.list_point_data_returns = [];
+        var streamline = new Streamline(this.streamline_generator, this);
+        this.list_streamlines.push(streamline);
+    }
+
+    recalculateWithLastParameters() {
+        this.recalculateFirstStreamlineWithLastParameters();
+    }
+    /*
+        recalculateFirstStreamlineWithLastParameters() {
+            var streamline = this.list_streamlines[0];
+            if(streamline.existsInScene){
+                this.scene.remove(streamline.mesh);
+                streamline.calculate();
+                streamline.build();
+        
+                this.scene.add(streamline.mesh);
+                streamline.existsInScene = true;
+            }
+        }
+        */
+
+    recalculateFirstStreamlineWithLastParameters() {
+        this.list_point_data_returns = [];
+        var number_of_returns = this.simulationParameters.termination_method;
+        var index = 0;
+
+        //calculate initial streamline with last parameters
+        var streamline = this.list_streamlines[index];
+        streamline.calculate();
+        number_of_returns -= 1;
+        this.number_success = streamline.success ? 1 : 0;
+        this.number_computed = 1;
+
+        //calculate additional streamlines starting from previous end point
+        while (number_of_returns > 0) {
+            index += 1;
+            var previous = this.list_streamlines[index - 1];
+            if (!previous.success) {
+                break;
+            }
+
+            if(index == this.list_streamlines.length){
+                var new_streamline = new Streamline(this.streamline_generator, this);
+                this.list_streamlines.push(new_streamline);
+            }
+            var streamline = this.list_streamlines[index];
+            streamline.recalculateFromOther(previous);
+            number_of_returns -= 1;
+            this.number_computed += 1;
+            this.number_success += streamline.success ? 1 : 0;
+        }
+    }
+
+    recalculate(x, y, z, dir_x, dir_y, dir_z, energy) {
+        this.list_point_data_returns = [];
+        var number_of_returns = this.simulationParameters.termination_method;
+        var index = 0;
+
+        //calculate initial streamline with new parameters
+        var streamline = this.list_streamlines[index];
+        streamline.recalculate(x, y, z, dir_x, dir_y, dir_z, energy);
+        number_of_returns -= 1;
+        this.number_success = streamline.success ? 1 : 0;
+        this.number_computed = 1;
+
+        //calculate additional streamlines starting from previous end point
+        while (number_of_returns > 0) {
+            index += 1;
+            var previous = this.list_streamlines[index - 1];
+            if (!previous.success) {
+                break;
+            }
+
+            if(index == this.list_streamlines.length){
+                var new_streamline = new Streamline(this.streamline_generator, this);
+                this.list_streamlines.push(new_streamline);
+            }
+            var streamline = this.list_streamlines[index];
+            streamline.recalculateFromOther(previous);
+            number_of_returns -= 1;
+            this.number_computed += 1;
+            this.number_success = streamline.success ? this.number_success+1 : this.number_success;
+        }
+
+    }
+
+    updateStreamlineModels() {
+        console.warn("this.number_success", this.number_success)
+        for (var i = 0; i < this.list_streamlines.length; i++) {
+            var streamline = this.list_streamlines[i];
+            if (streamline.existsInScene) {
+                this.scene.remove(streamline.mesh);
+            }
+            var conditio_success = i < this.number_success;
+            var condition_computed = i < this.number_computed;
+            var condition = condition_computed;//TODO switch condition depending on parameter
+            if (condition){
+                streamline.build();
+                this.scene.add(streamline.mesh);
+                streamline.existsInScene = true;
+            }
+        }
     }
 }
 
@@ -225,67 +388,24 @@ class StreamlineGenerator {
     }
 
     initialize() {
-        this.list_streamlines = [];
-        var streamline = new Streamline(this);
-        this.list_streamlines.push(streamline);
+        this.list_multi = [];
+        var multi = new MultipleReturnsStreamline(this);
+        this.list_multi.push(multi);
     }
 
-    recalculateStreamline(index, x, y, z, dir_x, dir_y, dir_z, energy) {
-        var streamline = this.list_streamlines[index];
-        if(streamline.existsInScene){
-            this.scene.remove(streamline.mesh);
-        }
-
-        var seed_direction = vec3.fromValues(dir_x, dir_y, dir_z);
-        vec3.normalize(seed_direction, seed_direction);
-        vec3.scale(seed_direction, seed_direction, energy);
-
-        streamline.setSeedPosition(vec3.fromValues(x, y, z));
-        streamline.setSeedDirection(seed_direction);
-        streamline.calculate();
-        streamline.build();
-
-        this.scene.add(streamline.mesh);
-        streamline.existsInScene = true;
+    recalculateMulti(index, x, y, z, dir_x, dir_y, dir_z, energy) {
+        console.warn("### recalculateMulti");
+        this.list_multi[index].recalculate(x, y, z, dir_x, dir_y, dir_z, energy);
     }
 
-    recalculateStreamlineWithLastParameters(index) {
-        var streamline = this.list_streamlines[index];
-        if(streamline.existsInScene){
-            this.scene.remove(streamline.mesh);
-            streamline.calculate();
-            streamline.build();
-    
-            this.scene.add(streamline.mesh);
-            streamline.existsInScene = true;
-        }
+    recalculateMultiWithLastParameters(index) {
+        console.warn("### recalculateMultiWithLastParameters");
+        this.list_multi[index].recalculateWithLastParameters();
     }
 
-    updateStreamlineModel(index) {
-        var streamline = this.list_streamlines[index];
-        if(streamline.existsInScene){
-            this.scene.remove(streamline.mesh);
-            streamline.build();
-            this.scene.add(streamline.mesh);
-            streamline.existsInScene = true;
-        }   
-    }
-
-    f(position, signum) {
-        var PI = 3.1415926535897932384626433832795;
-
-        var x1 = position[0];
-        var x2 = position[1];
-        var x3 = position[2];
-
-        var u = 2 * Math.sin(2 * PI * x3);
-        var v = Math.sin(2 * PI * x2) + 2 * Math.cos(2 * PI * x3);
-        var w = Math.cos(2 * PI * x1);
-        var result = vec3.create();
-        result[0] = u * signum;
-        result[1] = v * signum;
-        result[2] = w * signum;
-        return result;
+    updateMultiModel(index) {
+        console.warn("### updateMultiModel");
+        this.list_multi[index].updateStreamlineModels();
     }
 
     f_position(position, direction, signum) {
