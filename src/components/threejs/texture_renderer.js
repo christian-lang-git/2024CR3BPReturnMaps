@@ -175,12 +175,12 @@ class TextureRenderer {
                     scalar = InterpolateScalar(x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
                     outputColor = vec4(mapScalarToColor(scalar), opacity);
                     break;
-                case 2://TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_ADVECTION_TIME
+                case 2://TEXTURE_MODE_SPECIALIZED_RETURN_ADVECTION_TIME
                     int x_pixel = int(round(x_frac * (planeDimensionsPixel.x-1.0)));
                     int y_pixel = int(round(y_frac * (planeDimensionsPixel.y-1.0)));
                     x_virtual = 0;
                     y_virtual = 1;
-                    z_layer = 1;
+                    z_layer = return_layer;
                     component = 1;
                     scalar = InterpolateScalar(x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
                     outputColor = vec4(mapScalarToColor(scalar), opacity);
@@ -194,12 +194,12 @@ class TextureRenderer {
                     //    outputColor = vec4(1.0, 0.0, 0.0, 1.0);
                     //}
                     break;
-                case 3://TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_ARC_LENGTH
+                case 3://TEXTURE_MODE_SPECIALIZED_RETURN_ARC_LENGTH
                     //int x_pixel = int(round(x_frac * (planeDimensionsPixel.x-1.0)));
                     //int y_pixel = int(round(y_frac * (planeDimensionsPixel.y-1.0)));
                     x_virtual = 0;
                     y_virtual = 1;
-                    z_layer = 1;
+                    z_layer = return_layer;
                     component = 2;
                     scalar = InterpolateScalar(x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
                     outputColor = vec4(mapScalarToColor(scalar), opacity);
@@ -213,35 +213,35 @@ class TextureRenderer {
                     //    outputColor = vec4(1.0, 0.0, 0.0, 1.0);
                     //}
                     break;
-                case 4://TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_POSITION
+                case 4://TEXTURE_MODE_SPECIALIZED_RETURN_POSITION
                     x_virtual = 0;
                     y_virtual = 0;
-                    z_layer = 1;
+                    z_layer = return_layer;
                     data = InterpolateVec4(x_frac, y_frac, x_virtual, y_virtual, z_layer);
                     //outputColor = vec4(normalMappingVec2(data.xy), opacity);
                     outputColor = vec4(normalMappingVec3(data.xyz), opacity);
                     break;
-                case 5://TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_POSITION_RELATIVE
+                case 5://TEXTURE_MODE_SPECIALIZED_RETURN_POSITION_RELATIVE
                     x_virtual = 0;
                     y_virtual = 0;
-                    z_layer = 1;
+                    z_layer = return_layer;
                     data = InterpolateVec4(x_frac, y_frac, x_virtual, y_virtual, z_layer);
                     data_seeds = InterpolateVec4(x_frac, y_frac, x_virtual, y_virtual, z_layer-1);
                     outputColor = vec4(normalMappingVec3(data.xyz - data_seeds.xyz), opacity);
                     break;
-                case 6://TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_POSITION_RELATIVE_MAGNITUDE
+                case 6://TEXTURE_MODE_SPECIALIZED_RETURN_POSITION_RELATIVE_MAGNITUDE
                     x_virtual = 0;
                     y_virtual = 0;
-                    z_layer = 1;
+                    z_layer = return_layer;
                     data = InterpolateVec4(x_frac, y_frac, x_virtual, y_virtual, z_layer);
                     data_seeds = InterpolateVec4(x_frac, y_frac, x_virtual, y_virtual, z_layer-1);
                     float magnitude = length(data.xyz - data_seeds.xyz);
                     outputColor = vec4(mapScalarToColor(magnitude), opacity);
                     break;                    
-                case 7://TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_DIRECTION
+                case 7://TEXTURE_MODE_SPECIALIZED_RETURN_DIRECTION
                     x_virtual = 1;
                     y_virtual = 0;
-                    z_layer = 1;
+                    z_layer = return_layer;
                     data = InterpolateVec4(x_frac, y_frac, x_virtual, y_virtual, z_layer);
                     outputColor = vec4(normalMappingVec3(data.xyz), opacity);
                     break;
@@ -437,7 +437,8 @@ class TextureRenderer {
         this.uniforms["displayedTexture"] = { type: 'sampler3D', value: null};
         this.uniforms["colorMapsTexture"] = { type: 'sampler2D', value: null};
         this.uniforms["rendering_texture_mode"] = { type: 'int', value: parseInt(Constants.TEXTURE_MODE_SPECIALIZED)};      
-        this.uniforms["rendering_specialized_mode"] = { type: 'int', value: parseInt(Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE)};    
+        this.uniforms["rendering_specialized_mode"] = { type: 'int', value: parseInt(Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE)};   
+        this.uniforms["return_layer"] = { type: 'int', value: Constants.LAYER_INDEX_FIRST_RETURN};   
         this.uniforms["rendering_raw_mode_layer"] = { type: 'int', value: 0};    
         this.uniforms["rendering_raw_mode_x_texture_index"] = { type: 'int', value: 0};    
         this.uniforms["rendering_raw_mode_y_texture_index"] = { type: 'int', value: 0};            
@@ -454,6 +455,7 @@ class TextureRenderer {
         this.textured_plane_mesh.material.uniforms.colorMapsTexture.value = this.colorMaps.texture;
         this.textured_plane_mesh.material.uniforms.rendering_texture_mode.value = this.simulationParameters.rendering_texture_mode;
         this.textured_plane_mesh.material.uniforms.rendering_specialized_mode.value = this.simulationParameters.rendering_specialized_mode;
+        this.textured_plane_mesh.material.uniforms.return_layer.value = this.simulationParameters.return_layer;
         this.textured_plane_mesh.material.uniforms.rendering_raw_mode_layer.value = this.simulationParameters.rendering_raw_mode_layer;
         this.textured_plane_mesh.material.uniforms.rendering_raw_mode_x_texture_index.value = this.simulationParameters.rendering_raw_mode_x_texture_index;
         this.textured_plane_mesh.material.uniforms.rendering_raw_mode_y_texture_index.value = this.simulationParameters.rendering_raw_mode_y_texture_index;

@@ -243,12 +243,13 @@ class SceneWrapperVisualization {
         this.simulationParameters.domain_pixels_y = parseFloat(domain_pixels_y);
     }
 
-    updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position, rendering_texture_mode, rendering_specialized_mode, rendering_raw_mode, rendering_raw_mode_layer, rendering_raw_mode_x_texture_index, rendering_raw_mode_y_texture_index, scalar_min, scalar_max, opacity, tube_segment_length, tube_max_segments) {
+    updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position, rendering_texture_mode, rendering_specialized_mode, return_number, rendering_raw_mode, rendering_raw_mode_layer, rendering_raw_mode_x_texture_index, rendering_raw_mode_y_texture_index, scalar_min, scalar_max, opacity, tube_segment_length, tube_max_segments) {
         this.simulationParameters.max_radius_bodies = max_radius_bodies;
         this.simulationParameters.radius_center_of_mass = radius_center_of_mass;
         this.simulationParameters.radius_clicked_position = radius_clicked_position;
         this.simulationParameters.rendering_texture_mode = parseInt(rendering_texture_mode);
         this.simulationParameters.rendering_specialized_mode = parseInt(rendering_specialized_mode);
+        this.simulationParameters.return_layer = parseInt(return_number);//currently return layer is equivalent to return number      
         this.simulationParameters.rendering_raw_mode = parseInt(rendering_raw_mode);
         this.simulationParameters.rendering_raw_mode_layer = parseInt(rendering_raw_mode_layer);
         this.simulationParameters.rendering_raw_mode_x_texture_index = parseInt(rendering_raw_mode_x_texture_index);
@@ -362,22 +363,22 @@ class SceneWrapperVisualization {
             case Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE_MAGNITUDE:
                 offscreenRenderer = this.offscreenRendererGravitationalForce;
                 break;
-            case Constants.TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_ADVECTION_TIME:
+            case Constants.TEXTURE_MODE_SPECIALIZED_RETURN_ADVECTION_TIME:
                 offscreenRenderer = this.offscreenRendererSeedsAndReturns;
                 break;
-            case Constants.TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_ARC_LENGTH:
+            case Constants.TEXTURE_MODE_SPECIALIZED_RETURN_ARC_LENGTH:
                 offscreenRenderer = this.offscreenRendererSeedsAndReturns;
                 break;
-            case Constants.TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_POSITION:
+            case Constants.TEXTURE_MODE_SPECIALIZED_RETURN_POSITION:
                 offscreenRenderer = this.offscreenRendererSeedsAndReturns;
                 break;
-            case Constants.TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_POSITION_RELATIVE:
+            case Constants.TEXTURE_MODE_SPECIALIZED_RETURN_POSITION_RELATIVE:
                 offscreenRenderer = this.offscreenRendererSeedsAndReturns;
                 break;
-            case Constants.TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_POSITION_RELATIVE_MAGNITUDE:
+            case Constants.TEXTURE_MODE_SPECIALIZED_RETURN_POSITION_RELATIVE_MAGNITUDE:
                 offscreenRenderer = this.offscreenRendererSeedsAndReturns;
                 break;
-            case Constants.TEXTURE_MODE_SPECIALIZED_FIRST_RETURN_DIRECTION:
+            case Constants.TEXTURE_MODE_SPECIALIZED_RETURN_DIRECTION:
                 offscreenRenderer = this.offscreenRendererSeedsAndReturns;
                 break;
             default:

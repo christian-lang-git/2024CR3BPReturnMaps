@@ -33,6 +33,20 @@ class TabRendering extends Component {
         return uiState.UI_STATE_RENDERING_TEXTURE_MODE === Constants.TEXTURE_MODE_SPECIALIZED;
     };
 
+    shouldRenderReturnNumber = () => {
+        const { uiState } = this.context;
+        return uiState.UI_STATE_RENDERING_TEXTURE_MODE === Constants.TEXTURE_MODE_SPECIALIZED
+            &&
+            (
+                uiState.UI_STATE_RENDERING_SPECIALIZED_MODE === Constants.TEXTURE_MODE_SPECIALIZED_RETURN_ADVECTION_TIME
+                || uiState.UI_STATE_RENDERING_SPECIALIZED_MODE === Constants.TEXTURE_MODE_SPECIALIZED_RETURN_ARC_LENGTH
+                || uiState.UI_STATE_RENDERING_SPECIALIZED_MODE === Constants.TEXTURE_MODE_SPECIALIZED_RETURN_POSITION
+                || uiState.UI_STATE_RENDERING_SPECIALIZED_MODE === Constants.TEXTURE_MODE_SPECIALIZED_RETURN_POSITION_RELATIVE
+                || uiState.UI_STATE_RENDERING_SPECIALIZED_MODE === Constants.TEXTURE_MODE_SPECIALIZED_RETURN_POSITION_RELATIVE_MAGNITUDE
+                || uiState.UI_STATE_RENDERING_SPECIALIZED_MODE === Constants.TEXTURE_MODE_SPECIALIZED_RETURN_DIRECTION
+            );
+    };
+
     shouldRenderRawMode = () => {
         const { uiState } = this.context;
         return uiState.UI_STATE_RENDERING_TEXTURE_MODE === Constants.TEXTURE_MODE_RAW_TEXTURE
@@ -62,26 +76,32 @@ class TabRendering extends Component {
                                     {this.shouldRenderSpecializedMode() && (
                                         <LabeledSelectSpecializedMode />
                                     )}
-                                    {this.shouldRenderRawMode() && (
-                                    <div className="grid grid-cols-2">
-                                        <LabeledSelectRawMode />
+                                    {this.shouldRenderReturnNumber() && (
                                         <LabeledField
-                                            name="UI_STATE_RENDERING_RAW_MODE_LAYER"
-                                            labelText={"layer"}
+                                            name="UI_STATE_RENDERING_RETURN_NUMBER"
+                                            labelText={"return number"}
                                         />
-                                    </div>
+                                    )}
+                                    {this.shouldRenderRawMode() && (
+                                        <div className="grid grid-cols-2">
+                                            <LabeledSelectRawMode />
+                                            <LabeledField
+                                                name="UI_STATE_RENDERING_RAW_MODE_LAYER"
+                                                labelText={"layer"}
+                                            />
+                                        </div>
                                     )}
                                     {this.shouldRenderRawModeVirtual() && (
-                                    <div className="grid grid-cols-2">
-                                        <LabeledField
-                                            name="UI_STATE_RENDERING_RAW_MODE_X_TEXTURE_INDEX"
-                                            labelText={"x texture index"}
-                                        />
-                                        <LabeledField
-                                            name="UI_STATE_RENDERING_RAW_MODE_Y_TEXTURE_INDEX"
-                                            labelText={"y texture index"}
-                                        />
-                                    </div>
+                                        <div className="grid grid-cols-2">
+                                            <LabeledField
+                                                name="UI_STATE_RENDERING_RAW_MODE_X_TEXTURE_INDEX"
+                                                labelText={"x texture index"}
+                                            />
+                                            <LabeledField
+                                                name="UI_STATE_RENDERING_RAW_MODE_Y_TEXTURE_INDEX"
+                                                labelText={"y texture index"}
+                                            />
+                                        </div>
                                     )}
                                     <div className="grid grid-cols-2">
                                         <LabeledField
