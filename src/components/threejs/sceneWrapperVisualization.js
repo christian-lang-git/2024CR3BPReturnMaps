@@ -395,6 +395,9 @@ class SceneWrapperVisualization {
             case Constants.TEXTURE_MODE_SPECIALIZED_RETURN_DIRECTION:
                 offscreenRenderer = this.offscreenRendererSeedsAndReturns;
                 break;
+            case Constants.TEXTURE_MODE_SPECIALIZED_RETURN_FTLE:
+                offscreenRenderer = this.offscreenRendererSeedsAndReturns;
+                break;
             default:
                 console.error("Error: Unknown rendering_specialized_mode", this.simulationParameters.rendering_specialized_mode);
                 break;

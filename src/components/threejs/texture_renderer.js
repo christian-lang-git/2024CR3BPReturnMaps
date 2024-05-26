@@ -245,6 +245,14 @@ class TextureRenderer {
                     data = InterpolateVec4(x_frac, y_frac, x_virtual, y_virtual, z_layer);
                     outputColor = vec4(normalMappingVec3(data.xyz), opacity);
                     break;
+                case 8://TEXTURE_MODE_SPECIALIZED_RETURN_FTLE
+                    x_virtual = 1;
+                    y_virtual = 1;
+                    z_layer = return_layer;
+                    component = 0;
+                    scalar = InterpolateScalar(x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
+                    outputColor = vec4(mapScalarToColor(scalar), opacity);
+                    break;
             }
 
         }

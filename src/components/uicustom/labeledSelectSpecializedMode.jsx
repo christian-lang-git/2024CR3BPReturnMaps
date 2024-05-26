@@ -10,7 +10,8 @@ const options = [
     { value: Constants.TEXTURE_MODE_SPECIALIZED_RETURN_POSITION, label: 'return: position' },
     { value: Constants.TEXTURE_MODE_SPECIALIZED_RETURN_POSITION_RELATIVE, label: 'return: relative position (normalized)' },
     { value: Constants.TEXTURE_MODE_SPECIALIZED_RETURN_POSITION_RELATIVE_MAGNITUDE, label: 'return: relative position (magnitude)' },       
-    { value: Constants.TEXTURE_MODE_SPECIALIZED_RETURN_DIRECTION, label: 'return: direction' }
+    { value: Constants.TEXTURE_MODE_SPECIALIZED_RETURN_DIRECTION, label: 'return: direction' },   
+    { value: Constants.TEXTURE_MODE_SPECIALIZED_RETURN_FTLE, label: 'return: FTLE' }    
 ];
 
 const LabeledSelectSpecializedMode = () => (

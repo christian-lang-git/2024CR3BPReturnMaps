@@ -79,7 +79,7 @@ class OffscreenRendererFTLE extends OffscreenRenderer {
                     outputColor = texelFetch(texture_seeds_and_returns, pointer_original, 0);
                 }
                 else{
-                    computeFTLE();
+                    computeFTLE(x_pixel_mod, y_pixel_mod);
                 }
             }
         `
@@ -87,14 +87,63 @@ class OffscreenRendererFTLE extends OffscreenRenderer {
 
     fragmentShaderAdditionalMethodDeclarations(){
         return glsl`
-        void computeFTLE();
+        void computeFTLE(int x_pixel_mod, int y_pixel_mod);
         `;
     }
 
     fragmentShaderAdditionalMethodDefinitions(){
-        return glsl`
-        void computeFTLE(){
-            outputColor = vec4(0.1, 0.5, 1.0, 1.0); 
+        return LINALG.SHADER_MODULE_LINALG + "\n" + UTILITY.SHADER_MODULE_UTILITY + "\n" + glsl`
+
+
+
+        void computeFTLE(int x_pixel_mod, int y_pixel_mod){
+            float dx = 1.0 / (planeDimensionsPixel.x-1.0);
+            float dy = 1.0 / (planeDimensionsPixel.y-1.0);
+            ivec3 pointer = ivec3(x_pixel_mod, y_pixel_mod, target_layer_index);
+
+            //finite differences
+            //finite differences in x direction
+            vec3 df_dx;
+            if(x_pixel_mod == 0){
+                df_dx = computeForwardDifference(texture_seeds_and_returns, pointer, ivec3(1,0,0), dx );
+            }
+            else if(x_pixel_mod == int(planeDimensionsPixel.x-1.0)){
+                df_dx = computeBackwardDifference(texture_seeds_and_returns, pointer, ivec3(-1,0,0), dx );
+            }
+            else{
+                df_dx = computeCentralDifference(texture_seeds_and_returns, pointer, ivec3(-1,0,0), ivec3(1,0,0), dx );
+            }
+            //finite differences in y direction
+            vec3 df_dy;
+            if(y_pixel_mod == 0){
+                df_dy = computeForwardDifference(texture_seeds_and_returns, pointer, ivec3(0,1,0), dx );
+            }
+            else if(y_pixel_mod == int(planeDimensionsPixel.y-1.0)){
+                df_dy = computeBackwardDifference(texture_seeds_and_returns, pointer, ivec3(0,-1,0), dx );
+            }
+            else{
+                df_dy = computeCentralDifference(texture_seeds_and_returns, pointer, ivec3(0,-1,0), ivec3(0,1,0), dy );
+            }
+            //finite differences in z direction = (0,0,0)
+            vec3 df_dz = vec3(0,0,0);
+
+            //jacobian
+            mat3 J = BuildJacoby(df_dx, df_dy, df_dz);
+            //transpose jacobian
+            mat3 JT = transpose(J);
+            //C = cauchy-green tensor = J^T * J
+            mat3 C = JT * J;
+
+            //biggest eigenvalue lambda_max
+            vec3 lambdas = vec3(0,0,0);
+            mat3eigenvalues(C, lambdas);
+            float lambda_max = max(lambdas.x, max(lambdas.y, lambdas.z));
+
+            //FTLE
+            float advection_time = 1.0;//TODO SCALING?
+            float ftle = 1.0 / advection_time * log(sqrt(lambda_max));
+
+            outputColor = vec4(ftle, 0.0, 0.0, 1.0); 
         }
         `
     }

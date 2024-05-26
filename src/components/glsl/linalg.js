@@ -162,7 +162,7 @@ bool mat3realEigenvector(mat3 m, float lambda, inout vec3 ev)
 //returns:
 //if lamda is negative, ev contains the eigenvector, the return value is true (or false if there was a problem)
 //if lamba is positive, ev is NOT calculated, the return value is false
-bool mat3RidgeEigen(mat3 m, inout float lambda, inout vec3 ev)
+bool mat3RidgeEigen(mat3 m, inout float lambda, inout vec3 ev, float ridge_lambda_threshold)
 {
     vec3 lambdas = vec3(0,0,0);
     mat3eigenvalues(m, lambdas);
