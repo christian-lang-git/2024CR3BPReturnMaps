@@ -18,7 +18,8 @@ const glsl = x => x[0];
  *          [value=0] to have same layout as flowmap
  *          [value=0] to have same layout as flowmap
  *          [value=0] to have same layout as flowmap
- * 4. vec4: placeholder to have same layout as flowmap
+ * 4. vec4: [value=0] to have same layout as flowmap
+ *  	    3 placeholder
  */
 class OffscreenRendererSeeds extends OffscreenRenderer {
 

@@ -7,6 +7,7 @@ import * as Constants from "@/components/utility/constants";
 import { OffscreenRendererSeedsAndReturns} from "./offscreen_renderer_seeds_and_returns";
 import { OffscreenRendererSeeds} from "./offscreen_renderer_seeds";
 import { OffscreenRendererFlowMap } from "./offscreen_renderer_flow_map";
+import { OffscreenRendererFTLE } from "./offscreen_renderer_ftle";
 import { OffscreenRendererGravitationalForce} from "./offscreen_renderer_gravitational_force";
 import { TextureRenderer } from "@/components/threejs/texture_renderer";
 import { StreamlineGenerator } from "@/components/threejs/streamline_generator";
@@ -33,15 +34,18 @@ class SceneWrapperVisualization {
         this.streamlineGenerator.initialize();
         this.offscreenRendererSeeds = new OffscreenRendererSeeds(renderer, this.simulationParameters);
         this.offscreenRendererFlowMap = new OffscreenRendererFlowMap(renderer, this.simulationParameters);
+        this.OffscreenRendererFTLE = new OffscreenRendererFTLE(renderer, this.simulationParameters);
         this.offscreenRendererSeedsAndReturns = new OffscreenRendererSeedsAndReturns(renderer, this.simulationParameters);
         this.offscreenRendererGravitationalForce = new OffscreenRendererGravitationalForce(renderer, this.simulationParameters);
 
         this.offscreenRendererFlowMap.link(this.offscreenRendererSeedsAndReturns);
+        this.OffscreenRendererFTLE.link(this.offscreenRendererSeedsAndReturns);
         this.offscreenRendererGravitationalForce.link(this.offscreenRendererSeedsAndReturns);
 
         this.offscreenRendererSeeds.initialize();
         this.offscreenRendererSeedsAndReturns.initialize();
         this.offscreenRendererFlowMap.initialize();
+        this.OffscreenRendererFTLE.initialize();
         this.offscreenRendererGravitationalForce.initialize();
 
         this.textureRenderer = new TextureRenderer(renderer, this.simulationParameters, this.colorMaps, scene);
@@ -297,10 +301,16 @@ class SceneWrapperVisualization {
 
         this.offscreenRendererFlowMap.updateTexturedPlane();
         this.offscreenRendererFlowMap.computeTargetLayerAt0(1);
-        this.offscreenRendererSeedsAndReturns.copyTextureToLayer(this.offscreenRendererFlowMap.renderTarget.texture, 1);
+        this.offscreenRendererSeedsAndReturns.copyTextureToLayer(this.offscreenRendererFlowMap.renderTarget.texture, 1);   
+        this.OffscreenRendererFTLE.updateTexturedPlane();     
+        this.OffscreenRendererFTLE.computeTargetLayerAt0(1);
+        this.offscreenRendererSeedsAndReturns.copyTextureToLayer(this.OffscreenRendererFTLE.renderTarget.texture, 1);
+        
         this.offscreenRendererFlowMap.computeTargetLayerAt0(2);
-        this.offscreenRendererSeedsAndReturns.copyTextureToLayer(this.offscreenRendererFlowMap.renderTarget.texture, 2);
-
+        this.offscreenRendererSeedsAndReturns.copyTextureToLayer(this.offscreenRendererFlowMap.renderTarget.texture, 2); 
+        this.OffscreenRendererFTLE.computeTargetLayerAt0(2);
+        this.offscreenRendererSeedsAndReturns.copyTextureToLayer(this.OffscreenRendererFTLE.renderTarget.texture, 2);
+        
         this.offscreenRendererGravitationalForce.updateTexturedPlane();
         this.offscreenRendererGravitationalForce.compute();
     }

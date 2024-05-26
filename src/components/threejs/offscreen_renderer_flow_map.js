@@ -21,7 +21,8 @@ const glsl = x => x[0];
  *          1 float for advection time
  *          1 float for arc length
  *          1 float for step counter
- * 4. vec4: placeholder
+ * 4. vec4: [value=0] 1 float for ftle value (computed later)
+ *  	    3 placeholder
  */
 class OffscreenRendererFlowMap extends OffscreenRenderer {
 
