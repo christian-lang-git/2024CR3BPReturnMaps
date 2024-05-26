@@ -267,6 +267,7 @@ class MultipleReturnsStreamline {
         this.streamline_generator = streamline_generator;
         this.simulationParameters = streamline_generator.simulationParameters;
         this.scene = streamline_generator.scene;
+        this.has_data = false;
         this.initialize();
     }
 
@@ -278,23 +279,11 @@ class MultipleReturnsStreamline {
     }
 
     recalculateWithLastParameters() {
-        this.recalculateFirstStreamlineWithLastParameters();
-    }
-    /*
-        recalculateFirstStreamlineWithLastParameters() {
-            var streamline = this.list_streamlines[0];
-            if(streamline.existsInScene){
-                this.scene.remove(streamline.mesh);
-                streamline.calculate();
-                streamline.build();
-        
-                this.scene.add(streamline.mesh);
-                streamline.existsInScene = true;
-            }
+        if(!this.has_data){
+            console.warn("recalculateWithLastParameters NO DATA YET");
+            return;
         }
-        */
 
-    recalculateFirstStreamlineWithLastParameters() {
         this.list_point_data_returns = [];
         var number_of_returns = this.simulationParameters.termination_method;
         var index = 0;
@@ -325,6 +314,7 @@ class MultipleReturnsStreamline {
             this.number_success += streamline.success ? 1 : 0;
         }
     }
+
 
     recalculate(x, y, z, dir_x, dir_y, dir_z, energy) {
         this.list_point_data_returns = [];
@@ -357,6 +347,7 @@ class MultipleReturnsStreamline {
             this.number_success = streamline.success ? this.number_success+1 : this.number_success;
         }
 
+        this.has_data = true;
     }
 
     updateStreamlineModels() {
