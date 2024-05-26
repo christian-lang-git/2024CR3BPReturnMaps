@@ -1,6 +1,9 @@
 import * as THREE from "three";
 import { vec3 } from "gl-matrix/esm";
 
+
+const glsl = x => x[0];
+
 class OffscreenRenderer {
 
     constructor(renderer, simulationParameters) {
@@ -179,7 +182,7 @@ class OffscreenRenderer {
     }
 
     vertexShader() {
-        return `
+        return glsl`
         varying vec3 vUv; 
     
         void main() {
@@ -195,7 +198,7 @@ class OffscreenRenderer {
         return "" +
             this.getUniformsString() + "\n" +
             this.fragmentShaderAdditionalMethodDeclarations() +
-            `
+            glsl`
         varying vec3 vUv;
 
         const float G = 1.0;//TODO

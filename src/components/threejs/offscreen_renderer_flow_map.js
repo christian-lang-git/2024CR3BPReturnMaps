@@ -2,6 +2,8 @@ import * as THREE from "three";
 import { vec3 } from "gl-matrix/esm";
 import { OffscreenRenderer } from "@/components/threejs/offscreen_renderer"
 
+
+const glsl = x => x[0];
 /**
  * TODO
  * SHARES RenderTarget with seeds
@@ -22,6 +24,7 @@ import { OffscreenRenderer } from "@/components/threejs/offscreen_renderer"
  * 4. vec4: placeholder
  */
 class OffscreenRendererFlowMap extends OffscreenRenderer {
+
 
     constructor(renderer, simulationParameters) {
         super(renderer, simulationParameters)
@@ -60,7 +63,7 @@ class OffscreenRendererFlowMap extends OffscreenRenderer {
     }
 
     fragmentShaderMethodComputation() {
-        return `
+        return glsl`
 
             ivec3 pointer = ivec3(x_pixel_mod, y_pixel_mod, target_layer_index-1);
             vec3 seed_position = texelFetch(texture_seeds_and_returns, pointer, 0).xyz;
@@ -173,14 +176,14 @@ class OffscreenRendererFlowMap extends OffscreenRenderer {
     }
 
     fragmentShaderAdditionalMethodDeclarations(){
-        return `
+        return glsl`
         vec3 f_position(vec3 position, vec3 direction, float signum);
         vec3 f_direction(vec3 position, vec3 direction, float signum);
         `;
     }
 
     fragmentShaderAdditionalMethodDefinitions(){
-        return`
+        return glsl`
         vec3 f_position(vec3 position, vec3 direction, float signum) {
             float n = angular_velocity;
     

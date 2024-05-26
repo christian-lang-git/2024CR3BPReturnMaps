@@ -2,6 +2,8 @@ import * as THREE from "three";
 import { vec3 } from "gl-matrix/esm";
 import { OffscreenRenderer } from "@/components/threejs/offscreen_renderer"
 
+const glsl = x => x[0];
+
 /**
  * TODO
  * The resulting texture stores positions and velocities of the seeds and is padded with additional values to have the same layout as flow map:
@@ -45,7 +47,7 @@ class OffscreenRendererSeedsAndReturns extends OffscreenRenderer {
     }
 
     fragmentShaderMethodComputation() {
-        return `
+        return glsl`
             ivec3 pointer = ivec3(int(floor(x_pixel)), int(floor(y_pixel)), 0);
             outputColor = texelFetch(texture_input, pointer, 0);       
             //outputColor = vec4(1.0, 0.0, 0.0, 1.0);      

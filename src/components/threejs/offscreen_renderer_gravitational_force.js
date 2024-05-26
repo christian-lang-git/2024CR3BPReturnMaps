@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { vec3 } from "gl-matrix/esm";
 import { OffscreenRenderer } from "@/components/threejs/offscreen_renderer"
 
+const glsl = x => x[0];
 /**
  * TODO
  * The resulting texture stores force vector and magnitude:
@@ -45,7 +46,7 @@ class OffscreenRendererGravitationalForce extends OffscreenRenderer {
     }
 
     fragmentShaderMethodComputation() {
-        return `            
+        return glsl`            
 
             //renaming for convenience
             float x1 = primary_x;
