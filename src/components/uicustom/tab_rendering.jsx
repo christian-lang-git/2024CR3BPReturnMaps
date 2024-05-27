@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input"
 import LabeledSelectTextureMode from './labeledSelectTextureMode';
 import LabeledSelectSpecializedMode from './labeledSelectSpecializedMode';
 import LabeledSelectRawMode from './labeledSelectRawMode';
+import LabeledSelectRenderingDirection from './labeledSelectRenderingDirection';
 
 
 
@@ -45,9 +46,20 @@ class TabRendering extends Component {
                 || uiState.UI_STATE_RENDERING_SPECIALIZED_MODE === Constants.TEXTURE_MODE_SPECIALIZED_RETURN_POSITION_RELATIVE
                 || uiState.UI_STATE_RENDERING_SPECIALIZED_MODE === Constants.TEXTURE_MODE_SPECIALIZED_RETURN_POSITION_RELATIVE_MAGNITUDE
                 || uiState.UI_STATE_RENDERING_SPECIALIZED_MODE === Constants.TEXTURE_MODE_SPECIALIZED_RETURN_DIRECTION
-                || uiState.UI_STATE_RENDERING_SPECIALIZED_MODE === Constants.TEXTURE_MODE_SPECIALIZED_RETURN_FTLE                
+                || uiState.UI_STATE_RENDERING_SPECIALIZED_MODE === Constants.TEXTURE_MODE_SPECIALIZED_RETURN_FTLE     
+                || uiState.UI_STATE_RENDERING_SPECIALIZED_MODE === Constants.TEXTURE_MODE_SPECIALIZED_RETURN_FTLE_BOTH                    
             );
     };
+
+    shouldRenderDirection = () => {
+        const { uiState } = this.context;
+        return ! //NEGATED
+        (
+            uiState.UI_STATE_RENDERING_TEXTURE_MODE === Constants.TEXTURE_MODE_SPECIALIZED 
+            && uiState.UI_STATE_RENDERING_SPECIALIZED_MODE === Constants.TEXTURE_MODE_SPECIALIZED_RETURN_FTLE_BOTH
+        );
+};
+
 
     shouldRenderRawMode = () => {
         const { uiState } = this.context;
@@ -78,12 +90,6 @@ class TabRendering extends Component {
                                     {this.shouldRenderSpecializedMode() && (
                                         <LabeledSelectSpecializedMode />
                                     )}
-                                    {this.shouldRenderReturnNumber() && (
-                                        <LabeledField
-                                            name="UI_STATE_RENDERING_RETURN_NUMBER"
-                                            labelText={"return number"}
-                                        />
-                                    )}
                                     {this.shouldRenderRawMode() && (
                                         <div className="grid grid-cols-2">
                                             <LabeledSelectRawMode />
@@ -92,6 +98,15 @@ class TabRendering extends Component {
                                                 labelText={"layer"}
                                             />
                                         </div>
+                                    )}
+                                    {this.shouldRenderDirection() && (
+                                        <LabeledSelectRenderingDirection />
+                                    )}
+                                    {this.shouldRenderReturnNumber() && (
+                                        <LabeledField
+                                            name="UI_STATE_RENDERING_RETURN_NUMBER"
+                                            labelText={"return number"}
+                                        />
                                     )}
                                     {this.shouldRenderRawModeVirtual() && (
                                         <div className="grid grid-cols-2">

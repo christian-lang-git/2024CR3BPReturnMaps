@@ -205,6 +205,7 @@ class ThreeContainer extends Component {
         var rendering_texture_mode = uiState.UI_STATE_RENDERING_TEXTURE_MODE;
         var rendering_specialized_mode = uiState.UI_STATE_RENDERING_SPECIALIZED_MODE;
         var return_number = uiState.UI_STATE_RENDERING_RETURN_NUMBER;
+        var rendering_forward = uiState.UI_STATE_RENDERING_DIRECTION;
         var rendering_raw_mode = uiState.UI_STATE_RENDERING_RAW_MODE;
         var rendering_raw_mode_layer = uiState.UI_STATE_RENDERING_RAW_MODE_LAYER;
         var rendering_raw_mode_x_texture_index = uiState.UI_STATE_RENDERING_RAW_MODE_X_TEXTURE_INDEX;
@@ -217,7 +218,7 @@ class ThreeContainer extends Component {
         var tube_only_show_successful_returns = uiState.UI_STATE_RENDERING_TUBE_ONLY_SHOW_SUCCESSFUL_RETURNS;
 
         this.sceneWrapper.updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position, 
-            rendering_texture_mode, rendering_specialized_mode, return_number, rendering_raw_mode, 
+            rendering_texture_mode, rendering_specialized_mode, return_number, rendering_forward, rendering_raw_mode, 
             rendering_raw_mode_layer, rendering_raw_mode_x_texture_index, rendering_raw_mode_y_texture_index,
             scalar_min, scalar_max, opacity, tube_segment_length, tube_max_segments, tube_only_show_successful_returns);       
     }

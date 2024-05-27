@@ -36,3 +36,6 @@ export const TERMINATION_METHOD_SECOND_RETURN = "2";
 
 export const LAYER_INDEX_FIRST_RETURN = 1;
 export const LAYER_INDEX_SECOND_RETURN = 2;
+
+export const RENDERER_DIRECTION_FORWARD = true;
+export const RENDERER_DIRECTION_BACKWARD = false;

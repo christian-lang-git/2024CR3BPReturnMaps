@@ -146,12 +146,12 @@ class TextureRenderer {
                     break;
                 case 1://raw texture output of virtual texture
                     pointer = ivec3(x_pixel+x_offset, y_pixel+y_offset, rendering_raw_mode_layer);
-                    data = texelFetch(displayedTexture, pointer, 0);
+                    data = rendering_forward ? texelFetch(displayedTexture, pointer, 0) : texelFetch(displayedTextureBackwards, pointer, 0);
                     outputColor = vec4(data.x, data.y, data.z, data.a);
                     break;
                 case 2://raw texture output of all virtual textures
                     pointer = ivec3(x_pixel_total, y_pixel_total, rendering_raw_mode_layer);
-                    data = texelFetch(displayedTexture, pointer, 0);
+                    data = rendering_forward ? texelFetch(displayedTexture, pointer, 0) : texelFetch(displayedTextureBackwards, pointer, 0);
                     outputColor = vec4(data.x, data.y, data.z, data.a);
                     break;
             }
@@ -165,7 +165,7 @@ class TextureRenderer {
             int y_virtual = 0;
             int z_layer = 0;
             int component = 0;
-            bool forward = true;
+            bool forward = rendering_forward;
             outputColor = vec4(1.0, 0.0, 1.0, 1.0);
 
             float scalar;
@@ -482,6 +482,7 @@ class TextureRenderer {
         this.uniforms["rendering_specialized_mode"] = { type: 'int', value: parseInt(Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE) };
         this.uniforms["return_layer"] = { type: 'int', value: Constants.LAYER_INDEX_FIRST_RETURN };
         this.uniforms["rendering_raw_mode_layer"] = { type: 'int', value: 0 };
+        this.uniforms["rendering_forward"] = { type: 'bool', value: true };        
         this.uniforms["rendering_raw_mode_x_texture_index"] = { type: 'int', value: 0 };
         this.uniforms["rendering_raw_mode_y_texture_index"] = { type: 'int', value: 0 };
 
@@ -499,6 +500,7 @@ class TextureRenderer {
         this.textured_plane_mesh.material.uniforms.rendering_texture_mode.value = this.simulationParameters.rendering_texture_mode;
         this.textured_plane_mesh.material.uniforms.rendering_specialized_mode.value = this.simulationParameters.rendering_specialized_mode;
         this.textured_plane_mesh.material.uniforms.return_layer.value = this.simulationParameters.return_layer;
+        this.textured_plane_mesh.material.uniforms.rendering_forward.value = this.simulationParameters.rendering_forward;        
         this.textured_plane_mesh.material.uniforms.rendering_raw_mode_layer.value = this.simulationParameters.rendering_raw_mode_layer;
         this.textured_plane_mesh.material.uniforms.rendering_raw_mode_x_texture_index.value = this.simulationParameters.rendering_raw_mode_x_texture_index;
         this.textured_plane_mesh.material.uniforms.rendering_raw_mode_y_texture_index.value = this.simulationParameters.rendering_raw_mode_y_texture_index;
