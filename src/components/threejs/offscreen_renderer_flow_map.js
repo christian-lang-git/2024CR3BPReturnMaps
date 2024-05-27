@@ -27,8 +27,9 @@ const glsl = x => x[0];
 class OffscreenRendererFlowMap extends OffscreenRenderer {
 
 
-    constructor(renderer, simulationParameters) {
+    constructor(renderer, simulationParameters, signum) {
         super(renderer, simulationParameters)
+        this.signum = signum;
     }
 
     link(offscreenRendererSeedsAndReturns){
@@ -59,7 +60,8 @@ class OffscreenRendererFlowMap extends OffscreenRenderer {
     setAdditionalUniforms() {
         this.dummy_plane_mesh.material.uniforms.texture_seeds_and_returns.value = this.offscreenRendererSeedsAndReturns.renderTarget.texture;     
         this.dummy_plane_mesh.material.uniforms.max_steps.value = this.simulationParameters.max_steps;       
-        this.dummy_plane_mesh.material.uniforms.step_size.value = this.simulationParameters.step_size;       
+        this.dummy_plane_mesh.material.uniforms.step_size.value = this.simulationParameters.step_size;    
+        this.dummy_plane_mesh.material.uniforms.signum.value = this.signum;//use signum from constructor          
  
     }
 

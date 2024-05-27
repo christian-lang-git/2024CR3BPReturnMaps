@@ -1,6 +1,9 @@
 import * as THREE from "three";
 import { vec3 } from "gl-matrix/esm";
 
+import * as LINALG from "@/components/glsl/linalg";
+import * as UTILITY from "@/components/glsl/utility";
+
 
 const glsl = x => x[0];
 
@@ -197,7 +200,7 @@ class OffscreenRenderer {
     fragmentShader() {
         return "" +
             this.getUniformsString() + "\n" +
-            this.fragmentShaderAdditionalMethodDeclarations() +
+            this.fragmentShaderAdditionalMethodDeclarations() + LINALG.SHADER_MODULE_LINALG + "\n" + UTILITY.SHADER_MODULE_UTILITY + "\n" +
             glsl`
         varying vec3 vUv;
 

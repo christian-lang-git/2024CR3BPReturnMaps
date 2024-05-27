@@ -1,8 +1,7 @@
 import * as THREE from "three";
 import { vec3 } from "gl-matrix/esm";
 import { OffscreenRenderer } from "@/components/threejs/offscreen_renderer"
-import * as LINALG from "@/components/glsl/linalg";
-import * as UTILITY from "@/components/glsl/utility";
+
 
 
 const glsl = x => x[0];
@@ -92,7 +91,7 @@ class OffscreenRendererFTLE extends OffscreenRenderer {
     }
 
     fragmentShaderAdditionalMethodDefinitions(){
-        return LINALG.SHADER_MODULE_LINALG + "\n" + UTILITY.SHADER_MODULE_UTILITY + "\n" + glsl`
+        return glsl`
 
 
 

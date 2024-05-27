@@ -39,20 +39,20 @@ mat3 BuildHessianForceSym(vec3 sample_jacoby_direction_x, vec3 sample_jacoby_dir
 }
 
 vec3 computeCentralDifference(sampler3D texture, ivec3 pointer, ivec3 offset_backward, ivec3 offset_forward, float h){
-    vec3 backward = texelFetch(texture_seeds_and_returns, pointer+offset_backward, 0).xyz;
-    vec3 forward = texelFetch(texture_seeds_and_returns, pointer+offset_forward, 0).xyz;
+    vec3 backward = texelFetch(texture, pointer+offset_backward, 0).xyz;
+    vec3 forward = texelFetch(texture, pointer+offset_forward, 0).xyz;
     return (forward - backward) / (2.0*h); 
 }
 
 vec3 computeForwardDifference(sampler3D texture, ivec3 pointer, ivec3 offset_forward, float h){
-    vec3 value = texelFetch(texture_seeds_and_returns, pointer, 0).xyz;
-    vec3 forward = texelFetch(texture_seeds_and_returns, pointer+offset_forward, 0).xyz;
+    vec3 value = texelFetch(texture, pointer, 0).xyz;
+    vec3 forward = texelFetch(texture, pointer+offset_forward, 0).xyz;
     return (forward - value) / h; 
 }
 
 vec3 computeBackwardDifference(sampler3D texture, ivec3 pointer, ivec3 offset_backward, float h){
-    vec3 backward = texelFetch(texture_seeds_and_returns, pointer+offset_backward, 0).xyz;
-    vec3 value = texelFetch(texture_seeds_and_returns, pointer, 0).xyz;
+    vec3 backward = texelFetch(texture, pointer+offset_backward, 0).xyz;
+    vec3 value = texelFetch(texture, pointer, 0).xyz;
     return (value - backward) / h; 
 }
 

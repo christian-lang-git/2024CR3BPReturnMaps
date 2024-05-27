@@ -33,19 +33,29 @@ class SceneWrapperVisualization {
         this.streamlineGenerator = new StreamlineGenerator(this.simulationParameters, scene);
         this.streamlineGenerator.initialize();
         this.offscreenRendererSeeds = new OffscreenRendererSeeds(renderer, this.simulationParameters);
-        this.offscreenRendererFlowMap = new OffscreenRendererFlowMap(renderer, this.simulationParameters);
+        this.offscreenRendererSeedsBackwards = new OffscreenRendererSeeds(renderer, this.simulationParameters);
+        this.offscreenRendererFlowMap = new OffscreenRendererFlowMap(renderer, this.simulationParameters, 1);
+        this.offscreenRendererFlowMapBackwards = new OffscreenRendererFlowMap(renderer, this.simulationParameters, -1);
         this.OffscreenRendererFTLE = new OffscreenRendererFTLE(renderer, this.simulationParameters);
+        this.OffscreenRendererFTLEBackwards = new OffscreenRendererFTLE(renderer, this.simulationParameters);
         this.offscreenRendererSeedsAndReturns = new OffscreenRendererSeedsAndReturns(renderer, this.simulationParameters);
+        this.offscreenRendererSeedsAndReturnsBackwards = new OffscreenRendererSeedsAndReturns(renderer, this.simulationParameters);
         this.offscreenRendererGravitationalForce = new OffscreenRendererGravitationalForce(renderer, this.simulationParameters);
 
         this.offscreenRendererFlowMap.link(this.offscreenRendererSeedsAndReturns);
+        this.offscreenRendererFlowMapBackwards.link(this.offscreenRendererSeedsAndReturnsBackwards);
         this.OffscreenRendererFTLE.link(this.offscreenRendererSeedsAndReturns);
+        this.OffscreenRendererFTLEBackwards.link(this.offscreenRendererSeedsAndReturnsBackwards);
         this.offscreenRendererGravitationalForce.link(this.offscreenRendererSeedsAndReturns);
 
         this.offscreenRendererSeeds.initialize();
+        this.offscreenRendererSeedsBackwards.initialize();
         this.offscreenRendererSeedsAndReturns.initialize();
+        this.offscreenRendererSeedsAndReturnsBackwards.initialize();
         this.offscreenRendererFlowMap.initialize();
+        this.offscreenRendererFlowMapBackwards.initialize();
         this.OffscreenRendererFTLE.initialize();
+        this.OffscreenRendererFTLEBackwards.initialize();
         this.offscreenRendererGravitationalForce.initialize();
 
         this.textureRenderer = new TextureRenderer(renderer, this.simulationParameters, this.colorMaps, scene);
@@ -299,17 +309,40 @@ class SceneWrapperVisualization {
         this.offscreenRendererSeedsAndReturns.updateTexturedPlane();
         this.offscreenRendererSeedsAndReturns.copyTextureToLayer(this.offscreenRendererSeeds.renderTarget.texture, 0);
 
+        //this.offscreenRendererSeedsBackwards.updateTexturedPlane();
+        //this.offscreenRendererSeedsBackwards.compute();
+        this.offscreenRendererSeedsAndReturnsBackwards.updateTexturedPlane();
+        this.offscreenRendererSeedsAndReturnsBackwards.copyTextureToLayer(this.offscreenRendererSeeds.renderTarget.texture, 0);
+
+
+
         this.offscreenRendererFlowMap.updateTexturedPlane();
         this.offscreenRendererFlowMap.computeTargetLayerAt0(1);
         this.offscreenRendererSeedsAndReturns.copyTextureToLayer(this.offscreenRendererFlowMap.renderTarget.texture, 1);   
         this.OffscreenRendererFTLE.updateTexturedPlane();     
         this.OffscreenRendererFTLE.computeTargetLayerAt0(1);
         this.offscreenRendererSeedsAndReturns.copyTextureToLayer(this.OffscreenRendererFTLE.renderTarget.texture, 1);
+
+        this.offscreenRendererFlowMapBackwards.updateTexturedPlane();
+        this.offscreenRendererFlowMapBackwards.computeTargetLayerAt0(1);
+        this.offscreenRendererSeedsAndReturnsBackwards.copyTextureToLayer(this.offscreenRendererFlowMapBackwards.renderTarget.texture, 1);   
+        this.OffscreenRendererFTLEBackwards.updateTexturedPlane();     
+        this.OffscreenRendererFTLEBackwards.computeTargetLayerAt0(1);
+        this.offscreenRendererSeedsAndReturnsBackwards.copyTextureToLayer(this.OffscreenRendererFTLEBackwards.renderTarget.texture, 1);
+
+
         
         this.offscreenRendererFlowMap.computeTargetLayerAt0(2);
         this.offscreenRendererSeedsAndReturns.copyTextureToLayer(this.offscreenRendererFlowMap.renderTarget.texture, 2); 
         this.OffscreenRendererFTLE.computeTargetLayerAt0(2);
         this.offscreenRendererSeedsAndReturns.copyTextureToLayer(this.OffscreenRendererFTLE.renderTarget.texture, 2);
+
+        this.offscreenRendererFlowMapBackwards.computeTargetLayerAt0(2);
+        this.offscreenRendererSeedsAndReturnsBackwards.copyTextureToLayer(this.offscreenRendererFlowMapBackwards.renderTarget.texture, 2); 
+        this.OffscreenRendererFTLEBackwards.computeTargetLayerAt0(2);
+        this.offscreenRendererSeedsAndReturnsBackwards.copyTextureToLayer(this.OffscreenRendererFTLEBackwards.renderTarget.texture, 2);
+
+
         
         this.offscreenRendererGravitationalForce.updateTexturedPlane();
         this.offscreenRendererGravitationalForce.compute();
@@ -351,7 +384,7 @@ class SceneWrapperVisualization {
     }
 
     changeDisplayedTexture(){
-        //this.textureRenderer.changeDisplayedTexture(this.offscreenRendererSeeds.renderTarget.texture);
+        this.textureRenderer.changeDisplayedTextureBackwards(this.offscreenRendererSeedsAndReturnsBackwards.renderTarget.texture);
         switch (this.simulationParameters.rendering_texture_mode) {
             case Constants.TEXTURE_MODE_SPECIALIZED:
                 this.changeDisplayedTextureSpecialized();
@@ -396,6 +429,9 @@ class SceneWrapperVisualization {
                 offscreenRenderer = this.offscreenRendererSeedsAndReturns;
                 break;
             case Constants.TEXTURE_MODE_SPECIALIZED_RETURN_FTLE:
+                offscreenRenderer = this.offscreenRendererSeedsAndReturns;
+                break;
+            case Constants.TEXTURE_MODE_SPECIALIZED_RETURN_FTLE_BOTH:
                 offscreenRenderer = this.offscreenRendererSeedsAndReturns;
                 break;
             default:
