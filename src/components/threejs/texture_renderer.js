@@ -119,6 +119,7 @@ class TextureRenderer {
         float InterpolateScalarWrapper(bool forward, float x_frac, float y_frac, int x_virtual, int y_virtual, int z_layer, int component);
         vec4 InterpolateVec4Wrapper(bool forward, float x_frac, float y_frac, int x_virtual, int y_virtual, int z_layer);
         vec3 mapScalarToColor(float scalar);
+        vec3 mapScalarToColorWithInterval(float scalar, float minValue, float maxValue);
         vec3 normalMappingVec2(vec2 vector);
         vec3 normalMappingVec3(vec3 vector);
 
@@ -296,6 +297,14 @@ class TextureRenderer {
                     col_backwards = vec3(1.0-t_backwards, 1.0-t_backwards, 1.0);
                     outputColor = vec4(mix(col_forward, col_backwards, 0.5), opacity);
                     break;
+                case 10://TEXTURE_MODE_SPECIALIZED_RETURN_SUCCESS
+                    x_virtual = 0;
+                    y_virtual = 1;
+                    z_layer = return_layer;
+                    component = 0;
+                    scalar = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
+                    outputColor = vec4(mapScalarToColorWithInterval(scalar, 0.0, 1.0), opacity);
+                    break;
             }
 
         }
@@ -382,6 +391,17 @@ class TextureRenderer {
             int bin_count = 256;
 
             float t = (scalar - scalar_min) / (scalar_max - scalar_min);
+            int bin_index = int(t * float(bin_count-1));
+            bin_index = clamp(bin_index, 0, bin_count-1);
+            vec3 color = texelFetch(colorMapsTexture, ivec2(bin_index, 0), 0).rgb;
+
+            return vec3(color);
+        }
+
+        vec3 mapScalarToColorWithInterval(float scalar, float minValue, float maxValue){
+            int bin_count = 256;
+
+            float t = (scalar - minValue) / (maxValue - minValue);
             int bin_index = int(t * float(bin_count-1));
             bin_index = clamp(bin_index, 0, bin_count-1);
             vec3 color = texelFetch(colorMapsTexture, ivec2(bin_index, 0), 0).rgb;
