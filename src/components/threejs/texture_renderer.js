@@ -166,6 +166,8 @@ class TextureRenderer {
             int z_layer = 0;
             int component = 0;
             bool forward = rendering_forward;
+            vec3 col_forward;
+            vec3 col_backwards;
             outputColor = vec4(1.0, 0.0, 1.0, 1.0);
 
             float scalar;
@@ -263,7 +265,20 @@ class TextureRenderer {
                     z_layer = return_layer;
                     component = 0;
                     scalar = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
-                    outputColor = vec4(mapScalarToColor(scalar), opacity);
+
+                    if(false){//TODO parameter to use color map instead of red blue
+                        //map to color map
+                        outputColor = vec4(mapScalarToColor(scalar), opacity);
+                    }
+                    else{
+                        //map to either red or blue
+                        float t = (scalar - scalar_min) / (scalar_max - scalar_min);
+                        t = clamp(t, 0.0, 1.0);
+    
+                        col_forward = vec3(1.0, 1.0-t, 1.0-t);
+                        col_backwards = vec3(1.0-t, 1.0-t, 1.0);
+                        outputColor = forward ? vec4(col_forward, opacity) : vec4(col_backwards, opacity);
+                    }
                     break;
                 case 9://TEXTURE_MODE_SPECIALIZED_RETURN_FTLE_BOTH
                     x_virtual = 1;
@@ -273,8 +288,13 @@ class TextureRenderer {
                     scalar = InterpolateScalarWrapper(true, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
                     float scalarBackwards = InterpolateScalarWrapper(false, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
                     float t_forward = (scalar - scalar_min) / (scalar_max - scalar_min);
-                    float t_backwards2 = (scalarBackwards - scalar_min) / (scalar_max - scalar_min);
-                    outputColor = vec4(t_forward, 0.0, t_backwards2, opacity);
+                    float t_backwards = (scalarBackwards - scalar_min) / (scalar_max - scalar_min);
+                    t_forward = clamp(t_forward, 0.0, 1.0);
+                    t_backwards = clamp(t_backwards, 0.0, 1.0);
+
+                    col_forward = vec3(1.0, 1.0-t_forward, 1.0-t_forward);
+                    col_backwards = vec3(1.0-t_backwards, 1.0-t_backwards, 1.0);
+                    outputColor = vec4(mix(col_forward, col_backwards, 0.5), opacity);
                     break;
             }
 
