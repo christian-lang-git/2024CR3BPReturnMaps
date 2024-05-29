@@ -215,12 +215,15 @@ class ThreeContainer extends Component {
         var opacity = uiState.UI_STATE_RENDERING_OPACITY;
         var tube_segment_length = uiState.UI_STATE_RENDERING_TUBE_SEGMENT_LENGTH;
         var tube_max_segments = uiState.UI_STATE_RENDERING_TUBE_MAX_SEGMENTS;
+        var tube_num_sides = uiState.UI_STATE_RENDERING_TUBE_NUM_SIDES;
+        var tube_radius = uiState.UI_STATE_RENDERING_TUBE_RADIUS;
+
         var tube_only_show_successful_returns = uiState.UI_STATE_RENDERING_TUBE_ONLY_SHOW_SUCCESSFUL_RETURNS;
 
         this.sceneWrapper.updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position, 
             rendering_texture_mode, rendering_specialized_mode, return_number, rendering_forward, rendering_raw_mode, 
             rendering_raw_mode_layer, rendering_raw_mode_x_texture_index, rendering_raw_mode_y_texture_index,
-            scalar_min, scalar_max, opacity, tube_segment_length, tube_max_segments, tube_only_show_successful_returns);       
+            scalar_min, scalar_max, opacity, tube_segment_length, tube_max_segments, tube_num_sides, tube_radius, tube_only_show_successful_returns);       
     }
 
     updateParametersActiveBehavior() {

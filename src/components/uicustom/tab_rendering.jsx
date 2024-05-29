@@ -163,6 +163,16 @@ class TabRendering extends Component {
                                             labelText={"max segments"}
                                         />
                                     </div>
+                                    <div className="grid grid-cols-2">
+                                        <LabeledField
+                                            name="UI_STATE_RENDERING_TUBE_RADIUS"
+                                            labelText={"tube radius"}
+                                        />
+                                        <LabeledField
+                                            name="UI_STATE_RENDERING_TUBE_NUM_SIDES"
+                                            labelText={"number of sides"}
+                                        />
+                                    </div>
                                     <LabeledCheckbox
                                         name="UI_STATE_RENDERING_TUBE_ONLY_SHOW_SUCCESSFUL_RETURNS"
                                         labelText={"only show successful returns"}
