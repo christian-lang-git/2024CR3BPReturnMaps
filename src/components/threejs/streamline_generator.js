@@ -68,6 +68,20 @@ class Streamline {
     recalculate(x, y, z, dir_x, dir_y, dir_z, energy) {
         var seed_direction = vec3.fromValues(dir_x, dir_y, dir_z);
         vec3.normalize(seed_direction, seed_direction);
+
+        var mu = this.simulationParameters.mu;
+        var n = this.simulationParameters.angular_velocity;
+        var H = energy;
+        var phi = - (1-mu)/(Math.sqrt((x+mu)*(x+mu) + y*y + z*z)) - mu/(Math.sqrt((x-(1-mu))*(x-(1-mu)) + y*y + z*z));
+        var ydxminusxdy = y*dir_x - x*dir_y;
+        var L = -n * ydxminusxdy;
+        var R = Math.sqrt(n*n*ydxminusxdy*ydxminusxdy - 2*(phi-H));
+
+        var a1 = L + R;
+        var a2 = L - R;
+
+        console.warn("results for a", a1, a2);
+
         vec3.scale(seed_direction, seed_direction, energy);
 
         this.setSeedPosition(vec3.fromValues(x, y, z));
