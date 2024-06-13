@@ -29,6 +29,7 @@ class Streamline {
 
         this.seed_position = vec3.fromValues(0.75, 0.4, 0);
         this.seed_direction = vec3.fromValues(0, 0, 0.1);
+        this.seed_velocity = vec3.fromValues(0, 0, 0.1);
 
         this.existsInScene = false;
     }
@@ -66,33 +67,10 @@ class Streamline {
     */
 
     recalculate(x, y, z, dir_x, dir_y, dir_z, energy) {
-        var seed_direction = vec3.fromValues(dir_x, dir_y, dir_z);
-        var seed_velocity = vec3.create();
-        vec3.normalize(seed_direction, seed_direction);
-        dir_x = seed_direction[0];
-        dir_y = seed_direction[1];
-        dir_z = seed_direction[2];
-
-        var mu = this.simulationParameters.mu;
-        var n = this.simulationParameters.angular_velocity;
-        var H = energy;
-        var phi = - (1-mu)/(Math.sqrt((x+mu)*(x+mu) + y*y + z*z)) - mu/(Math.sqrt((x-(1-mu))*(x-(1-mu)) + y*y + z*z));
-        var ydxminusxdy = y*dir_x - x*dir_y;
-        var L = -n * ydxminusxdy;
-        var R = Math.sqrt(n*n*ydxminusxdy*ydxminusxdy - 2*(phi-H));
-
-        var a1 = L + R;
-        var a2 = L - R;
-        var a = Math.max(a1, a2);
-
-        console.warn("results for a", a1, a2);
-
-        vec3.scale(seed_velocity, seed_direction, a);
-        //vec3.scale(seed_direction, seed_direction, energy);
-
         this.setSeedPosition(vec3.fromValues(x, y, z));
-        this.setSeedDirection(seed_velocity);
-        this.calculate();
+        this.setSeedDirection(vec3.fromValues(dir_x, dir_y, dir_z));
+        this.updateSeedVelocity();
+        this.calculate();    
     }
 
     recalculateFromOther(other){
@@ -102,10 +80,39 @@ class Streamline {
         var end_point_data = other.list_point_data[other.list_point_data.length-1];
         vec3.copy(seed_position, end_point_data.position);
         vec3.copy(seed_direction, end_point_data.direction);
+        vec3.copy(seed_velocity, end_point_data.direction);
 
         this.setSeedPosition(seed_position);
         this.setSeedDirection(seed_direction);
         this.calculate();
+    }
+
+    updateSeedVelocity(){
+        console.warn("SEED DIRECTION: ", this.seed_direction);
+        var dir_normalized = vec3.create();
+        vec3.normalize(dir_normalized, this.seed_direction);
+        var dir_x = dir_normalized[0];
+        var dir_y = dir_normalized[1];
+        var dir_z = dir_normalized[2];
+        var x = this.seed_position[0];
+        var y = this.seed_position[1];
+        var z = this.seed_position[2];
+
+        var mu = this.simulationParameters.mu;
+        var n = this.simulationParameters.angular_velocity;
+        var H = this.simulationParameters.seed_energy;
+        var phi = - (1-mu)/(Math.sqrt((x+mu)*(x+mu) + y*y + z*z)) - mu/(Math.sqrt((x-(1-mu))*(x-(1-mu)) + y*y + z*z));
+        var ydxminusxdy = y*dir_x - x*dir_y;
+        var L = -n * ydxminusxdy;
+        var R = Math.sqrt(n*n*ydxminusxdy*ydxminusxdy - 2*(phi-H));
+
+        var a1 = L + R;
+        var a2 = L - R;
+        var a = Math.max(a1, a2);
+        console.warn("results for a", a1, a2);
+
+        vec3.scale(this.seed_velocity, dir_normalized, a);
+        console.warn("SEED VELOCITY: ", this.seed_velocity);
     }
 
     calculate() {
@@ -117,11 +124,8 @@ class Streamline {
         //initial position
         var current_position_data = new PointData();
         vec3.copy(current_position_data.position, this.seed_position);
-        vec3.copy(current_position_data.direction, this.seed_direction);
+        vec3.copy(current_position_data.direction, this.seed_velocity);
         this.list_point_data.push(current_position_data);
-
-        console.warn("SEED DIRECTION: ", this.seed_direction);
-
 
         var difference = vec3.create();//current - previous positions, calculated from k values
         var k1 = vec3.create();
@@ -310,6 +314,7 @@ class MultipleReturnsStreamline {
 
         //calculate initial streamline with last parameters
         var streamline = this.list_streamlines[index];
+        streamline.updateSeedVelocity();
         streamline.calculate();
         number_of_returns -= 1;
         this.number_success = streamline.success ? 1 : 0;
