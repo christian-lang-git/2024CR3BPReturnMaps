@@ -80,7 +80,7 @@ class Streamline {
         var end_point_data = other.list_point_data[other.list_point_data.length-1];
         vec3.copy(seed_position, end_point_data.position);
         vec3.copy(seed_direction, end_point_data.direction);
-        vec3.copy(seed_velocity, end_point_data.direction);
+        vec3.copy(this.seed_velocity, end_point_data.direction);
 
         this.setSeedPosition(seed_position);
         this.setSeedDirection(seed_direction);
