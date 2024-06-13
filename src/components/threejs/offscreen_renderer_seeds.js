@@ -58,8 +58,40 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
                 if(virtual_texture_x == 0)
                     outputColor = vec4(world_x, world_y, 0.0, 1.0);          
                 if(virtual_texture_x == 1){
-                    vec3 seed_velocity = normalize(seed_direction) * seed_energy;//TODO placeholder
-                    outputColor = vec4(seed_velocity.x, seed_velocity.y, seed_velocity.z, 1.0);
+                    if(false){
+                        vec3 seed_velocity = normalize(seed_direction) * seed_energy;//TODO placeholder
+                        outputColor = vec4(seed_velocity.x, seed_velocity.y, seed_velocity.z, 1.0);
+                    }
+                    else{
+                        vec3 dir_normalized = normalize(seed_direction);
+
+                        float x = world_x;
+                        float y = world_y;
+                        float dir_x = dir_normalized.x;
+                        float dir_y = dir_normalized.y;
+                        float dir_z = dir_normalized.z;
+    
+                        float z = 0.0;
+                        float n = angular_velocity;
+                        float H = seed_energy;
+                        float phi = - (1.0-mu)/(sqrt((x+mu)*(x+mu) + y*y + z*z)) - mu/(sqrt((x-(1.0-mu))*(x-(1.0-mu)) + y*y + z*z));
+                        float ydxminusxdy = y*dir_x - x*dir_y;
+                        float L = -n * ydxminusxdy;
+                        float R = sqrt(n*n*ydxminusxdy*ydxminusxdy - 2.0*(phi-H));
+    
+                        float a1 = L + R;
+                        float a2 = L - R;
+                        float a = max(a1, a2);
+    
+                        outputColor = vec4(a*dir_x, a*dir_y, a*dir_z, a);
+                    }
+
+                    
+
+
+
+
+                    
                 }
             }
             else{
