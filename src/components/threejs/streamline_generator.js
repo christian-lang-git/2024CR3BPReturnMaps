@@ -340,6 +340,20 @@ class MultipleReturnsStreamline {
         }
     }
 
+    recalculateKeepPosition(){
+        if(!this.has_data){
+            console.warn("recalculateKeepPosition NO DATA YET");
+            return;
+        }
+
+        var streamline = this.list_streamlines[0];
+        var position = streamline.seed_position;
+        var dir_x = this.simulationParameters.seed_direction_x;
+        var dir_y = this.simulationParameters.seed_direction_y;
+        var dir_z = this.simulationParameters.seed_direction_z;
+        var energy = this.simulationParameters.seed_energy;
+        this.recalculate(position[0], position[1], position[2], dir_x, dir_y, dir_z, energy);
+    }
 
     recalculate(x, y, z, dir_x, dir_y, dir_z, energy) {
         this.list_point_data_returns = [];
@@ -412,6 +426,11 @@ class StreamlineGenerator {
     recalculateMulti(index, x, y, z, dir_x, dir_y, dir_z, energy) {
         console.warn("### recalculateMulti");
         this.list_multi[index].recalculate(x, y, z, dir_x, dir_y, dir_z, energy);
+    }
+
+    recalculateMultiKeepPosition(index) {
+        console.warn("### recalculateMultiAtLastPosition");
+        this.list_multi[index].recalculateKeepPosition();
     }
 
     recalculateMultiWithLastParameters(index) {

@@ -488,6 +488,16 @@ class SceneWrapperVisualization {
         this.repositionReturnSpheres();
     }
 
+    recalculateStreamlineKeepPosition(){
+        var dir_x = this.simulationParameters.seed_direction_x;
+        var dir_y = this.simulationParameters.seed_direction_y;
+        var dir_z = this.simulationParameters.seed_direction_z;
+        var energy = this.simulationParameters.seed_energy;            
+        this.streamlineGenerator.recalculateMultiKeepPosition(0, dir_x, dir_y, dir_z, energy);
+        this.streamlineGenerator.updateMultiModel(0);
+        this.repositionReturnSpheres();
+    }
+
     recalculateStreamlineWithLastParameters(){    
         this.streamlineGenerator.recalculateMultiWithLastParameters(0);
         this.streamlineGenerator.updateMultiModel(0);

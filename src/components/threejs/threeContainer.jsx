@@ -164,6 +164,7 @@ class ThreeContainer extends Component {
     computeStuff(){
         this.sceneWrapper.computeStuff();
         this.sceneWrapper.recalculateStreamlineWithLastParameters();
+        this.sceneWrapper.recalculateStreamlineKeepPosition();        
     }
 
     updateVisualElements(){
