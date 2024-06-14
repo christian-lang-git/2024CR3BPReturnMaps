@@ -334,18 +334,17 @@ class SceneWrapperVisualization {
         this.offscreenRendererSeedsAndReturnsBackwards.copyTextureToLayer(this.OffscreenRendererFTLEBackwards.renderTarget.texture, 1);
 
 
-        
-        this.offscreenRendererFlowMap.computeTargetLayerAt0(2);
-        this.offscreenRendererSeedsAndReturns.copyTextureToLayer(this.offscreenRendererFlowMap.renderTarget.texture, 2); 
-        this.OffscreenRendererFTLE.computeTargetLayerAt0(2);
-        this.offscreenRendererSeedsAndReturns.copyTextureToLayer(this.OffscreenRendererFTLE.renderTarget.texture, 2);
-
-        this.offscreenRendererFlowMapBackwards.computeTargetLayerAt0(2);
-        this.offscreenRendererSeedsAndReturnsBackwards.copyTextureToLayer(this.offscreenRendererFlowMapBackwards.renderTarget.texture, 2); 
-        this.OffscreenRendererFTLEBackwards.computeTargetLayerAt0(2);
-        this.offscreenRendererSeedsAndReturnsBackwards.copyTextureToLayer(this.OffscreenRendererFTLEBackwards.renderTarget.texture, 2);
-
-
+        if(this.simulationParameters.termination_method != Constants.TERMINATION_METHOD_FIRST_RETURN){
+            this.offscreenRendererFlowMap.computeTargetLayerAt0(2);
+            this.offscreenRendererSeedsAndReturns.copyTextureToLayer(this.offscreenRendererFlowMap.renderTarget.texture, 2); 
+            this.OffscreenRendererFTLE.computeTargetLayerAt0(2);
+            this.offscreenRendererSeedsAndReturns.copyTextureToLayer(this.OffscreenRendererFTLE.renderTarget.texture, 2);
+    
+            this.offscreenRendererFlowMapBackwards.computeTargetLayerAt0(2);
+            this.offscreenRendererSeedsAndReturnsBackwards.copyTextureToLayer(this.offscreenRendererFlowMapBackwards.renderTarget.texture, 2); 
+            this.OffscreenRendererFTLEBackwards.computeTargetLayerAt0(2);
+            this.offscreenRendererSeedsAndReturnsBackwards.copyTextureToLayer(this.OffscreenRendererFTLEBackwards.renderTarget.texture, 2);
+        }
         
         this.offscreenRendererGravitationalForce.updateTexturedPlane();
         this.offscreenRendererGravitationalForce.compute();
