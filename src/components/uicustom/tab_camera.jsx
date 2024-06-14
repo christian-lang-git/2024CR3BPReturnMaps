@@ -36,7 +36,7 @@ class TabCamera extends Component {
                                 <AccordionContent>
                                     <LabeledField
                                         name="UI_STATE_CAMERA_CONTROLS_ROTATESPEED"
-                                        labelText={"rotate speed"}
+                                        labelText={"rotation speed"}
                                     />
                                     <LabeledField
                                         name="UI_STATE_CAMERA_CONTROLS_PANSPEED"

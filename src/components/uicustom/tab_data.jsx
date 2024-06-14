@@ -122,25 +122,7 @@ class TabData extends Component {
                                     />
                                     </div>
                                 </AccordionContent>
-                            </AccordionItem>
-                            <AccordionItem value="streamline">
-                                <AccordionTrigger>Streamline</AccordionTrigger>
-                                <AccordionContent>
-
-                                </AccordionContent>
-                            </AccordionItem>
-                            <AccordionItem value="ftle">
-                                <AccordionTrigger>FTLE</AccordionTrigger>
-                                <AccordionContent>
-                                    Stuff
-                                </AccordionContent>
-                            </AccordionItem>
-                            <AccordionItem value="geometry">
-                                <AccordionTrigger>Geometry</AccordionTrigger>
-                                <AccordionContent>
-                                    Stuff
-                                </AccordionContent>
-                            </AccordionItem>
+                            </AccordionItem>                            
                         </Accordion>
                     </div>
                 </ScrollArea>
