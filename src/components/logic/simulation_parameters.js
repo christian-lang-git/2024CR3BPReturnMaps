@@ -43,6 +43,7 @@ class SimulationParameters {
         this.rendering_raw_mode_layer = 0;
         this.rendering_raw_mode_x_texture_index = 0;
         this.rendering_raw_mode_y_texture_index = 0;
+        this.rendering_ftle_type = Constants.FTLE_TYPE_PSFTLE;
 
         this.scalar_min = 0.0;
         this.scalar_max = 1.0;

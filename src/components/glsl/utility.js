@@ -56,6 +56,50 @@ vec3 computeBackwardDifference(sampler3D texture, ivec3 pointer, ivec3 offset_ba
     return (value - backward) / h; 
 }
 
+/**
+ * Intended for use with PSFTLE return maps, i.e., we only care about 2 position components but 3 velocity components
+ * Ignores the 3rd component of the position
+ */
+mat2 BuildCauchyGreen(vec3 dpos_dx, vec3 dvel_dx, vec3 dpos_dy, vec3 dvel_dy){
+    /*
+                                    A =     
+                                    | x_dx x_dy |
+                                    | y_dx y_dy |
+                                    | u_dx u_dy |
+                                    | v_dx v_dy |
+                                    | w_dx w_dy |
+    
+    AT =
+    | x_dx y_dx u_dx v_dx w_dx |    | a b |
+    | x_dy y_dy u_dy v_dy w_dy |    | c d |
+
+
+    */
+    float x_dx = dpos_dx.x;
+    float y_dx = dpos_dx.y;
+    float u_dx = dvel_dx.x;
+    float v_dx = dvel_dx.y;
+    float w_dx = dvel_dx.z;
+
+    float x_dy = dpos_dy.x;
+    float y_dy = dpos_dy.y;
+    float u_dy = dvel_dy.x;
+    float v_dy = dvel_dy.y;
+    float w_dy = dvel_dy.z;
+
+    float a = x_dx*x_dx + y_dx*y_dx + u_dx*u_dx + v_dx*v_dx + w_dx*w_dx;
+    float b = x_dx*x_dy + y_dx*y_dy + u_dx*u_dy + v_dx*v_dy + w_dx*w_dy;
+    //float c = x_dy*x_dx + y_dy*y_dx + u_dy*u_dx + v_dy*v_dx + w_dy*w_dx;
+    float c = b;//symmetry
+    float d = x_dy*x_dy + y_dy*y_dy + u_dy*u_dy + v_dy*v_dy + w_dy*w_dy;
+    
+    mat2 matrix;//column major order, matrix[0] references the first column
+    matrix[0] = vec2(a, c);
+    matrix[1] = vec2(b, d);
+
+    return matrix;
+}
+
 `;
 
 export { SHADER_MODULE_UTILITY }

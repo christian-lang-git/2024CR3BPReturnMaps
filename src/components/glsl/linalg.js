@@ -3,10 +3,20 @@ const glsl = x => x[0];
 const SHADER_MODULE_LINALG = glsl`
 //code from linalg.h + additional wrapper
 
+float mat2det(mat2 a) { return a[0][0] * a[1][1] - a[0][1] * a[1][0]; }
+
 float mat3det(mat3 a) {
     return a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1]) +
            a[0][1] * (a[1][2] * a[2][0] - a[1][0] * a[2][2]) +
            a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0]);
+}
+
+void mat2invariants(mat2 m, inout vec2 pqr) {
+    // invariant0 = det(M)
+    pqr[0] = mat2det(m);
+
+    // invariant1 = -trace M
+    pqr[1] = -(m[0][0] + m[1][1]);
 }
 
 void mat3invariants(mat3 m, inout vec3 pqr) {
@@ -20,6 +30,35 @@ void mat3invariants(mat3 m, inout vec3 pqr) {
 
     // invariant2 = -trace M
     pqr[2] = -(m[0][0] + m[1][1] + m[2][2]);
+}
+
+int vec2squareroots(vec2 a, inout vec2 r)
+/*
+ *	Solves equation
+ *	    1 * x^2 + a[1]*x + a[0] = 0
+ *
+ *	On output, 
+ *	    r[0], r[1] or
+ *	    r[0] +- i*r[1] are the roots 
+ *	   
+ *	returns number of real solutions
+ */
+{
+    float discrim, root;
+
+    discrim = a[1] * a[1] - 4.0 * a[0];
+
+    if (discrim >= 0.0) {
+        root = sqrt(discrim);
+        r[0] = (-a[1] - root) / 2.0;
+        r[1] = (-a[1] + root) / 2.0;
+        return (2);
+    } else {
+        root = sqrt(-discrim);
+        r[0] = -a[1] / 2.0;
+        r[1] = root / 2.0;
+        return (0);
+    }
 }
 
 int vec3cubicroots(vec3 a, inout vec3 r, bool forceReal)
@@ -91,6 +130,14 @@ int vec3cubicroots(vec3 a, inout vec3 r, bool forceReal)
         r[2] = root / 2.;
         return 1;
     }    
+}
+
+int mat2eigenvalues(mat2 m, inout vec2 lambda) {
+    vec2 pqr;
+
+    mat2invariants(m, pqr);
+
+    return (vec2squareroots(pqr, lambda));
 }
 
 int mat3eigenvalues(mat3 m, inout vec3 lambda)

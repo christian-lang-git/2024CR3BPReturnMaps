@@ -40,3 +40,6 @@ export const LAYER_INDEX_SECOND_RETURN = 2;
 
 export const RENDERER_DIRECTION_FORWARD = true;
 export const RENDERER_DIRECTION_BACKWARD = false;
+
+export const FTLE_TYPE_END_POSITION = 0;
+export const FTLE_TYPE_PSFTLE = 1;

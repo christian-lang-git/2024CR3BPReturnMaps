@@ -18,7 +18,7 @@ import LabeledSelectTextureMode from './labeledSelectTextureMode';
 import LabeledSelectSpecializedMode from './labeledSelectSpecializedMode';
 import LabeledSelectRawMode from './labeledSelectRawMode';
 import LabeledSelectRenderingDirection from './labeledSelectRenderingDirection';
-
+import LabeledSelectFtleType from './labeledSelectFtleType';
 
 
 class TabRendering extends Component {
@@ -52,6 +52,16 @@ class TabRendering extends Component {
             );
     };
 
+    shouldRenderFtleType = () => {
+        const { uiState } = this.context;
+        return uiState.UI_STATE_RENDERING_TEXTURE_MODE === Constants.TEXTURE_MODE_SPECIALIZED
+        &&
+        (
+            uiState.UI_STATE_RENDERING_SPECIALIZED_MODE === Constants.TEXTURE_MODE_SPECIALIZED_RETURN_FTLE     
+            || uiState.UI_STATE_RENDERING_SPECIALIZED_MODE === Constants.TEXTURE_MODE_SPECIALIZED_RETURN_FTLE_BOTH               
+        );
+    };
+
     shouldRenderDirection = () => {
         const { uiState } = this.context;
         return ! //NEGATED
@@ -59,7 +69,7 @@ class TabRendering extends Component {
             uiState.UI_STATE_RENDERING_TEXTURE_MODE === Constants.TEXTURE_MODE_SPECIALIZED 
             && uiState.UI_STATE_RENDERING_SPECIALIZED_MODE === Constants.TEXTURE_MODE_SPECIALIZED_RETURN_FTLE_BOTH
         );
-};
+    };
 
 
     shouldRenderRawMode = () => {
@@ -99,6 +109,9 @@ class TabRendering extends Component {
                                                 labelText={"layer"}
                                             />
                                         </div>
+                                    )}
+                                    {this.shouldRenderFtleType() && (
+                                        <LabeledSelectFtleType />
                                     )}
                                     {this.shouldRenderDirection() && (
                                         <LabeledSelectRenderingDirection />

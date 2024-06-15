@@ -78,7 +78,10 @@ class OffscreenRendererFTLE extends OffscreenRenderer {
                     outputColor = texelFetch(texture_seeds_and_returns, pointer_original, 0);
                 }
                 else{
-                    computeFTLE(x_pixel_mod, y_pixel_mod);
+                    float ftle = computeFTLE(x_pixel_mod, y_pixel_mod);
+                    float psftle = computePSFTLE(x_pixel_mod, y_pixel_mod);
+                    
+                    outputColor = vec4(ftle,psftle, 0.0, 1.0); 
                 }
             }
         `
@@ -86,7 +89,8 @@ class OffscreenRendererFTLE extends OffscreenRenderer {
 
     fragmentShaderAdditionalMethodDeclarations(){
         return glsl`
-        void computeFTLE(int x_pixel_mod, int y_pixel_mod);
+        float computeFTLE(int x_pixel_mod, int y_pixel_mod);
+        float computePSFTLE(int x_pixel_mod, int y_pixel_mod);
         `;
     }
 
@@ -95,7 +99,7 @@ class OffscreenRendererFTLE extends OffscreenRenderer {
 
 
 
-        void computeFTLE(int x_pixel_mod, int y_pixel_mod){
+        float computeFTLE(int x_pixel_mod, int y_pixel_mod){
             float dx = 1.0 / (planeDimensionsPixel.x-1.0);
             float dy = 1.0 / (planeDimensionsPixel.y-1.0);
             ivec3 pointer = ivec3(x_pixel_mod, y_pixel_mod, target_layer_index);
@@ -142,7 +146,60 @@ class OffscreenRendererFTLE extends OffscreenRenderer {
             float advection_time = 1.0;//TODO SCALING?
             float ftle = 1.0 / advection_time * log(sqrt(lambda_max));
 
-            outputColor = vec4(ftle, 0.0, 0.0, 1.0); 
+            return ftle;
+        }
+
+        float computePSFTLE(int x_pixel_mod, int y_pixel_mod){
+            float dx = 1.0 / (planeDimensionsPixel.x-1.0);
+            float dy = 1.0 / (planeDimensionsPixel.y-1.0);
+            ivec3 pointer = ivec3(x_pixel_mod, y_pixel_mod, target_layer_index);
+
+            ivec3 x_offset_vel = ivec3(int(planeDimensionsPixel.x),0,0);
+
+            //finite differences
+            //finite differences in x direction
+            vec3 dpos_dx;
+            vec3 dvel_dx;
+            if(x_pixel_mod == 0){
+                dpos_dx = computeForwardDifference(texture_seeds_and_returns, pointer, ivec3(1,0,0), dx );
+                dvel_dx = computeForwardDifference(texture_seeds_and_returns, pointer+x_offset_vel, ivec3(1,0,0), dx );
+            }
+            else if(x_pixel_mod == int(planeDimensionsPixel.x-1.0)){
+                dpos_dx = computeBackwardDifference(texture_seeds_and_returns, pointer, ivec3(-1,0,0), dx );
+                dvel_dx = computeBackwardDifference(texture_seeds_and_returns, pointer+x_offset_vel, ivec3(-1,0,0), dx );
+            }
+            else{
+                dpos_dx = computeCentralDifference(texture_seeds_and_returns, pointer, ivec3(-1,0,0), ivec3(1,0,0), dx );
+                dvel_dx = computeCentralDifference(texture_seeds_and_returns, pointer+x_offset_vel, ivec3(-1,0,0), ivec3(1,0,0), dx );
+            }
+            //finite differences in y direction
+            vec3 dpos_dy;
+            vec3 dvel_dy;
+            if(y_pixel_mod == 0){
+                dpos_dy = computeForwardDifference(texture_seeds_and_returns, pointer, ivec3(0,1,0), dx );
+                dvel_dy = computeForwardDifference(texture_seeds_and_returns, pointer+x_offset_vel, ivec3(0,1,0), dx );
+            }
+            else if(y_pixel_mod == int(planeDimensionsPixel.y-1.0)){
+                dpos_dy = computeBackwardDifference(texture_seeds_and_returns, pointer, ivec3(0,-1,0), dx );
+                dvel_dy = computeBackwardDifference(texture_seeds_and_returns, pointer+x_offset_vel, ivec3(0,-1,0), dx );
+            }
+            else{
+                dpos_dy = computeCentralDifference(texture_seeds_and_returns, pointer, ivec3(0,-1,0), ivec3(0,1,0), dy );
+                dvel_dy = computeCentralDifference(texture_seeds_and_returns, pointer+x_offset_vel, ivec3(0,-1,0), ivec3(0,1,0), dy );
+            }
+
+            mat2 C = BuildCauchyGreen(dpos_dx, dvel_dx, dpos_dy, dvel_dy);
+
+            //biggest eigenvalue lambda_max
+            vec2 lambdas = vec2(0,0);
+            mat2eigenvalues(C, lambdas);
+            float lambda_max = max(lambdas.x, lambdas.y);
+
+            //FTLE
+            float advection_time = 1.0;//TODO SCALING?
+            float ftle = 1.0 / advection_time * log(sqrt(lambda_max));
+
+            return ftle;
         }
         `
     }

@@ -264,7 +264,7 @@ class TextureRenderer {
                     x_virtual = 1;
                     y_virtual = 1;
                     z_layer = return_layer;
-                    component = 0;
+                    component = ftle_type;
                     scalar = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
 
                     if(false){//TODO parameter to use color map instead of red blue
@@ -285,7 +285,7 @@ class TextureRenderer {
                     x_virtual = 1;
                     y_virtual = 1;
                     z_layer = return_layer;
-                    component = 0;
+                    component = ftle_type;
                     scalar = InterpolateScalarWrapper(true, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
                     float scalarBackwards = InterpolateScalarWrapper(false, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
                     float t_forward = (scalar - scalar_min) / (scalar_max - scalar_min);
@@ -530,7 +530,8 @@ class TextureRenderer {
         this.uniforms["scalar_max"] = { type: 'float', value: 1.0 };
         this.uniforms["opacity"] = { type: 'float', value: 1.0 };
 
-
+        this.uniforms["ftle_type"] = { type: 'int', value: Constants.FTLE_TYPE_PSFTLE };
+        
     }
 
     setAdditionalUniforms() {
@@ -547,6 +548,7 @@ class TextureRenderer {
         this.textured_plane_mesh.material.uniforms.scalar_min.value = this.simulationParameters.scalar_min;
         this.textured_plane_mesh.material.uniforms.scalar_max.value = this.simulationParameters.scalar_max;
         this.textured_plane_mesh.material.uniforms.opacity.value = this.simulationParameters.opacity;
+        this.textured_plane_mesh.material.uniforms.ftle_type.value = this.simulationParameters.rendering_ftle_type;
 
         console.warn("this.uniforms", this.uniforms);
     }
