@@ -1,6 +1,6 @@
 import "./App.css"
 import * as Constants from "./components/utility/constants";
-import ThreeContainer from "./components/threejs/threeContainer";
+import ThreeContainerMain from "./components/threejs/threeContainerMain";
 import Emitter from "./components/utility/emitter";
 import LeftPanel from "./components/uicustom/leftpanel";
 import {
@@ -31,11 +31,11 @@ function App() {
                     <ResizableHandle />
                     <ResizablePanel onResize={handleResizePanel} defaultSize={70}>
                         <ResizablePanelGroup direction="vertical">
-                            <ResizablePanel onResize={handleResizePanel} defaultSize={75}>
-                                <ThreeContainer />
+                            <ResizablePanel onResize={handleResizePanel} defaultSize={85}>
+                                <ThreeContainerMain />
                             </ResizablePanel>
                             <ResizableHandle />
-                            <ResizablePanel defaultSize={25}>
+                            <ResizablePanel defaultSize={15}>
                                 <div className="flex items-center justify-center p-2">
                                     <BehaviorBar />
                                 </div>

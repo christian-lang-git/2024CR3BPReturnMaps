@@ -6,11 +6,15 @@ import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls
 import Emitter from '../utility/emitter';
 import * as Constants from "../utility/constants";
 import { AppContext } from "@/components/uicustom/AppContext"
-import { SceneWrapperVisualization } from "./sceneWrapperVisualization";
 
 class ThreeContainer extends Component {
 
     static contextType = AppContext;
+
+    constructor(props) {
+        super(props);
+        console.warn("CONSTRUCTOR ThreeContainer");
+    }
 
     componentDidMount() {
         console.warn("ThreeScene::componentDidMount");
@@ -21,6 +25,7 @@ class ThreeContainer extends Component {
         this.initializeControls();
         this.initializeRayCaster();
         this.initializeEventHandlers();
+        this.initializeAdditionalEventHandlers();
 
         this.loadScene();
 
@@ -69,18 +74,21 @@ class ThreeContainer extends Component {
 
     initializeEventHandlers() {
         window.addEventListener("resize", this.handleResize);
-        Emitter.on(Constants.EVENT_RESIZE_PANEL, this.handleResize);
-        Emitter.on(Constants.EVENT_DATA_UPDATE, this.handleEventDataUpdate);
-        Emitter.on(Constants.EVENT_CAMERA_UPDATE, this.handleEventCameraUpdate);
-        Emitter.on(Constants.EVENT_RENDERING_UPDATE, this.handleEventRenderingUpdate);
-        Emitter.on(Constants.EVENT_ALIGN_CAMERA, this.handleEventAlignCamera);        
+        Emitter.on(Constants.EVENT_RESIZE_PANEL, this.handleResize);    
+        Emitter.on(Constants.EVENT_CAMERA_UPDATE, this.handleEventCameraUpdate); 
     }
 
+    initializeAdditionalEventHandlers() {
+        //define in child class  
+        console.error("initializeAdditionalEventHandlers not defined");
+    }
 
-
+    /**
+     * generates and initializes a SceneWrapper "this.sceneWrapper"
+     */
     loadScene() {
-        this.sceneWrapper = new SceneWrapperVisualization(this.renderer, this.scene, this.camera, this.controls, this.raycaster);
-        this.sceneWrapper.initialize();
+        //define in child class
+        console.error("loadScene not defined");
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,24 +107,6 @@ class ThreeContainer extends Component {
     handleEventCameraUpdate = () => {
         console.log("handleEventCameraUpdate");
         this.updateControls();
-    }
-
-    handleEventDataUpdate = () => {
-        console.log("handleEventDataUpdate");
-        this.updateParametersData();
-        this.computeStuff();
-        this.updateVisualElements();
-    }
-
-    handleEventRenderingUpdate = () => {
-        console.log("handleEventRenderingUpdate");
-        this.updateParametersRendering();
-        this.updateVisualElements();
-    }
-
-    handleEventAlignCamera = () => {
-        console.log("handleEventAlignCamera");
-        this.alignCameraWithDomain();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -162,17 +152,13 @@ class ThreeContainer extends Component {
     }
 
     computeStuff(){
-        this.sceneWrapper.computeStuff();
-        this.sceneWrapper.recalculateStreamlineWithLastParameters();
-        this.sceneWrapper.recalculateStreamlineKeepPosition();        
+        //define in child class
+        console.error("computeStuff not defined");
     }
 
     updateVisualElements(){
-        this.sceneWrapper.updateBodies();
-        this.sceneWrapper.updateClickedPosition();   
-        this.sceneWrapper.updateStreamlineModel();  
-        this.sceneWrapper.updateTexturedPlane();
-        this.sceneWrapper.updateAxes();
+        //define in child class
+        console.error("updateVisualElements not defined");
     }
 
     updateParametersData() {
