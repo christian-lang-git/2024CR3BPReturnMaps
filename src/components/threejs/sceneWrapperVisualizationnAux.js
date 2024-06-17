@@ -42,6 +42,19 @@ class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
         this.changeDisplayedTexture();
         this.textureRenderer.updateTexturedPlane();
     }
+
+    updateAxes(){
+        var has_z = false;
+        var min_x = 0;
+        var max_x = 1;
+        var min_y = 0;
+        var max_y = 1;    
+        var radius = 0.002;
+        var color1 = 0x00ffff;
+        var color2 = 0xff00ff;
+        var color3 = 0x000000;
+        this.objectAxes.rebuild(has_z, this.scene, this.simulationParameters, min_x, max_x, min_y, max_y, radius, color1, color2, color3);
+    }
 }
 
 export { SceneWrapperVisualizationAux };

@@ -61,7 +61,8 @@ class ObjectAxes{
 
         this.list_arrows = [];
 
-        this.build();
+        var has_z = true;
+        this.build(has_z);
     }
 
     setValues(position, length_x, length_y, length_z, radius, cone_radius_factor, cone_fraction){
@@ -74,19 +75,21 @@ class ObjectAxes{
         this.cone_fraction = cone_fraction;
     }
 
-    build(){
+    build(has_z, color1, color2, color3){
         this.list_arrows = [];
 
-        this.axes_arrow_x = new ObjectArrow(this.position, this.length_x, this.radius, this.cone_radius_factor, this.cone_fraction, 0xff0000);
+        this.axes_arrow_x = new ObjectArrow(this.position, this.length_x, this.radius, this.cone_radius_factor, this.cone_fraction, color1);
         this.axes_arrow_x.mesh.rotateZ(THREE.MathUtils.degToRad(-90));
         this.list_arrows.push(this.axes_arrow_x);
 
-        this.axes_arrow_y = new ObjectArrow(this.position, this.length_y, this.radius, this.cone_radius_factor, this.cone_fraction, 0x00ff00);
+        this.axes_arrow_y = new ObjectArrow(this.position, this.length_y, this.radius, this.cone_radius_factor, this.cone_fraction, color2);
         this.list_arrows.push(this.axes_arrow_y);
 
-        this.axes_arrow_z = new ObjectArrow(this.position, this.length_z, this.radius, this.cone_radius_factor, this.cone_fraction, 0x0000ff);
-        this.axes_arrow_z.mesh.rotateX(THREE.MathUtils.degToRad(90));
-        this.list_arrows.push(this.axes_arrow_z);
+        if(has_z){
+            this.axes_arrow_z = new ObjectArrow(this.position, this.length_z, this.radius, this.cone_radius_factor, this.cone_fraction, color3);
+            this.axes_arrow_z.mesh.rotateX(THREE.MathUtils.degToRad(90));
+            this.list_arrows.push(this.axes_arrow_z);
+        }
     }
 
     addToScene(scene){
@@ -104,26 +107,19 @@ class ObjectAxes{
         }
     }
 
-    rebuild(scene, simulationParameters){       
+    rebuild(has_z, scene, simulationParameters, min_x, max_x, min_y, max_y, radius, color1, color2, color3){       
 
         this.removefromScene(scene);
-
-        var min_x = simulationParameters.domain_min_x;
-        var max_x = simulationParameters.domain_max_x;
-        var min_y = simulationParameters.domain_min_y;
-        var max_y = simulationParameters.domain_max_y;
-
 
         var position = vec3.fromValues(min_x, min_y, 0);
         var length_x = max_x - min_x;
         var length_y = max_y - min_y;
         var length_z = Math.min(length_x, length_y) / 2;
-        var radius = 0.02;
         var cone_radius_factor = 5.0;
         var cone_fraction = 0.05;
 
         this.setValues(position, length_x, length_y, length_z, radius, cone_radius_factor, cone_fraction);
-        this.build();
+        this.build(has_z, color1, color2, color3);
         this.addToScene(scene);
     }
 }

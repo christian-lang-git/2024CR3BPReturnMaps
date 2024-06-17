@@ -42,6 +42,19 @@ class SceneWrapperVisualizationMain extends SceneWrapperVisualization{
         this.changeDisplayedTexture();
         this.textureRenderer.updateTexturedPlane();
     }
+
+    updateAxes(){
+        var has_z = true;
+        var min_x = this.simulationParameters.domain_min_x;
+        var max_x = this.simulationParameters.domain_max_x;
+        var min_y = this.simulationParameters.domain_min_y;
+        var max_y = this.simulationParameters.domain_max_y;        
+        var radius = 0.02;
+        var color1 = 0xff0000;
+        var color2 = 0x00ff00;
+        var color3 = 0x0000ff;
+        this.objectAxes.rebuild(has_z, this.scene, this.simulationParameters, min_x, max_x, min_y, max_y, radius, color1, color2, color3);
+    }
 }
 
 export { SceneWrapperVisualizationMain };

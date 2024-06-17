@@ -362,7 +362,8 @@ class SceneWrapperVisualization {
     }
 
     updateAxes(){
-        this.objectAxes.rebuild(this.scene, this.simulationParameters);
+        //define in child class
+        console.error("loadScene not defined");
     }
 
     alignCameraWithDomain(camera, controls){
