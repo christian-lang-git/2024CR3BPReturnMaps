@@ -8,8 +8,8 @@ class SimulationParameters {
         this.seed_direction_x = 1;
         this.seed_direction_y = 0;
         this.seed_direction_z = 1;
-        this.seed_energy = 0.25;//used to calculate seed velocity (varies with position)
-
+        this.seed_energy = 0.25;//used to calculate seed velocity - this is either the hamiltonian or the magnitude depending on use_constant_velocity
+        this.use_constant_velocity = false;//if set to false, use constant hamiltonian
         //RK4
         this.max_steps = 15000;
         this.step_size = 0.001;

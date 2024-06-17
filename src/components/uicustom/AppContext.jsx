@@ -45,6 +45,7 @@ export const AppProvider = ({ children }) => {
         UI_STATE_RENDERING_TUBE_NUM_SIDES: "20",
         UI_STATE_RENDERING_TUBE_ONLY_SHOW_SUCCESSFUL_RETURNS: "true",
         UI_STATE_ACTIVE_BEHAVIOR: Constants.BEHAVIOR_CONTROL_CAMERA,
+        UI_STATE_DATA_PHYSICS_USE_CONSTANT_VELOCITY: false,
     });
 
     const value = {

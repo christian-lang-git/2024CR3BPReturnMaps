@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { AppContext } from "@/components/uicustom/AppContext"
 import {
     Accordion,
     AccordionContent,
@@ -13,6 +14,7 @@ import * as Constants from "@/components/utility/constants";
 import LabeledField from "@/components/uicustom/labeledfield";
 import LabeledSelect from "@/components/uicustom/labeledSelect";
 import LabeledSelectTerminationMethod from "@/components/uicustom/labeledSelectTerminationMethod";
+import LabeledSelectUseConstantVelocity from "@/components/uicustom/labeledSelectUseConstantVelocity";
 import { Input } from "@/components/ui/input"
 import {
     Select,
@@ -25,10 +27,22 @@ import { Label } from '@radix-ui/react-label';
 
 class TabData extends Component {
 
+    static contextType = AppContext;
+
     handleClickDataUpdate() {
         console.log("handleClickDataUpdate")
         Emitter.emit(Constants.EVENT_DATA_UPDATE, {});
     }
+
+    shouldRenderSeedMagnitude = () => {
+        const { uiState } = this.context;
+        return uiState.UI_STATE_DATA_PHYSICS_USE_CONSTANT_VELOCITY === true;
+    };
+
+    shouldRenderSeedHamiltonian = () => {
+        const { uiState } = this.context;
+        return uiState.UI_STATE_DATA_PHYSICS_USE_CONSTANT_VELOCITY === false;
+    };
 
     render() {
         return (
@@ -51,12 +65,22 @@ class TabData extends Component {
                                     <LabeledField
                                         name="UI_STATE_DATA_PHYSICS_ANGULAR_VELOCITY"
                                         labelText={"angular velocity: n"}
-                                    />
-                                    
-                                    <LabeledField
+                                    />                                    
+                                    <div className="grid grid-cols-2">
+                                    <LabeledSelectUseConstantVelocity/>
+                                    {this.shouldRenderSeedMagnitude() && (
+                                        <LabeledField
                                         name="UI_STATE_DATA_PHYSICS_SEED_ENERGY"
-                                        labelText={"seed energy"}
-                                    />
+                                        labelText={"magnitude"}
+                                        />
+                                    )}
+                                    {this.shouldRenderSeedHamiltonian() && (
+                                        <LabeledField
+                                        name="UI_STATE_DATA_PHYSICS_SEED_ENERGY"
+                                        labelText={"hamiltonian"}
+                                        />
+                                    )}
+                                    </div>    
                                     <Label className="font-medium">seed direction</Label>
                                     <div className="grid grid-cols-3">
                                     <LabeledField

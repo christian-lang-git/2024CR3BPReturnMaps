@@ -42,6 +42,8 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
     addAdditionalUniforms() {
         this.uniforms["seed_direction"] = { type: 'vec3', value: new THREE.Vector3(0, 0, 0) };
         this.uniforms["seed_energy"] = { type: 'float', value: 1.0 };
+        this.uniforms["use_constant_velocity"] = { type: 'bool', value: false };
+        this.uniforms["mode_constant_direction"] = { type: 'bool', value: true };
     }
 
     setAdditionalUniforms() {
@@ -49,29 +51,55 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
         this.dummy_plane_mesh.material.uniforms.seed_direction.value.y = this.simulationParameters.seed_direction_y;
         this.dummy_plane_mesh.material.uniforms.seed_direction.value.z = this.simulationParameters.seed_direction_z;
         this.dummy_plane_mesh.material.uniforms.seed_energy.value = this.simulationParameters.seed_energy;
+        this.dummy_plane_mesh.material.uniforms.use_constant_velocity.value = this.simulationParameters.use_constant_velocity;
         
     }
 
     fragmentShaderMethodComputation() {
         return glsl`
-            if(virtual_texture_y == 0){
-                if(virtual_texture_x == 0)
-                    outputColor = vec4(world_x, world_y, 0.0, 1.0);          
+            if(mode_constant_direction){
+                computeSeedConstantDirection(virtual_texture_x, virtual_texture_y, world_x, world_y);
+            }
+            else{
+                //computeSeedConstantPosition(virtual_texture_x, virtual_texture_y, world_x, world_y);
+            }    
+        `
+    }
+
+    fragmentShaderAdditionalMethodDeclarations(){
+        return glsl`
+        void computeSeedConstantDirection(int virtual_texture_x, int virtual_texture_y, float world_x, float world_y);
+        void computeSeedConstantPosition(int virtual_texture_x, int virtual_texture_y, float world_x, float world_y);
+        `;
+    }
+
+    fragmentShaderAdditionalMethodDefinitions(){
+        return glsl`
+
+        void computeSeedConstantDirection(int virtual_texture_x, int virtual_texture_y, float world_x, float world_y){
+            if(virtual_texture_y == 0){                
+                if(virtual_texture_x == 0){
+                    //POSITION CALCULATION
+                    outputColor = vec4(world_x, world_y, 0.0, 1.0);
+                }        
                 if(virtual_texture_x == 1){
-                    if(false){
+                    //VELOCITY CALCULATION
+                    if(use_constant_velocity){
+                        //if set to true, use constant velocity
                         vec3 seed_velocity = normalize(seed_direction) * seed_energy;//TODO placeholder
                         outputColor = vec4(seed_velocity.x, seed_velocity.y, seed_velocity.z, 1.0);
                     }
                     else{
+                        //if set to false, use constant hamiltonian
                         vec3 dir_normalized = normalize(seed_direction);
 
                         float x = world_x;
                         float y = world_y;
+                        float z = 0.0;
                         float dir_x = dir_normalized.x;
                         float dir_y = dir_normalized.y;
                         float dir_z = dir_normalized.z;
     
-                        float z = 0.0;
                         float n = angular_velocity;
                         float H = seed_energy;
                         float phi = - (1.0-mu)/(sqrt((x+mu)*(x+mu) + y*y + z*z)) - mu/(sqrt((x-(1.0-mu))*(x-(1.0-mu)) + y*y + z*z));
@@ -84,21 +112,16 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
                         float a = max(a1, a2);
     
                         outputColor = vec4(a*dir_x, a*dir_y, a*dir_z, a);
-                    }
-
-                    
-
-
-
-
-                    
+                    }                    
                 }
             }
             else{
                 outputColor = vec4(0.0, 0.0, 0.0, 0.0);         
             }
+        }
         `
     }
+
 
 }
 

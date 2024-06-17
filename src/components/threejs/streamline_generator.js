@@ -89,29 +89,40 @@ class Streamline {
 
     updateSeedVelocity(){
         console.warn("SEED DIRECTION: ", this.seed_direction);
-        var dir_normalized = vec3.create();
-        vec3.normalize(dir_normalized, this.seed_direction);
-        var dir_x = dir_normalized[0];
-        var dir_y = dir_normalized[1];
-        var dir_z = dir_normalized[2];
-        var x = this.seed_position[0];
-        var y = this.seed_position[1];
-        var z = this.seed_position[2];
 
-        var mu = this.simulationParameters.mu;
-        var n = this.simulationParameters.angular_velocity;
-        var H = this.simulationParameters.seed_energy;
-        var phi = - (1-mu)/(Math.sqrt((x+mu)*(x+mu) + y*y + z*z)) - mu/(Math.sqrt((x-(1-mu))*(x-(1-mu)) + y*y + z*z));
-        var ydxminusxdy = y*dir_x - x*dir_y;
-        var L = -n * ydxminusxdy;
-        var R = Math.sqrt(n*n*ydxminusxdy*ydxminusxdy - 2*(phi-H));
+        if(this.simulationParameters.use_constant_velocity){
+            //if set to true, use constant velocity
+            var dir_normalized = vec3.create();
+            vec3.normalize(dir_normalized, this.seed_direction);
+            vec3.scale(this.seed_velocity, dir_normalized, this.simulationParameters.seed_energy);
+        }
+        else{
+            //if set to false, use constant hamiltonian
+            var dir_normalized = vec3.create();
+            vec3.normalize(dir_normalized, this.seed_direction);
+            var dir_x = dir_normalized[0];
+            var dir_y = dir_normalized[1];
+            var dir_z = dir_normalized[2];
+            var x = this.seed_position[0];
+            var y = this.seed_position[1];
+            var z = this.seed_position[2];
+    
+            var mu = this.simulationParameters.mu;
+            var n = this.simulationParameters.angular_velocity;
+            var H = this.simulationParameters.seed_energy;
+            var phi = - (1-mu)/(Math.sqrt((x+mu)*(x+mu) + y*y + z*z)) - mu/(Math.sqrt((x-(1-mu))*(x-(1-mu)) + y*y + z*z));
+            var ydxminusxdy = y*dir_x - x*dir_y;
+            var L = -n * ydxminusxdy;
+            var R = Math.sqrt(n*n*ydxminusxdy*ydxminusxdy - 2*(phi-H));
+    
+            var a1 = L + R;
+            var a2 = L - R;
+            var a = Math.max(a1, a2);
+            console.warn("results for a", a1, a2);
+    
+            vec3.scale(this.seed_velocity, dir_normalized, a);
+        }
 
-        var a1 = L + R;
-        var a2 = L - R;
-        var a = Math.max(a1, a2);
-        console.warn("results for a", a1, a2);
-
-        vec3.scale(this.seed_velocity, dir_normalized, a);
         console.warn("SEED VELOCITY: ", this.seed_velocity);
     }
 
