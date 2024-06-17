@@ -81,7 +81,7 @@ class TabData extends Component {
                                         />
                                     )}
                                     </div>    
-                                    <Label className="font-medium">seed direction</Label>
+                                    <Label className="font-medium">constant seed direction (left view)</Label>
                                     <div className="grid grid-cols-3">
                                     <LabeledField
                                         name="UI_STATE_DATA_PHYSICS_SEED_DIRECTION_X"
@@ -95,7 +95,18 @@ class TabData extends Component {
                                         name="UI_STATE_DATA_PHYSICS_SEED_DIRECTION_Z"
                                         labelText={"z"}
                                     />
-                                    </div>                                    
+                                    </div>       
+                                    <Label className="font-medium">constant seed position (right view)</Label>
+                                    <div className="grid grid-cols-2">
+                                    <LabeledField
+                                        name="UI_STATE_DATA_PHYSICS_SEED_POSITION_X"
+                                        labelText={"x"}
+                                    />
+                                    <LabeledField
+                                        name="UI_STATE_DATA_PHYSICS_SEED_POSITION_Y"
+                                        labelText={"y"}
+                                    />
+                                    </div>                                 
                                 </AccordionContent>
                             </AccordionItem>
                             <AccordionItem value="integration">

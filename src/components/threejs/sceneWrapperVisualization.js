@@ -22,18 +22,20 @@ import { ColorMaps } from "@/components/colormaps/colormaps"
  * - a deformed sphere that visualizes equivalent energy
  */
 class SceneWrapperVisualization {
-    constructor(renderer, scene, camera, controls, raycaster) {
+    constructor(renderer, scene, camera, controls, raycaster, mode_constant_direction) {
+        console.warn("CONSTRUCTOR SceneWrapperVisualization");
         this.renderer = renderer;
         this.scene = scene;
         this.camera = camera;
         this.controls = controls;
         this.raycaster = raycaster;
+        this.mode_constant_direction = mode_constant_direction;
         this.simulationParameters = new SimulationParameters();
         this.colorMaps = new ColorMaps();
         this.streamlineGenerator = new StreamlineGenerator(this.simulationParameters, scene);
         this.streamlineGenerator.initialize();
-        this.offscreenRendererSeeds = new OffscreenRendererSeeds(renderer, this.simulationParameters);
-        this.offscreenRendererSeedsBackwards = new OffscreenRendererSeeds(renderer, this.simulationParameters);
+        this.offscreenRendererSeeds = new OffscreenRendererSeeds(renderer, this.simulationParameters, this.mode_constant_direction);
+        this.offscreenRendererSeedsBackwards = new OffscreenRendererSeeds(renderer, this.simulationParameters, this.mode_constant_direction);
         this.offscreenRendererFlowMap = new OffscreenRendererFlowMap(renderer, this.simulationParameters, 1);
         this.offscreenRendererFlowMapBackwards = new OffscreenRendererFlowMap(renderer, this.simulationParameters, -1);
         this.OffscreenRendererFTLE = new OffscreenRendererFTLE(renderer, this.simulationParameters);
@@ -236,7 +238,7 @@ class SceneWrapperVisualization {
 
 
 
-    updateParametersData(mu, angular_velocity, use_constant_velocity, seed_energy, seed_direction_x, seed_direction_y, seed_direction_z, step_size, max_steps, termination_method, domain_min_x, domain_max_x, domain_pixels_x, domain_min_y, domain_max_y, domain_pixels_y) {
+    updateParametersData(mu, angular_velocity, use_constant_velocity, seed_energy, seed_direction_x, seed_direction_y, seed_direction_z, seed_position_x, seed_position_y, step_size, max_steps, termination_method, domain_min_x, domain_max_x, domain_pixels_x, domain_min_y, domain_max_y, domain_pixels_y) {
         this.simulationParameters.mu = parseFloat(mu);
         this.simulationParameters.angular_velocity = parseFloat(angular_velocity);
         this.simulationParameters.use_constant_velocity = use_constant_velocity;
@@ -244,6 +246,8 @@ class SceneWrapperVisualization {
         this.simulationParameters.seed_direction_x = parseFloat(seed_direction_x);
         this.simulationParameters.seed_direction_y = parseFloat(seed_direction_y);
         this.simulationParameters.seed_direction_z = parseFloat(seed_direction_z);
+        this.simulationParameters.seed_position_x = parseFloat(seed_position_x);
+        this.simulationParameters.seed_position_y = parseFloat(seed_position_y);
 
         this.simulationParameters.step_size = parseFloat(step_size);
         this.simulationParameters.max_steps = parseInt(max_steps);        

@@ -170,6 +170,8 @@ class ThreeContainer extends Component {
         var seed_direction_x = uiState.UI_STATE_DATA_PHYSICS_SEED_DIRECTION_X;
         var seed_direction_y = uiState.UI_STATE_DATA_PHYSICS_SEED_DIRECTION_Y;
         var seed_direction_z = uiState.UI_STATE_DATA_PHYSICS_SEED_DIRECTION_Z;
+        var seed_position_x = uiState.UI_STATE_DATA_PHYSICS_SEED_POSITION_X;
+        var seed_position_y = uiState.UI_STATE_DATA_PHYSICS_SEED_POSITION_Y;
 
         var step_size = uiState.UI_STATE_DATA_INTEGRATION_STEP_SIZE;
         var max_steps = uiState.UI_STATE_DATA_INTEGRATION_MAX_STEPS;
@@ -182,7 +184,7 @@ class ThreeContainer extends Component {
         var domain_max_y = uiState.UI_STATE_DATA_DOMAIN_MAX_Y;
         var domain_pixels_y = uiState.UI_STATE_DATA_DOMAIN_PIXELS_Y;
 
-        this.sceneWrapper.updateParametersData(mu, angular_velocity, use_constant_velocity, seed_energy, seed_direction_x, seed_direction_y, seed_direction_z, step_size, max_steps, termination_method, domain_min_x, domain_max_x, domain_pixels_x, domain_min_y, domain_max_y, domain_pixels_y);
+        this.sceneWrapper.updateParametersData(mu, angular_velocity, use_constant_velocity, seed_energy, seed_direction_x, seed_direction_y, seed_direction_z, seed_position_x, seed_position_y, step_size, max_steps, termination_method, domain_min_x, domain_max_x, domain_pixels_x, domain_min_y, domain_max_y, domain_pixels_y);
     }
 
     updateParametersRendering(){

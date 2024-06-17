@@ -205,6 +205,7 @@ class OffscreenRenderer {
         varying vec3 vUv;
 
         const float G = 1.0;//TODO
+        const float PI = 3.1415926535897932384626433832795;
         out vec4 outputColor;
   
         void main() {
@@ -220,9 +221,14 @@ class OffscreenRenderer {
             int virtual_texture_x = int(x_pixel) / int(planeDimensionsPixel.x);
             int virtual_texture_y = int(y_pixel) / int(planeDimensionsPixel.y);
 
-            //world coordinates in virtual texture
+            //world coordinates in virtual texture (when position is variable and direction is constant)
             float world_x = planeCornerBL.x + (float(x_pixel_mod) / (planeDimensionsPixel.x - 1.0)) * planeDimensions.x;
             float world_y = planeCornerBL.y + (float(y_pixel_mod) / (planeDimensionsPixel.y - 1.0)) * planeDimensions.y;
+
+            //angles in virtual texture (when position is constant and direction is variable)
+            //ISO convention (i.e. for physics: radius r, inclination theta, azimuth phi) --> https://en.wikipedia.org/wiki/Spherical_coordinate_system#Cartesian_coordinates
+            float theta_radians = PI * (float(x_pixel_mod) / (planeDimensionsPixel.x - 1.0));//TODO REPLACE planeDimensionsPixel with dimension of other grid
+            float phi_radians = 2.0 * PI * (float(y_pixel_mod) / (planeDimensionsPixel.y - 1.0));//TODO REPLACE planeDimensionsPixel with dimension of other grid
         `
             + this.fragmentShaderMethodComputation() +
             `

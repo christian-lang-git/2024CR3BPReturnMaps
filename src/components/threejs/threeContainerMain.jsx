@@ -6,7 +6,7 @@ import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls
 import Emitter from '../utility/emitter';
 import * as Constants from "../utility/constants";
 import { AppContext } from "@/components/uicustom/AppContext"
-import { SceneWrapperVisualization } from "./sceneWrapperVisualization";
+import { SceneWrapperVisualizationMain } from "./sceneWrapperVisualizationMain";
 import ThreeContainer from "./threeContainer";
 
 class ThreeContainerMain extends ThreeContainer {
@@ -31,7 +31,7 @@ class ThreeContainerMain extends ThreeContainer {
     }
 
     loadScene() {
-        this.sceneWrapper = new SceneWrapperVisualization(this.renderer, this.scene, this.camera, this.controls, this.raycaster);
+        this.sceneWrapper = new SceneWrapperVisualizationMain(this.renderer, this.scene, this.camera, this.controls, this.raycaster);
         this.sceneWrapper.initialize();
     }
 
