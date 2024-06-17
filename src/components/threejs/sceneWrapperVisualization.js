@@ -330,8 +330,18 @@ class SceneWrapperVisualization {
     }
 
     updateTexturedPlane(){
-        //define in child class
-        console.error("loadScene not defined");
+        var min_x = this.getTexturedPlaneMinX();
+        var max_x = this.getTexturedPlaneMaxX();
+        var min_y = this.getTexturedPlaneMinY();
+        var max_y = this.getTexturedPlaneMaxY();
+        var scale_x = max_x - min_x;
+        var scale_y = max_y - min_y;
+        var pos_x = 0.5 * (min_x + max_x);
+        var pos_y = 0.5 * (min_y + max_y);
+
+        this.textureRenderer.updateTransform(pos_x, pos_y, scale_x, scale_y);
+        this.changeDisplayedTexture();
+        this.textureRenderer.updateTexturedPlane();
     }
 
     updateAxes(){
