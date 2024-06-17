@@ -57,6 +57,26 @@ class SceneWrapperVisualizationMain extends SceneWrapperVisualization{
         this.scene.add(this.center_mesh);
     }
 
+    getTexturedPlaneMinX(){
+        return this.simulationParameters.domain_min_x;
+    }
+
+    getTexturedPlaneMaxX(){
+        return this.simulationParameters.domain_max_x;
+    }
+
+    getTexturedPlaneMinY(){
+        return this.simulationParameters.domain_min_y;
+    }
+
+    getTexturedPlaneMaxY(){
+        return this.simulationParameters.domain_max_y;
+    }
+
+    getDefaultCameraDistance(){
+        return 11;
+    }
+
     updateVisualElements(){
         this.updateBodies();
         this.updateClickedPosition();   

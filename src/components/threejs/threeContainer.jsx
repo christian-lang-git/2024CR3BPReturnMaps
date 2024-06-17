@@ -34,6 +34,7 @@ class ThreeContainer extends Component {
         this.updateParameters();
         this.computeStuff();
         this.updateVisualElements();
+        this.alignCameraWithDomain();
         this.renderLoop();
     }
 

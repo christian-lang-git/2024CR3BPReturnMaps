@@ -32,6 +32,26 @@ class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
 
     }
 
+    getTexturedPlaneMinX(){
+        return 0;
+    }
+
+    getTexturedPlaneMaxX(){
+        return 1;
+    }
+
+    getTexturedPlaneMinY(){
+        return 0;
+    }
+
+    getTexturedPlaneMaxY(){
+        return 1;
+    }
+
+    getDefaultCameraDistance(){
+        return 0.75;
+    }
+
     updateVisualElements(){
         this.updateClickedPosition();   
         this.updateStreamlineModel();  

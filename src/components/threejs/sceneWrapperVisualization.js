@@ -182,6 +182,31 @@ class SceneWrapperVisualization {
         );
     }
 
+    getTexturedPlaneMinX(){
+        //define in child class
+        console.error("getTexturedPlaneMinX not defined");
+    }
+
+    getTexturedPlaneMaxX(){
+        //define in child class
+        console.error("getTexturedPlaneMaxX not defined");
+    }
+
+    getTexturedPlaneMinY(){
+        //define in child class
+        console.error("getTexturedPlaneMinY not defined");
+    }
+
+    getTexturedPlaneMaxY(){
+        //define in child class
+        console.error("getTexturedPlaneMaxY not defined");
+    }
+
+    getDefaultCameraDistance(){
+        //define in child class
+        console.error("getTexturedPlaneMaxY not defined");
+    }
+
     rayCastAndMovePosition(mousePositionNDC){
         
         //console.log("CLICK NDC:", mousePositionNDC.x, mousePositionNDC.y);
@@ -314,16 +339,16 @@ class SceneWrapperVisualization {
         console.error("loadScene not defined");
     }
 
-    alignCameraWithDomain(camera, controls){
-        var min_x = this.simulationParameters.domain_min_x;
-        var min_y = this.simulationParameters.domain_min_y;
-        var max_x = this.simulationParameters.domain_max_x;
-        var max_y = this.simulationParameters.domain_max_y;
+    alignCameraWithDomain(camera, controls, min_x, max_x, min_y, max_y){
+        var min_x = this.getTexturedPlaneMinX();
+        var max_x = this.getTexturedPlaneMaxX();
+        var min_y = this.getTexturedPlaneMinY();
+        var max_y = this.getTexturedPlaneMaxY();
 
         var x = 0.5 * (min_x + max_x);
         var y = 0.5 * (min_y + max_y);
 
-        camera.position.set(x, y, 11);
+        camera.position.set(x, y, this.getDefaultCameraDistance());
         controls.target.set(x, y, 0);
         camera.up.set(0, 1, 0);
         console.log(camera.position);
