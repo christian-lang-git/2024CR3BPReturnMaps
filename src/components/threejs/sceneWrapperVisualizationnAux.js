@@ -28,6 +28,17 @@ class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
         console.warn("CONSTRUCTOR SceneWrapperVisualizationAux");
     }
 
+    initializeAdditionalObjects(){
+
+    }
+
+    updateVisualElements(){
+        this.updateClickedPosition();   
+        this.updateStreamlineModel();  
+        this.updateTexturedPlane();
+        this.updateAxes();
+    }
+
     updateTexturedPlane(){
         var min_x = 0;
         var max_x = 1;

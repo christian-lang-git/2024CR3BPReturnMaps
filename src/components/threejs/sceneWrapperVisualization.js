@@ -69,9 +69,15 @@ class SceneWrapperVisualization {
         this.initializeAxesArrows();
         this.initializePlane();
         this.initializeTexturedPlane();
-        this.initializeBodies();
         this.initializeClickedPositionMarker();
         this.initializeEventListeners();
+
+        this.initializeAdditionalObjects();
+    }
+
+    initializeAdditionalObjects(){
+        //define in child class
+        console.error("initializeAdditionalObjects not defined");
     }
 
     initializeExampleCube() {
@@ -132,32 +138,6 @@ class SceneWrapperVisualization {
         this.textured_plane_material.opacity = 0.5;
         */
         //this.textured_plane_material = new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide });
-    }
-
-
-    /**
-    * Generates the 3 spheres with radius 1
-    */
-    initializeBodies() {
-        var radius = 1.0;
-
-        this.primary_geometry = new THREE.SphereGeometry(radius);
-        this.primary_material = new THREE.MeshStandardMaterial({ color: 0xff0000 });
-        this.primary_mesh = new THREE.Mesh(this.primary_geometry, this.primary_material);
-        this.primary_mesh.position.set(1, 0, 0);
-        this.scene.add(this.primary_mesh);
-
-        this.secondary_geometry = new THREE.SphereGeometry(radius);
-        this.secondary_material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
-        this.secondary_mesh = new THREE.Mesh(this.secondary_geometry, this.secondary_material);
-        this.secondary_mesh.position.set(-1, 0, 0);
-        this.scene.add(this.secondary_mesh);
-
-        this.center_geometry = new THREE.SphereGeometry(radius);
-        this.center_material = new THREE.MeshStandardMaterial({ color: 0x0000ff });
-        this.center_mesh = new THREE.Mesh(this.center_geometry, this.center_material);
-        this.center_mesh.position.set(0, 0, 0);
-        this.scene.add(this.center_mesh);
     }
 
     initializeClickedPositionMarker() {
@@ -296,20 +276,6 @@ class SceneWrapperVisualization {
 
     updateParametersActiveBehavior(activeBehavior){
         this.simulationParameters.activeBehavior = activeBehavior;        
-    }
-
-    updateBodies() {
-        //scale
-        var radius = this.simulationParameters.getPrimaryRadius();
-        this.primary_mesh.scale.set(radius, radius, radius);
-        var radius = this.simulationParameters.getSecondaryRadius();
-        this.secondary_mesh.scale.set(radius, radius, radius);
-        var radius = this.simulationParameters.getCenterOfMassRadius();
-        this.center_mesh.scale.set(radius, radius, radius);
-
-        //position
-        this.primary_mesh.position.set(this.simulationParameters.getPrimaryX(), 0, 0);
-        this.secondary_mesh.position.set(this.simulationParameters.getSecondaryX(), 0, 0);
     }
 
     computeStuff(){

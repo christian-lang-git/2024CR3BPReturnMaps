@@ -76,11 +76,14 @@ class ThreeContainerMain extends ThreeContainer {
     }
 
     updateVisualElements(){
+        this.sceneWrapper.updateVisualElements();
+        /*
         this.sceneWrapper.updateBodies();
         this.sceneWrapper.updateClickedPosition();   
         this.sceneWrapper.updateStreamlineModel();  
         this.sceneWrapper.updateTexturedPlane();
         this.sceneWrapper.updateAxes();
+        */
     }
 
 }
