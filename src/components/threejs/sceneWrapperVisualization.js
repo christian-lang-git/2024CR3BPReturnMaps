@@ -125,19 +125,7 @@ class SceneWrapperVisualization {
     }
 
     initializeTexturedPlane() {
-        /*
-        this.textured_plane_geometry = new THREE.PlaneGeometry(1, 1);
-        this.textured_plane_material = new THREE.MeshBasicMaterial({map:this.offscreenRendererFlowMap.renderTarget.texture});
-        this.textured_plane_mesh = new THREE.Mesh(this.textured_plane_geometry, this.textured_plane_material);
-        this.scene.add(this.textured_plane_mesh);
-        */
-
         this.textureRenderer.initialize();
-        /*
-        this.textured_plane_material.transparent = true;
-        this.textured_plane_material.opacity = 0.5;
-        */
-        //this.textured_plane_material = new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide });
     }
 
     initializeClickedPositionMarker() {
@@ -255,8 +243,7 @@ class SceneWrapperVisualization {
         this.simulationParameters.rendering_raw_mode = parseInt(rendering_raw_mode);
         this.simulationParameters.rendering_raw_mode_layer = parseInt(rendering_raw_mode_layer);
         this.simulationParameters.rendering_raw_mode_x_texture_index = parseInt(rendering_raw_mode_x_texture_index);
-        this.simulationParameters.rendering_raw_mode_y_texture_index = parseInt(rendering_raw_mode_y_texture_index);
-        
+        this.simulationParameters.rendering_raw_mode_y_texture_index = parseInt(rendering_raw_mode_y_texture_index);        
 
         this.simulationParameters.scalar_min = parseFloat(scalar_min);
         this.simulationParameters.scalar_max = parseFloat(scalar_max);
@@ -266,12 +253,7 @@ class SceneWrapperVisualization {
         this.simulationParameters.tube_max_segments = parseInt(tube_max_segments); 
         this.simulationParameters.tube_num_sides = parseInt(tube_num_sides); 
         this.simulationParameters.tube_radius = parseFloat(tube_radius); 
-        this.simulationParameters.tube_only_show_successful_returns = tube_only_show_successful_returns; 
-
-        
-        
-        
-        
+        this.simulationParameters.tube_only_show_successful_returns = tube_only_show_successful_returns;         
     }
 
     updateParametersActiveBehavior(activeBehavior){
