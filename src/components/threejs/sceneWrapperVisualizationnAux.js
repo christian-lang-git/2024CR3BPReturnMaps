@@ -27,6 +27,21 @@ class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
         super(renderer, scene, camera, controls, raycaster, false);
         console.warn("CONSTRUCTOR SceneWrapperVisualizationAux");
     }
+
+    updateTexturedPlane(){
+        var min_x = 0;
+        var max_x = 1;
+        var min_y = 0;
+        var max_y = 1;
+        var scale_x = max_x - min_x;
+        var scale_y = max_y - min_y;
+        var pos_x = 0.5 * (min_x + max_x);
+        var pos_y = 0.5 * (min_y + max_y);
+
+        this.textureRenderer.updateTransform(pos_x, pos_y, scale_x, scale_y);
+        this.changeDisplayedTexture();
+        this.textureRenderer.updateTexturedPlane();
+    }
 }
 
 export { SceneWrapperVisualizationAux };

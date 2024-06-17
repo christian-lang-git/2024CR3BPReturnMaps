@@ -27,6 +27,21 @@ class SceneWrapperVisualizationMain extends SceneWrapperVisualization{
         super(renderer, scene, camera, controls, raycaster, true);
         console.warn("CONSTRUCTOR SceneWrapperVisualizationMain");
     }
+
+    updateTexturedPlane(){
+        var min_x = this.simulationParameters.domain_min_x;
+        var max_x = this.simulationParameters.domain_max_x;
+        var min_y = this.simulationParameters.domain_min_y;
+        var max_y = this.simulationParameters.domain_max_y;
+        var scale_x = max_x - min_x;
+        var scale_y = max_y - min_y;
+        var pos_x = 0.5 * (min_x + max_x);
+        var pos_y = 0.5 * (min_y + max_y);
+
+        this.textureRenderer.updateTransform(pos_x, pos_y, scale_x, scale_y);
+        this.changeDisplayedTexture();
+        this.textureRenderer.updateTexturedPlane();
+    }
 }
 
 export { SceneWrapperVisualizationMain };
