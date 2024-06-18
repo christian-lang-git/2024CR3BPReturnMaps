@@ -22,7 +22,7 @@ import { ColorMaps } from "@/components/colormaps/colormaps"
  * - a deformed sphere that visualizes equivalent energy
  */
 class SceneWrapperVisualization {
-    constructor(renderer, scene, camera, controls, raycaster, mode_constant_direction) {
+    constructor(renderer, scene, camera, controls, raycaster, mode_constant_direction, useAnglePlane) {
         console.warn("CONSTRUCTOR SceneWrapperVisualization");
         this.renderer = renderer;
         this.scene = scene;
@@ -34,15 +34,15 @@ class SceneWrapperVisualization {
         this.colorMaps = new ColorMaps();
         this.streamlineGenerator = new StreamlineGenerator(this.simulationParameters, scene);
         this.streamlineGenerator.initialize();
-        this.offscreenRendererSeeds = new OffscreenRendererSeeds(renderer, this.simulationParameters, this.mode_constant_direction);
-        this.offscreenRendererSeedsBackwards = new OffscreenRendererSeeds(renderer, this.simulationParameters, this.mode_constant_direction);
-        this.offscreenRendererFlowMap = new OffscreenRendererFlowMap(renderer, this.simulationParameters, 1);
-        this.offscreenRendererFlowMapBackwards = new OffscreenRendererFlowMap(renderer, this.simulationParameters, -1);
-        this.OffscreenRendererFTLE = new OffscreenRendererFTLE(renderer, this.simulationParameters);
-        this.OffscreenRendererFTLEBackwards = new OffscreenRendererFTLE(renderer, this.simulationParameters);
-        this.offscreenRendererSeedsAndReturns = new OffscreenRendererSeedsAndReturns(renderer, this.simulationParameters);
-        this.offscreenRendererSeedsAndReturnsBackwards = new OffscreenRendererSeedsAndReturns(renderer, this.simulationParameters);
-        this.offscreenRendererGravitationalForce = new OffscreenRendererGravitationalForce(renderer, this.simulationParameters);
+        this.offscreenRendererSeeds = new OffscreenRendererSeeds(renderer, this.simulationParameters, useAnglePlane, this.mode_constant_direction);
+        this.offscreenRendererSeedsBackwards = new OffscreenRendererSeeds(renderer, this.simulationParameters, useAnglePlane, this.mode_constant_direction);
+        this.offscreenRendererFlowMap = new OffscreenRendererFlowMap(renderer, this.simulationParameters, useAnglePlane, 1);
+        this.offscreenRendererFlowMapBackwards = new OffscreenRendererFlowMap(renderer, this.simulationParameters, useAnglePlane, -1);
+        this.OffscreenRendererFTLE = new OffscreenRendererFTLE(renderer, this.simulationParameters, useAnglePlane);
+        this.OffscreenRendererFTLEBackwards = new OffscreenRendererFTLE(renderer, this.simulationParameters, useAnglePlane);
+        this.offscreenRendererSeedsAndReturns = new OffscreenRendererSeedsAndReturns(renderer, this.simulationParameters, useAnglePlane);
+        this.offscreenRendererSeedsAndReturnsBackwards = new OffscreenRendererSeedsAndReturns(renderer, this.simulationParameters, useAnglePlane);
+        this.offscreenRendererGravitationalForce = new OffscreenRendererGravitationalForce(renderer, this.simulationParameters, useAnglePlane);
 
         this.offscreenRendererFlowMap.link(this.offscreenRendererSeedsAndReturns);
         this.offscreenRendererFlowMapBackwards.link(this.offscreenRendererSeedsAndReturnsBackwards);
@@ -60,7 +60,7 @@ class SceneWrapperVisualization {
         this.OffscreenRendererFTLEBackwards.initialize();
         this.offscreenRendererGravitationalForce.initialize();
 
-        this.textureRenderer = new TextureRenderer(renderer, this.simulationParameters, this.colorMaps, scene);
+        this.textureRenderer = new TextureRenderer(renderer, this.simulationParameters, this.colorMaps, scene, useAnglePlane);
 
     }
 
@@ -231,7 +231,7 @@ class SceneWrapperVisualization {
 
 
 
-    updateParametersData(mu, angular_velocity, use_constant_velocity, seed_energy, seed_direction_x, seed_direction_y, seed_direction_z, seed_position_x, seed_position_y, step_size, max_steps, termination_method, domain_min_x, domain_max_x, domain_pixels_x, domain_min_y, domain_max_y, domain_pixels_y) {
+    updateParametersData(mu, angular_velocity, use_constant_velocity, seed_energy, seed_direction_x, seed_direction_y, seed_direction_z, seed_position_x, seed_position_y, step_size, max_steps, termination_method, domain_min_x, domain_max_x, domain_pixels_x, domain_min_y, domain_max_y, domain_pixels_y, angle_pixels_x, angle_pixels_y) {
         this.simulationParameters.mu = parseFloat(mu);
         this.simulationParameters.angular_velocity = parseFloat(angular_velocity);
         this.simulationParameters.use_constant_velocity = use_constant_velocity;
@@ -249,11 +249,14 @@ class SceneWrapperVisualization {
         this.simulationParameters.domain_min_x = parseFloat(domain_min_x);    
         this.simulationParameters.domain_max_x = parseFloat(domain_max_x);    
         this.simulationParameters.domain_dimension_x = this.simulationParameters.domain_max_x - this.simulationParameters.domain_min_x;    
-        this.simulationParameters.domain_pixels_x = parseFloat(domain_pixels_x);    
+        this.simulationParameters.domain_pixels_x = parseInt(domain_pixels_x);    
         this.simulationParameters.domain_min_y = parseFloat(domain_min_y);    
         this.simulationParameters.domain_max_y = parseFloat(domain_max_y);    
         this.simulationParameters.domain_dimension_y = this.simulationParameters.domain_max_y - this.simulationParameters.domain_min_y;  
-        this.simulationParameters.domain_pixels_y = parseFloat(domain_pixels_y);
+        this.simulationParameters.domain_pixels_y = parseInt(domain_pixels_y);
+        
+        this.simulationParameters.angle_pixels_x = parseInt(angle_pixels_x);
+        this.simulationParameters.angle_pixels_y = parseInt(angle_pixels_y);
     }
 
     updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position, rendering_ftle_type, rendering_texture_mode, rendering_specialized_mode, return_number, rendering_forward, rendering_raw_mode, rendering_raw_mode_layer, rendering_raw_mode_x_texture_index, rendering_raw_mode_y_texture_index, scalar_min, scalar_max, opacity, tube_segment_length, tube_max_segments, tube_num_sides, tube_radius, tube_only_show_successful_returns) {

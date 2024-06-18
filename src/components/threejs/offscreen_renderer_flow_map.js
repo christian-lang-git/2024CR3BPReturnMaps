@@ -27,8 +27,8 @@ const glsl = x => x[0];
 class OffscreenRendererFlowMap extends OffscreenRenderer {
 
 
-    constructor(renderer, simulationParameters, signum) {
-        super(renderer, simulationParameters)
+    constructor(renderer, simulationParameters, useAnglePlane, signum) {
+        super(renderer, simulationParameters, useAnglePlane)
         this.signum = signum;
     }
 

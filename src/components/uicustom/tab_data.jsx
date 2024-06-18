@@ -156,6 +156,16 @@ class TabData extends Component {
                                         labelText={"grid nodes y"}
                                     />
                                     </div>
+                                    <div className="grid grid-cols-2">
+                                    <LabeledField
+                                        name="UI_STATE_DATA_ANGLE_PIXELS_X"
+                                        labelText={"grid nodes theta"}
+                                    />
+                                    <LabeledField
+                                        name="UI_STATE_DATA_ANGLE_PIXELS_Y"
+                                        labelText={"grid nodes phi"}
+                                    />
+                                    </div>
                                 </AccordionContent>
                             </AccordionItem>                            
                         </Accordion>

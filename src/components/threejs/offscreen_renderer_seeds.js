@@ -23,8 +23,8 @@ const glsl = x => x[0];
  */
 class OffscreenRendererSeeds extends OffscreenRenderer {
 
-    constructor(renderer, simulationParameters, mode_constant_direction) {
-        super(renderer, simulationParameters);
+    constructor(renderer, simulationParameters, useAnglePlane, mode_constant_direction) {
+        super(renderer, simulationParameters, useAnglePlane);
         this.mode_constant_direction = mode_constant_direction;
     }
 

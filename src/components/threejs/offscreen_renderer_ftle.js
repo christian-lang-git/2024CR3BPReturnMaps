@@ -25,8 +25,8 @@ const glsl = x => x[0];
 class OffscreenRendererFTLE extends OffscreenRenderer {
 
 
-    constructor(renderer, simulationParameters) {
-        super(renderer, simulationParameters)
+    constructor(renderer, simulationParameters, useAnglePlane) {
+        super(renderer, simulationParameters, useAnglePlane)
     }
 
     link(offscreenRendererSeedsAndReturns){

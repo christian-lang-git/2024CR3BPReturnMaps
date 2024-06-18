@@ -16,11 +16,20 @@ const glsl = x => x[0];
  */
 class TextureRenderer {
 
-    constructor(renderer, simulationParameters, colorMaps, scene) {
+    constructor(renderer, simulationParameters, colorMaps, scene, useAnglePlane) {
         this.renderer = renderer;
         this.simulationParameters = simulationParameters;
         this.colorMaps = colorMaps;
         this.scene = scene;
+        this.useAnglePlane = useAnglePlane;
+    }
+    
+    getPlaneDimensionX(){
+        return this.useAnglePlane ? this.simulationParameters.angle_pixels_x : this.simulationParameters.domain_pixels_x;
+    }
+
+    getPlaneDimensionY(){
+        return this.useAnglePlane ? this.simulationParameters.angle_pixels_y : this.simulationParameters.domain_pixels_y;
     }
 
     initialize() {
@@ -69,8 +78,8 @@ class TextureRenderer {
         this.textured_plane_mesh.material.uniforms.planeCornerBL.value.y = this.simulationParameters.domain_min_y;
         this.textured_plane_mesh.material.uniforms.planeDimensions.value.x = this.simulationParameters.domain_dimension_x;
         this.textured_plane_mesh.material.uniforms.planeDimensions.value.y = this.simulationParameters.domain_dimension_y;
-        this.textured_plane_mesh.material.uniforms.planeDimensionsPixel.value.x = this.simulationParameters.domain_pixels_x;
-        this.textured_plane_mesh.material.uniforms.planeDimensionsPixel.value.y = this.simulationParameters.domain_pixels_y;
+        this.textured_plane_mesh.material.uniforms.planeDimensionsPixel.value.x = this.getPlaneDimensionX();
+        this.textured_plane_mesh.material.uniforms.planeDimensionsPixel.value.y = this.getPlaneDimensionY();
         return;
     }
 

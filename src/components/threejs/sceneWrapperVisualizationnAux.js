@@ -24,7 +24,7 @@ import { ColorMaps } from "@/components/colormaps/colormaps"
  */
 class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
     constructor(renderer, scene, camera, controls, raycaster) {
-        super(renderer, scene, camera, controls, raycaster, false);
+        super(renderer, scene, camera, controls, raycaster, false, true);
         console.warn("CONSTRUCTOR SceneWrapperVisualizationAux");
     }
 

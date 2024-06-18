@@ -17,8 +17,8 @@ const glsl = x => x[0];
  */
 class OffscreenRendererGravitationalForce extends OffscreenRenderer {
 
-    constructor(renderer, simulationParameters) {
-        super(renderer, simulationParameters)
+    constructor(renderer, simulationParameters, useAnglePlane) {
+        super(renderer, simulationParameters, useAnglePlane)
     }
 
     link(offscreenRendererSeedsAndReturns){

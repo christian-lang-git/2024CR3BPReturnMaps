@@ -9,11 +9,20 @@ const glsl = x => x[0];
 
 class OffscreenRenderer {
 
-    constructor(renderer, simulationParameters) {
+    constructor(renderer, simulationParameters, useAnglePlane) {
         this.renderer = renderer;
         this.simulationParameters = simulationParameters;
         this.use_external_render_target = false;
         this.offscreen_renderer_for_external_render_target = null;
+        this.useAnglePlane = useAnglePlane;
+    }
+
+    getPlaneDimensionX(){
+        return this.useAnglePlane ? this.simulationParameters.angle_pixels_x : this.simulationParameters.domain_pixels_x;
+    }
+
+    getPlaneDimensionY(){
+        return this.useAnglePlane ? this.simulationParameters.angle_pixels_y : this.simulationParameters.domain_pixels_y;
     }
 
     /**
@@ -68,16 +77,16 @@ class OffscreenRenderer {
         this.dummy_plane_mesh.material.uniforms.planeCornerBL.value.y = this.simulationParameters.domain_min_y;
         this.dummy_plane_mesh.material.uniforms.planeDimensions.value.x = this.simulationParameters.domain_dimension_x;
         this.dummy_plane_mesh.material.uniforms.planeDimensions.value.y = this.simulationParameters.domain_dimension_y;
-        this.dummy_plane_mesh.material.uniforms.planeDimensionsPixel.value.x = this.simulationParameters.domain_pixels_x;
-        this.dummy_plane_mesh.material.uniforms.planeDimensionsPixel.value.y = this.simulationParameters.domain_pixels_y;
+        this.dummy_plane_mesh.material.uniforms.planeDimensionsPixel.value.x = this.getPlaneDimensionX();
+        this.dummy_plane_mesh.material.uniforms.planeDimensionsPixel.value.y = this.getPlaneDimensionY();
 
         var update_size = false;
-        if (this.simulationParameters.domain_pixels_x != this.width) {
-            this.width = this.simulationParameters.domain_pixels_x;
+        if (this.getPlaneDimensionX() != this.width) {
+            this.width = this.getPlaneDimensionX();
             update_size = true;
         }
-        if (this.simulationParameters.domain_pixels_y != this.height) {
-            this.height = this.simulationParameters.domain_pixels_y;
+        if (this.getPlaneDimensionY() != this.height) {
+            this.height = this.getPlaneDimensionY();
             update_size = true;
         }
         if (update_size) {
