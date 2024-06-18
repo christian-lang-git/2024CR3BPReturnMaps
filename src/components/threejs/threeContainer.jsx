@@ -18,6 +18,8 @@ class ThreeContainer extends Component {
 
     componentDidMount() {
         console.warn("ThreeScene::componentDidMount");
+        this.list_cameras = [];
+        this.list_controls = [];
 
         this.initializeScene();
         this.initializeRenderer();
@@ -25,7 +27,8 @@ class ThreeContainer extends Component {
         this.initializeControls();
         this.initializeRayCaster();
         this.initializeEventHandlers();
-        this.initializeAdditionalEventHandlers();
+
+        this.initializeAdditional();
 
         this.loadScene();
 
@@ -50,6 +53,8 @@ class ThreeContainer extends Component {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xffffff);
         //this.scene.background = new THREE.Color( 0x000000 );//background color for debugging layout
+
+        this.active_scene = this.scene;
     }
 
     initializeRenderer() {
@@ -62,11 +67,19 @@ class ThreeContainer extends Component {
         this.camera = new THREE.PerspectiveCamera(75, 1.0, 0.01, 100);
         this.camera.position.z = 11;
         this.scene.add(this.camera);
+
+        this.active_camera = this.camera;
+
+        this.list_cameras.push(this.camera);
     }
 
     initializeControls() {
         this.controls = new TrackballControls(this.camera, this.renderer.domElement);
         this.controls.update();
+
+        this.active_controls = this.controls;
+        
+        this.list_controls.push(this.controls);
     }
 
     initializeRayCaster() {
@@ -79,9 +92,9 @@ class ThreeContainer extends Component {
         Emitter.on(Constants.EVENT_CAMERA_UPDATE, this.handleEventCameraUpdate); 
     }
 
-    initializeAdditionalEventHandlers() {
+    initializeAdditional() {
         //define in child class  
-        console.error("initializeAdditionalEventHandlers not defined");
+        console.error("initializeAdditional not defined");
     }
 
     /**
@@ -127,23 +140,35 @@ class ThreeContainer extends Component {
         var width = canvas_parent.clientWidth;
         var height = canvas_parent.clientHeight;
 
-        this.camera.aspect = width / height;
-        this.camera.updateProjectionMatrix();
+        for(var i=0; i<this.list_cameras.length; i++){
+            var camera = this.list_cameras[i];
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+        }
 
-        this.controls.handleResize();
-        this.controls.update();
+        for(var i=0; i<this.list_controls.length; i++){
+            var controls = this.list_controls[i];
+            controls.handleResize();
+            controls.update();
+        }
+
+
 
         this.renderer.setSize(width, height, false);
-        this.renderer.render(this.scene, this.camera);
+        this.renderer.render(this.active_scene, this.active_camera);
         console.warn("RESIZE")
     }
 
     updateControls() {
+        this.updateControlsInstance(this.controls);
+    }
+
+    updateControlsInstance(controls) {
         const { uiState } = this.context;
-        this.controls.rotateSpeed = uiState.UI_STATE_CAMERA_CONTROLS_ROTATESPEED * 5.0;//default: 1.0
-        this.controls.panSpeed = uiState.UI_STATE_CAMERA_CONTROLS_PANSPEED * 0.3;//default: 0.3
-        this.controls.zoomSpeed = uiState.UI_STATE_CAMERA_CONTROLS_ZOOMSPEED * 1.2;//default: 1.2
-        this.controls.update();
+        controls.rotateSpeed = uiState.UI_STATE_CAMERA_CONTROLS_ROTATESPEED * 5.0;//default: 1.0
+        controls.panSpeed = uiState.UI_STATE_CAMERA_CONTROLS_PANSPEED * 0.3;//default: 0.3
+        controls.zoomSpeed = uiState.UI_STATE_CAMERA_CONTROLS_ZOOMSPEED * 1.2;//default: 1.2
+        controls.update();
     }
 
     updateParameters() {
@@ -245,8 +270,8 @@ class ThreeContainer extends Component {
         this.updateParametersActiveBehavior();
         this.sceneWrapper.updateBehavior();
         this.sceneWrapper.preRender();
-        this.controls.update();
-        this.renderer.render(this.scene, this.camera);
+        this.active_controls.update();
+        this.renderer.render(this.active_scene, this.active_camera);
         requestAnimationFrame(this.renderLoop);
     }
 

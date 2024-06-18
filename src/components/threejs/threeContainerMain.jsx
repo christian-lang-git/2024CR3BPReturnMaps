@@ -24,7 +24,7 @@ class ThreeContainerMain extends ThreeContainer {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    initializeAdditionalEventHandlers() {
+    initializeAdditional() {
         Emitter.on(Constants.EVENT_DATA_UPDATE, this.handleEventDataUpdate);
         Emitter.on(Constants.EVENT_RENDERING_UPDATE, this.handleEventRenderingUpdate);
         Emitter.on(Constants.EVENT_ALIGN_CAMERA, this.handleEventAlignCamera);        

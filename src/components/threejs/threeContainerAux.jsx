@@ -23,15 +23,61 @@ class ThreeContainerAux extends ThreeContainer {
     //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    initializeAdditionalEventHandlers() {
+   
+    initializeAdditional() {
         Emitter.on(Constants.EVENT_DATA_UPDATE, this.handleEventDataUpdate);
         Emitter.on(Constants.EVENT_RENDERING_UPDATE, this.handleEventRenderingUpdate);
-        Emitter.on(Constants.EVENT_ALIGN_CAMERA, this.handleEventAlignCamera);        
+        Emitter.on(Constants.EVENT_ALIGN_CAMERA, this.handleEventAlignCamera);    
+        
+        this.initializeAdditionalSceneSphere();
+        this.initializeAdditionalCameraSphere();
+        this.initializeAdditionalControlsSphere();
+
+        this.switchToScene(1);
     }
 
+    switchToScene(index){
+        if(index == 0){
+            this.active_scene = this.scene;
+            this.active_camera = this.camera;
+            this.active_controls = this.controls;
+
+            this.controls.enabled = true;
+            this.controls_sphere.enabled = false;
+        }
+        else{
+            this.active_scene = this.scene_sphere;
+            this.active_camera = this.camera_sphere;
+            this.active_controls = this.controls_sphere;
+
+            this.controls.enabled = false;
+            this.controls_sphere.enabled = true;
+        }
+    }
+
+    initializeAdditionalSceneSphere() {
+        this.scene_sphere = new THREE.Scene();
+        this.scene_sphere.background = new THREE.Color(0xffffff);
+    }
+
+    initializeAdditionalCameraSphere() {
+        this.camera_sphere = new THREE.PerspectiveCamera(75, 1.0, 0.01, 100);
+        this.camera_sphere.position.z = 2;
+        this.scene_sphere.add(this.camera_sphere);
+        
+        this.list_cameras.push(this.camera_sphere);
+    }
+
+    initializeAdditionalControlsSphere() {
+        this.controls_sphere = new TrackballControls(this.camera_sphere, this.renderer.domElement);
+        this.controls_sphere.update();
+
+        this.list_controls.push(this.controls_sphere);
+    }
+
+
     loadScene() {
-        this.sceneWrapper = new SceneWrapperVisualizationAux(this.renderer, this.scene, this.camera, this.controls, this.raycaster);
+        this.sceneWrapper = new SceneWrapperVisualizationAux(this.renderer, this.scene, this.camera, this.controls, this.raycaster, this.scene_sphere, this.camera_sphere, this.controls_sphere);
         this.sceneWrapper.initialize();
     }
 
@@ -84,6 +130,11 @@ class ThreeContainerAux extends ThreeContainer {
         this.sceneWrapper.updateTexturedPlane();
         this.sceneWrapper.updateAxes();
         */
+    }
+
+    updateControls() {
+        this.updateControlsInstance(this.controls);
+        this.updateControlsInstance(this.controls_sphere);
     }
 
 }
