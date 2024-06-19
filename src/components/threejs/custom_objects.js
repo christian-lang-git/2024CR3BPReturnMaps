@@ -2,6 +2,11 @@ import * as THREE from "three";
 import { vec3 } from "gl-matrix/esm";
 
 import * as BufferGeometryUtils from "three/examples/jsm/utils/BufferGeometryUtils.js";
+import * as LINALG from "@/components/glsl/linalg";
+import * as UTILITY from "@/components/glsl/utility";
+
+
+const glsl = x => x[0];
 
 class ObjectArrow {
     constructor(position, length, radius, cone_radius_factor, cone_fraction, color_hex){
@@ -130,7 +135,16 @@ class SpherelikeGrid{
         this.scene = scene;
         this.pixels_x = 0;
         this.pixels_y = 0;
-        this.subdivide = false;        
+        this.subdivide = false;     
+        
+        this.generateUniforms();
+        
+        this.material = new THREE.ShaderMaterial({
+            uniforms: this.uniforms,
+            fragmentShader: this.fragmentShader(),
+            vertexShader: this.vertexShader(),
+            glslVersion: THREE.GLSL3
+        })
     }
 
     updateGrid(subdivide, pixels_x, pixels_y){
@@ -155,16 +169,21 @@ class SpherelikeGrid{
             this.num_triangles *= 2;
         }
         this.build();
+        this.updateUniforms();
     }
 
     build(){
+        this.scene.remove(this.mesh);
+
         const geometry = new THREE.BufferGeometry();
 
         const vertices = new Float32Array(this.num_vertices * 3);
+        const uv = new Float32Array(this.num_vertices * 2);
         const indices = Array(this.num_triangles);
         
         //iterate over all nodes of the grid to calculate vertex positions
         var index = 0;
+        var index_uv = 0;
         for(var y_index = 0; y_index<this.pixels_y; y_index++){
             for(var x_index = 0; x_index<this.pixels_x; x_index++){
                 //angles in virtual texture (when position is constant and direction is variable)
@@ -178,9 +197,13 @@ class SpherelikeGrid{
 
                 vertices[index] = dir_x;
                 vertices[index+1] = dir_y;
-                vertices[index+2] = dir_z;
-
+                vertices[index+2] = dir_z;                
                 index+=3;
+                
+                uv[index_uv] = (x_index / (this.pixels_x - 1.0));
+                uv[index_uv+1] = (y_index / (this.pixels_y - 1.0));
+                index_uv+=2;
+
             }
         }
 
@@ -214,12 +237,86 @@ class SpherelikeGrid{
 
         geometry.setIndex( indices );
         geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+        geometry.setAttribute( 'uv', new THREE.BufferAttribute( uv, 2 ) );
 
-        const material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
-        const mesh = new THREE.Mesh( geometry, material );
+        //const material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+        this.mesh = new THREE.Mesh( geometry, this.material );
 
-        this.scene.add(mesh);
+        this.scene.add(this.mesh);
     }
+
+    vertexShader() {
+        return glsl`
+        varying vec2 vUv; 
+        //varying vec2 grid_indices; 
+    
+        void main() {
+            vUv = uv; 
+            //grid_indices = uv; 
+    
+            vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
+            gl_Position = projectionMatrix * modelViewPosition; 
+        }
+        `
+    }
+
+    fragmentShader() {
+        return "" +
+            this.getUniformsString() + LINALG.SHADER_MODULE_LINALG + "\n" + UTILITY.SHADER_MODULE_UTILITY + "\n" + glsl`
+
+            varying vec2 vUv;
+            //varying vec2 grid_indices;
+            out vec4 outputColor;
+
+            void main() {
+                //coordinates as fractions of texture starting bottom left
+                float x_frac = vUv.x;
+                float y_frac = vUv.y;
+
+                //outputColor = vec4(grid_indices.x/planeDimensionsPixel.x, grid_indices.y/planeDimensionsPixel.y, 0.0, 1.0);
+                outputColor = vec4(vUv.x, vUv.y, 0.0, 1.0);
+            }`
+    }
+
+    /**
+     * Automatically generates the shader code for uniforms from the method generateUniforms()
+     * The example: 
+     * 
+     *  this.uniforms = {
+     *      planeCenter: { type: 'vec2', value: new THREE.Vector2(0,0) },
+     *      planeCornerBL: { type: 'vec2', value: new THREE.Vector2(-1,-1) },
+     *      planeDimensions: { type: 'vec2', value: new THREE.Vector2(2,2) },
+     *      planeDimensionsPixel: { type: 'vec2', value: new THREE.Vector2(100,100) }
+     *  };
+     *  
+     * results in:
+     *       
+     *      uniform vec2 planeCenter; 
+     *      uniform vec2 planeCornerBL; 
+     *      uniform vec2 planeDimensions; 
+     *      uniform vec2 planeDimensionsPixel; 
+     * 
+     * @returns shader code for all uniforms
+     */
+    getUniformsString() {
+        return Object.keys(this.uniforms).map(key => {
+            const type = this.uniforms[key].type;
+            return `uniform ${type} ${key};`;
+        }).join('\n');
+    }
+
+    generateUniforms() {
+        this.uniforms = {
+            planeDimensionsPixel: { type: 'vec2', value: new THREE.Vector2(100, 100) }
+        }
+    }
+
+    updateUniforms() {
+        this.mesh.material.uniforms.planeDimensionsPixel.value.x = this.pixels_x;
+        this.mesh.material.uniforms.planeDimensionsPixel.value.y = this.pixels_y;
+    }
+
+    
 }
 
 export { ObjectArrow, ObjectAxes, SpherelikeGrid }
