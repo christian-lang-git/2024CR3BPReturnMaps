@@ -12,6 +12,7 @@ const LabeledSelectUseConstantVelocity = () => (
         name="selectSeedVelocityType"
         labelText="seed velocity"
         setUiStateKey="UI_STATE_DATA_PHYSICS_USE_CONSTANT_VELOCITY"
+        emit="false"
         options={options}
     />
 );

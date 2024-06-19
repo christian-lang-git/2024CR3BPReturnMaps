@@ -12,6 +12,7 @@ const LabeledSelectRenderingDirection = () => (
         name="selectRenderingDirection"
         labelText="direction"
         setUiStateKey="UI_STATE_RENDERING_DIRECTION"
+        emit="false"
         options={options}
     />
 );

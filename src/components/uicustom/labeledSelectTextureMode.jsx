@@ -13,6 +13,7 @@ const LabeledSelectTextureMode = () => (
         name="selectTextureMode"
         labelText="texture mode"
         setUiStateKey="UI_STATE_RENDERING_TEXTURE_MODE"
+        emit="false"
         options={options}
     />
 );

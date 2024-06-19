@@ -14,6 +14,7 @@ import { useState } from 'react'
 import { AppProvider } from '@/components/uicustom/AppContext'
 import BehaviorBar from "./components/uicustom/behaviorbar";
 import ActionBar from "./components/uicustom/actionbar";
+import LabeledSelectAuxContent from '@/components/uicustom/labeledSelectAuxContent'
 
 function App() {
 
@@ -54,7 +55,7 @@ function App() {
                             </ResizablePanel>
                             <ResizableHandle />
                             <ResizablePanel defaultSize={50}>
-                                
+                                <LabeledSelectAuxContent/>
                             </ResizablePanel>
                         </ResizablePanelGroup>
                     </ResizablePanel>

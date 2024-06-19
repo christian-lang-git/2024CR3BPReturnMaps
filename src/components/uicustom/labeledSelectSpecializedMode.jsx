@@ -22,6 +22,7 @@ const LabeledSelectSpecializedMode = () => (
         name="selectSpecializedMode"
         labelText="specialized mode"
         setUiStateKey="UI_STATE_RENDERING_SPECIALIZED_MODE"
+        emit="false"
         options={options}
     />
 );

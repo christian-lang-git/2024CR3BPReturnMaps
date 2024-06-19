@@ -8,19 +8,28 @@ import {
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 import { AppContext } from "@/components/uicustom/AppContext"
+import Emitter from "@/components/utility/emitter";
+import * as Constants from "@/components/utility/constants";
 
 class LabeledSelect extends Component {
 
     static contextType = AppContext;
     handleChange = (newValue) => {
-        const { setUiStateKey } = this.props;
+        const { setUiStateKey, emit } = this.props;
         const { setUiState } = this.context;
         setUiState({ [setUiStateKey]: newValue });
+        if(emit == "true"){
+            Emitter.emit(Constants.EVENT_SELECT_CHANGED, 
+                {
+                    key:setUiStateKey,
+                    value:newValue
+                });
+        }
     };
 
     render() {
 
-        const { name, labelText, setUiStateKey, options } = this.props;
+        const { name, labelText, setUiStateKey, emit, options } = this.props;
         const { uiState } = this.context;
         const value = uiState[setUiStateKey];
 

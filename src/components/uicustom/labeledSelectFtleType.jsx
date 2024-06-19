@@ -12,6 +12,7 @@ const LabeledSelectFtleType = () => (
         name="selectFtleType"
         labelText="FTLE type"
         setUiStateKey="UI_STATE_RENDERING_FTLE_TYPE"
+        emit="false"
         options={options}
     />
 );

@@ -14,6 +14,7 @@ const LabeledSelectRawMode = () => (
         name="selectRawMode"
         labelText="display texture"
         setUiStateKey="UI_STATE_RENDERING_RAW_MODE"
+        emit="false"
         options={options}
     />
 );

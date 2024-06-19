@@ -27,13 +27,16 @@ class ThreeContainerAux extends ThreeContainer {
     initializeAdditional() {
         Emitter.on(Constants.EVENT_DATA_UPDATE, this.handleEventDataUpdate);
         Emitter.on(Constants.EVENT_RENDERING_UPDATE, this.handleEventRenderingUpdate);
-        Emitter.on(Constants.EVENT_ALIGN_CAMERA, this.handleEventAlignCamera);    
+        Emitter.on(Constants.EVENT_ALIGN_CAMERA, this.handleEventAlignCamera);  
+        Emitter.on(Constants.EVENT_SELECT_CHANGED, this.handleEventSelectChanged);      
+
+        
         
         this.initializeAdditionalSceneSphere();
         this.initializeAdditionalCameraSphere();
         this.initializeAdditionalControlsSphere();
 
-        this.switchToScene(1);
+        this.switchToScene(0);
     }
 
     switchToScene(index){
@@ -105,6 +108,18 @@ class ThreeContainerAux extends ThreeContainer {
     handleEventAlignCamera = () => {
         console.log("handleEventAlignCamera");
         this.alignCameraWithDomain();
+    }
+
+    handleEventSelectChanged = (event) => {
+        console.log("handleEventSelectChanged");
+        switch(event.key){
+            case "UI_STATE_AUX_CONTENT":
+                this.switchToScene(event.value);
+                break;
+            default:
+                //do nothing
+                break;
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

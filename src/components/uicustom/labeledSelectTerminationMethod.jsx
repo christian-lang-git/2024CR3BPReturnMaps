@@ -13,6 +13,7 @@ const LabeledSelectTerminationMethod = () => (
         name="exampleSelect"
         labelText="termination method"
         setUiStateKey="UI_STATE_DATA_INTEGRATION_TERMINATION_METHOD"
+        emit="false"
         options={options}
     />
 );
