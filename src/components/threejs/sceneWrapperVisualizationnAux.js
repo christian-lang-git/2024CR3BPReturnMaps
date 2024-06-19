@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { ObjectArrow, ObjectAxes } from "./custom_objects";
+import { ObjectArrow, ObjectAxes, SpherelikeGrid } from "./custom_objects";
 import { vec3 } from "gl-matrix/esm";
 import { SimulationParameters } from "@/components/logic/simulation_parameters";
 import { getMousePositionInCanvasNDC } from "@/components/utility/mouseHelper";
@@ -33,6 +33,7 @@ class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
 
     initializeAdditionalObjects(){
         this.initializeAxesArrowsSpheres();
+        this.initializeSpherelikeGrid();
     }
 
     getTexturedPlaneMinX(){
@@ -105,14 +106,23 @@ class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
         var has_z = true;
         var z_factor = 1;
         var min_x = 0;
-        var max_x = 1;
+        var max_x = 1.25;
         var min_y = 0;
-        var max_y = 1;        
+        var max_y = 1.25;        
         var radius = 0.002;
         var color1 = 0xff0000;
         var color2 = 0x00ff00;
         var color3 = 0x0000ff;
         this.objectAxes_spheres.rebuild(has_z, z_factor, this.scene_sphere, this.simulationParameters, min_x, max_x, min_y, max_y, radius, color1, color2, color3);
+    }
+
+    initializeSpherelikeGrid(){
+        this.spherelikeGrid = new SpherelikeGrid(this.scene_sphere);
+    }
+
+    computeAdditionalStuff(){
+        var subdivide = false;
+        this.spherelikeGrid.updateGrid(subdivide ,this.offscreenRendererSeedsAndReturns.getPlaneDimensionX(), this.offscreenRendererSeedsAndReturns.getPlaneDimensionY());
     }
 
 }

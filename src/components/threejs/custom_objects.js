@@ -124,5 +124,102 @@ class ObjectAxes{
     }
 }
 
+class SpherelikeGrid{
 
-export { ObjectArrow, ObjectAxes }
+    constructor(scene){
+        this.scene = scene;
+        this.pixels_x = 0;
+        this.pixels_y = 0;
+        this.subdivide = false;        
+    }
+
+    updateGrid(subdivide, pixels_x, pixels_y){
+        var no_change = subdivide == this.subdivide && pixels_x == this.pixels_x && pixels_y == this.pixels_y;
+        if(no_change){
+            console.warn("updateGrid no change");
+            return;
+        }
+
+        console.warn("updateGrid");
+
+        this.subdivide = subdivide;//if true, one additional vertex per cell is added
+        this.pixels_x = pixels_x;
+        this.pixels_y = pixels_y;
+        this.num_cells_x = pixels_x - 1;
+        this.num_cells_y = pixels_y - 1;
+        this.num_cells = this.num_cells_x * this.num_cells_y;
+        this.num_vertices = pixels_x * pixels_y;
+        this.num_triangles = this.num_cells * 2;
+        if(subdivide){
+            this.num_vertices += this.num_cells;
+            this.num_triangles *= 2;
+        }
+        this.build();
+    }
+
+    build(){
+        const geometry = new THREE.BufferGeometry();
+
+        const vertices = new Float32Array(this.num_vertices * 3);
+        const indices = Array(this.num_triangles);
+        
+        //iterate over all nodes of the grid to calculate vertex positions
+        var index = 0;
+        for(var y_index = 0; y_index<this.pixels_y; y_index++){
+            for(var x_index = 0; x_index<this.pixels_x; x_index++){
+                //angles in virtual texture (when position is constant and direction is variable)
+                //ISO convention (i.e. for physics: radius r, inclination theta, azimuth phi) --> https://en.wikipedia.org/wiki/Spherical_coordinate_system#Cartesian_coordinates
+                var theta_radians = Math.PI * (x_index / (this.pixels_x - 1.0));
+                var phi_radians = 2.0 * Math.PI * (y_index / (this.pixels_y - 1.0));
+
+                var dir_x = Math.sin(theta_radians) * Math.cos(phi_radians);
+                var dir_y = Math.sin(theta_radians) * Math.sin(phi_radians);
+                var dir_z = Math.cos(theta_radians);
+
+                vertices[index] = dir_x;
+                vertices[index+1] = dir_y;
+                vertices[index+2] = dir_z;
+
+                index+=3;
+            }
+        }
+
+        //iterate over all cells of the grid to generate triangles
+        var index = 0;
+        for(var y_index = 0; y_index<this.num_cells_y; y_index++){
+            for(var x_index = 0; x_index<this.num_cells_x; x_index++){
+                
+                var vertex_index_top_left = x_index + y_index * this.pixels_y;
+                var vertex_index_bottom_left = vertex_index_top_left + this.pixels_x;
+                var vertex_index_bottom_right = vertex_index_bottom_left + 1;
+                var vertex_index_top_right = vertex_index_top_left + 1;
+
+                //this order results in triangles visible from inside the sphere
+                //indices[index] = vertex_index_top_left;
+                //indices[index+1] = vertex_index_bottom_left;
+                //indices[index+2] = vertex_index_top_right;
+
+                //this order results in triangles visible from inside the sphere
+                indices[index] = vertex_index_top_left;
+                indices[index+1] = vertex_index_top_right;
+                indices[index+2] = vertex_index_bottom_left;
+
+                indices[index+3] = vertex_index_top_right;
+                indices[index+4] = vertex_index_bottom_right;
+                indices[index+5] = vertex_index_bottom_left;
+
+                index+=6;
+            }
+        }
+
+        geometry.setIndex( indices );
+        geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+
+        const material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+        const mesh = new THREE.Mesh( geometry, material );
+
+        this.scene.add(mesh);
+    }
+}
+
+export { ObjectArrow, ObjectAxes, SpherelikeGrid }

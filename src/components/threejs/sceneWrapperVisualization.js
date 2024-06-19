@@ -330,6 +330,12 @@ class SceneWrapperVisualization {
         
         this.offscreenRendererGravitationalForce.updateTexturedPlane();
         this.offscreenRendererGravitationalForce.compute();
+
+        this.computeAdditionalStuff();
+    }
+
+    computeAdditionalStuff(){
+        //do nothing - override in child class
     }
 
     updateTexturedPlane(){
