@@ -113,7 +113,7 @@ class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
         var color2 = 0x00ff00;
         var color3 = 0x0000ff;
         this.objectAxes_spheres.rebuild(has_z, z_factor, this.scene_sphere, this.simulationParameters, min_x, max_x, min_y, max_y, radius, color1, color2, color3);
-    }0
+    }
 
 }
 
