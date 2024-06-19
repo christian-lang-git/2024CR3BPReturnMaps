@@ -132,6 +132,7 @@ class ObjectAxes{
 class SpherelikeGrid{
 
     constructor(scene, material){
+        console.warn("CONSTRUCTOR SpherelikeGrid");
         this.scene = scene;
         this.pixels_x = 0;
         this.pixels_y = 0;
@@ -142,11 +143,11 @@ class SpherelikeGrid{
     updateGrid(subdivide, pixels_x, pixels_y){
         var no_change = subdivide == this.subdivide && pixels_x == this.pixels_x && pixels_y == this.pixels_y;
         if(no_change){
-            console.warn("updateGrid no change");
+            console.warn("SpherelikeGrid updateGrid no change");
             return;
         }
 
-        console.warn("updateGrid");
+        console.warn("SpherelikeGrid updateGrid", pixels_x, pixels_y);
 
         this.subdivide = subdivide;//if true, one additional vertex per cell is added
         this.pixels_x = pixels_x;
@@ -165,6 +166,8 @@ class SpherelikeGrid{
 
     build(){
         this.scene.remove(this.mesh);
+
+        //console.warn("this.mesh", this.mesh);
 
         const geometry = new THREE.BufferGeometry();
 
@@ -203,7 +206,7 @@ class SpherelikeGrid{
         for(var y_index = 0; y_index<this.num_cells_y; y_index++){
             for(var x_index = 0; x_index<this.num_cells_x; x_index++){
                 
-                var vertex_index_top_left = x_index + y_index * this.pixels_y;
+                var vertex_index_top_left = x_index + y_index * this.pixels_x;
                 var vertex_index_bottom_left = vertex_index_top_left + this.pixels_x;
                 var vertex_index_bottom_right = vertex_index_bottom_left + 1;
                 var vertex_index_top_right = vertex_index_top_left + 1;

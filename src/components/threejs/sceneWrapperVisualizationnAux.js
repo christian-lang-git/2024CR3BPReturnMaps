@@ -134,13 +134,12 @@ class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
     }
 
     initializeSpherelikeGrid(){
-        this.spherelikeGrid = new SpherelikeGrid(this.scene_sphere);
         this.textureRendererSphere.initialize();
     }
 
     computeAdditionalStuff(){
         var subdivide = false;
-        this.spherelikeGrid.updateGrid(subdivide ,this.offscreenRendererSeedsAndReturns.getPlaneDimensionX(), this.offscreenRendererSeedsAndReturns.getPlaneDimensionY());
+        this.textureRendererSphere.spherelikeGrid.updateGrid(subdivide ,this.offscreenRendererSeedsAndReturns.getPlaneDimensionX(), this.offscreenRendererSeedsAndReturns.getPlaneDimensionY());
     }
 
 }
