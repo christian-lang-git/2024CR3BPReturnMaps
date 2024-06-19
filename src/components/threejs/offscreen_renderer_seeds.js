@@ -96,7 +96,7 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
                     if(use_constant_velocity){
                         //if set to true, use constant velocity
                         vec3 seed_velocity = normalize(seed_direction) * seed_energy;//TODO placeholder
-                        outputColor = vec4(seed_velocity.x, seed_velocity.y, seed_velocity.z, 1.0);
+                        outputColor = vec4(seed_velocity.x, seed_velocity.y, seed_velocity.z, seed_energy);
                     }
                     else{
                         //if set to false, use constant hamiltonian
@@ -147,7 +147,7 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
                     if(use_constant_velocity){
                         //if set to true, use constant velocity
                         vec3 seed_velocity = normalize(direction) * seed_energy;
-                        outputColor = vec4(seed_velocity.x, seed_velocity.y, seed_velocity.z, 1.0);
+                        outputColor = vec4(seed_velocity.x, seed_velocity.y, seed_velocity.z, seed_energy);
                     }
                     else{
                         //if set to false, use constant hamiltonian

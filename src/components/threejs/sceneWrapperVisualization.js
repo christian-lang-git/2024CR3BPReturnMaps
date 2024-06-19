@@ -294,10 +294,10 @@ class SceneWrapperVisualization {
         this.offscreenRendererSeedsAndReturns.updateTexturedPlane();
         this.offscreenRendererSeedsAndReturns.copyTextureToLayer(this.offscreenRendererSeeds.renderTarget.texture, 0);
 
-        //this.offscreenRendererSeedsBackwards.updateTexturedPlane();
-        //this.offscreenRendererSeedsBackwards.compute();
+        this.offscreenRendererSeedsBackwards.updateTexturedPlane();
+        this.offscreenRendererSeedsBackwards.compute();
         this.offscreenRendererSeedsAndReturnsBackwards.updateTexturedPlane();
-        this.offscreenRendererSeedsAndReturnsBackwards.copyTextureToLayer(this.offscreenRendererSeeds.renderTarget.texture, 0);
+        this.offscreenRendererSeedsAndReturnsBackwards.copyTextureToLayer(this.offscreenRendererSeedsBackwards.renderTarget.texture, 0);
 
 
 
@@ -374,7 +374,6 @@ class SceneWrapperVisualization {
     }
 
     changeDisplayedTexture(textureRenderer){
-        textureRenderer.changeDisplayedTextureBackwards(this.offscreenRendererSeedsAndReturnsBackwards.renderTarget.texture);
         switch (this.simulationParameters.rendering_texture_mode) {
             case Constants.TEXTURE_MODE_SPECIALIZED:
                 this.changeDisplayedTextureSpecialized(textureRenderer);
@@ -393,69 +392,91 @@ class SceneWrapperVisualization {
 
     changeDisplayedTextureSpecialized(textureRenderer){
         var offscreenRenderer;
+        var offscreenRendererBackwards;
         switch (this.simulationParameters.rendering_specialized_mode) {
             case Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE:
                 offscreenRenderer = this.offscreenRendererGravitationalForce;
+                offscreenRendererBackwards = this.offscreenRendererGravitationalForce;
                 break;
             case Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE_MAGNITUDE:
                 offscreenRenderer = this.offscreenRendererGravitationalForce;
+                offscreenRendererBackwards = this.offscreenRendererGravitationalForce;
                 break;
             case Constants.TEXTURE_MODE_SPECIALIZED_RETURN_ADVECTION_TIME:
                 offscreenRenderer = this.offscreenRendererSeedsAndReturns;
+                offscreenRendererBackwards = this.offscreenRendererSeedsAndReturnsBackwards;
                 break;
             case Constants.TEXTURE_MODE_SPECIALIZED_RETURN_ARC_LENGTH:
                 offscreenRenderer = this.offscreenRendererSeedsAndReturns;
+                offscreenRendererBackwards = this.offscreenRendererSeedsAndReturnsBackwards;
                 break;
             case Constants.TEXTURE_MODE_SPECIALIZED_RETURN_POSITION:
                 offscreenRenderer = this.offscreenRendererSeedsAndReturns;
+                offscreenRendererBackwards = this.offscreenRendererSeedsAndReturnsBackwards;
                 break;
             case Constants.TEXTURE_MODE_SPECIALIZED_RETURN_POSITION_RELATIVE:
                 offscreenRenderer = this.offscreenRendererSeedsAndReturns;
+                offscreenRendererBackwards = this.offscreenRendererSeedsAndReturnsBackwards;
                 break;
             case Constants.TEXTURE_MODE_SPECIALIZED_RETURN_POSITION_RELATIVE_MAGNITUDE:
                 offscreenRenderer = this.offscreenRendererSeedsAndReturns;
+                offscreenRendererBackwards = this.offscreenRendererSeedsAndReturnsBackwards;
                 break;
             case Constants.TEXTURE_MODE_SPECIALIZED_RETURN_DIRECTION:
                 offscreenRenderer = this.offscreenRendererSeedsAndReturns;
+                offscreenRendererBackwards = this.offscreenRendererSeedsAndReturnsBackwards;
                 break;
             case Constants.TEXTURE_MODE_SPECIALIZED_RETURN_FTLE:
                 offscreenRenderer = this.offscreenRendererSeedsAndReturns;
+                offscreenRendererBackwards = this.offscreenRendererSeedsAndReturnsBackwards;
                 break;
             case Constants.TEXTURE_MODE_SPECIALIZED_RETURN_FTLE_BOTH:
                 offscreenRenderer = this.offscreenRendererSeedsAndReturns;
+                offscreenRendererBackwards = this.offscreenRendererSeedsAndReturnsBackwards;
                 break;
             case Constants.TEXTURE_MODE_SPECIALIZED_RETURN_SUCCESS:
                 offscreenRenderer = this.offscreenRendererSeedsAndReturns;
+                offscreenRendererBackwards = this.offscreenRendererSeedsAndReturnsBackwards;
+                break;         
+            case Constants.TEXTURE_MODE_SPECIALIZED_SEED_VELOCITY_MAGNITUDE:
+                offscreenRenderer = this.offscreenRendererSeedsAndReturns;
+                offscreenRendererBackwards = this.offscreenRendererSeedsAndReturnsBackwards;
                 break;                
             default:
                 console.error("Error: Unknown rendering_specialized_mode", this.simulationParameters.rendering_specialized_mode);
                 break;
         }
         textureRenderer.changeDisplayedTexture(offscreenRenderer.renderTarget.texture);
+        textureRenderer.changeDisplayedTextureBackwards(offscreenRendererBackwards.renderTarget.texture);
     }
 
     changeDisplayedTextureRaw(textureRenderer){
         var offscreenRenderer;
-        offscreenRenderer = this.offscreenRendererSeeds;
+        var offscreenRendererBackwards;
         
         switch (this.simulationParameters.rendering_raw_mode) {
             case Constants.OFFSCREEN_RENDERER_SEEDS:
                 offscreenRenderer = this.offscreenRendererSeeds;
+                offscreenRendererBackwards = this.offscreenRendererSeedsBackwards;
                 break;
             case Constants.OFFSCREEN_RENDERER_GRAVITATIONAL_FORCE:
                 offscreenRenderer = this.offscreenRendererGravitationalForce;
+                offscreenRendererBackwards = this.offscreenRendererGravitationalForce;
                 break;            
             case Constants.OFFSCREEN_RENDERER_FLOW_MAP:
                 offscreenRenderer = this.offscreenRendererFlowMap;
+                offscreenRendererBackwards = this.offscreenRendererFlowMapBackwards;
                 break;       
             case Constants.OFFSCREEN_RENDERER_SEEDS_AND_RETURNS:                   
                 offscreenRenderer = this.offscreenRendererSeedsAndReturns;
+                offscreenRendererBackwards = this.offscreenRendererSeedsAndReturnsBackwards;
                 break;      
             default:
                 console.error("Error: Unknown rendering_raw_mode", this.simulationParameters.rendering_raw_mode);
                 break;
         }
         textureRenderer.changeDisplayedTexture(offscreenRenderer.renderTarget.texture);
+        textureRenderer.changeDisplayedTextureBackwards(offscreenRendererBackwards.renderTarget.texture);
     }
 
     updateClickedPosition() {

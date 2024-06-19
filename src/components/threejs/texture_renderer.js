@@ -317,6 +317,14 @@ class TextureRenderer {
                     scalar = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
                     outputColor = vec4(mapScalarToColorWithInterval(scalar, 0.0, 1.0), opacity);
                     break;
+                case 11://TEXTURE_MODE_SPECIALIZED_SEED_VELOCITY_MAGNITUDE
+                    x_virtual = 1;
+                    y_virtual = 0;
+                    z_layer = 0;
+                    component = 3;
+                    scalar = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
+                    outputColor = vec4(mapScalarToColorWithInterval(scalar, scalar_min, scalar_max), opacity);
+                    break;
             }
 
         }
