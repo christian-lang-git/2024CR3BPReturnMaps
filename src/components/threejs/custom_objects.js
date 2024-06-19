@@ -199,11 +199,11 @@ class SpherelikeGrid{
                 //indices[index+1] = vertex_index_bottom_left;
                 //indices[index+2] = vertex_index_top_right;
 
-                //this order results in triangles visible from inside the sphere
+                //this order results in triangles visible from outside the sphere
                 indices[index] = vertex_index_top_left;
                 indices[index+1] = vertex_index_top_right;
                 indices[index+2] = vertex_index_bottom_left;
-
+                //second triangle of cell
                 indices[index+3] = vertex_index_top_right;
                 indices[index+4] = vertex_index_bottom_right;
                 indices[index+5] = vertex_index_bottom_left;
