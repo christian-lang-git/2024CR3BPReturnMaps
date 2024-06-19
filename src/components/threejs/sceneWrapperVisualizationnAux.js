@@ -9,7 +9,7 @@ import { OffscreenRendererSeeds} from "./offscreen_renderer_seeds";
 import { OffscreenRendererFlowMap } from "./offscreen_renderer_flow_map";
 import { OffscreenRendererFTLE } from "./offscreen_renderer_ftle";
 import { OffscreenRendererGravitationalForce} from "./offscreen_renderer_gravitational_force";
-import { TextureRenderer } from "@/components/threejs/texture_renderer";
+import { TextureRendererSphere } from "@/components/threejs/texture_renderer_sphere";
 import { StreamlineGenerator } from "@/components/threejs/streamline_generator";
 import { SceneWrapperVisualization } from "@/components/threejs/sceneWrapperVisualization";
 
@@ -29,6 +29,8 @@ class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
         this.scene_sphere = scene_sphere;
         this.camera_sphere = camera_sphere;
         this.controls_sphere = controls_sphere;
+        var useAnglePlane = true;
+        this.textureRendererSphere = new TextureRendererSphere(renderer, this.simulationParameters, this.colorMaps, this.scene_sphere, useAnglePlane);
     }
 
     initializeAdditionalObjects(){
@@ -60,7 +62,22 @@ class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
         this.updateClickedPosition();   
         this.updateStreamlineModel();  
         this.updateTexturedPlane();
+        this.updateTexturedSphere();
         this.updateAxes();
+    }
+
+    updateTexturedSphere(){
+        var min_x = this.getTexturedPlaneMinX();
+        var max_x = this.getTexturedPlaneMaxX();
+        var min_y = this.getTexturedPlaneMinY();
+        var max_y = this.getTexturedPlaneMaxY();
+        var scale_x = max_x - min_x;
+        var scale_y = max_y - min_y;
+        var pos_x = 0.5 * (min_x + max_x);
+        var pos_y = 0.5 * (min_y + max_y);
+
+        this.changeDisplayedTexture(this.textureRendererSphere);
+        this.textureRendererSphere.updateTexturedMesh();
     }
 
     updateAxes(){
@@ -118,6 +135,7 @@ class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
 
     initializeSpherelikeGrid(){
         this.spherelikeGrid = new SpherelikeGrid(this.scene_sphere);
+        this.textureRendererSphere.initialize();
     }
 
     computeAdditionalStuff(){

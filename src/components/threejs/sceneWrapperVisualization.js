@@ -9,7 +9,7 @@ import { OffscreenRendererSeeds} from "./offscreen_renderer_seeds";
 import { OffscreenRendererFlowMap } from "./offscreen_renderer_flow_map";
 import { OffscreenRendererFTLE } from "./offscreen_renderer_ftle";
 import { OffscreenRendererGravitationalForce} from "./offscreen_renderer_gravitational_force";
-import { TextureRenderer } from "@/components/threejs/texture_renderer";
+import { TextureRendererPlane } from "@/components/threejs/texture_renderer_plane";
 import { StreamlineGenerator } from "@/components/threejs/streamline_generator";
 
 import { ColorMaps } from "@/components/colormaps/colormaps"
@@ -60,7 +60,7 @@ class SceneWrapperVisualization {
         this.OffscreenRendererFTLEBackwards.initialize();
         this.offscreenRendererGravitationalForce.initialize();
 
-        this.textureRenderer = new TextureRenderer(renderer, this.simulationParameters, this.colorMaps, scene, useAnglePlane);
+        this.textureRenderer = new TextureRendererPlane(renderer, this.simulationParameters, this.colorMaps, scene, useAnglePlane);
 
     }
 
@@ -349,8 +349,8 @@ class SceneWrapperVisualization {
         var pos_y = 0.5 * (min_y + max_y);
 
         this.textureRenderer.updateTransform(pos_x, pos_y, scale_x, scale_y);
-        this.changeDisplayedTexture();
-        this.textureRenderer.updateTexturedPlane();
+        this.changeDisplayedTexture(this.textureRenderer);
+        this.textureRenderer.updateTexturedMesh();
     }
 
     updateAxes(){
@@ -373,17 +373,17 @@ class SceneWrapperVisualization {
         console.log(camera.position);
     }
 
-    changeDisplayedTexture(){
-        this.textureRenderer.changeDisplayedTextureBackwards(this.offscreenRendererSeedsAndReturnsBackwards.renderTarget.texture);
+    changeDisplayedTexture(textureRenderer){
+        textureRenderer.changeDisplayedTextureBackwards(this.offscreenRendererSeedsAndReturnsBackwards.renderTarget.texture);
         switch (this.simulationParameters.rendering_texture_mode) {
             case Constants.TEXTURE_MODE_SPECIALIZED:
-                this.changeDisplayedTextureSpecialized();
+                this.changeDisplayedTextureSpecialized(textureRenderer);
                 break;
             case Constants.TEXTURE_MODE_RAW_VIRTUAL:
-                this.changeDisplayedTextureRaw();
+                this.changeDisplayedTextureRaw(textureRenderer);
                 break;
             case Constants.TEXTURE_MODE_RAW_TEXTURE:
-                this.changeDisplayedTextureRaw();
+                this.changeDisplayedTextureRaw(textureRenderer);
                 break;
             default:
                 console.error("Error: Unknown rendering_texture_mode", this.simulationParameters.rendering_texture_mode);
@@ -391,7 +391,7 @@ class SceneWrapperVisualization {
         }
     }
 
-    changeDisplayedTextureSpecialized(){
+    changeDisplayedTextureSpecialized(textureRenderer){
         var offscreenRenderer;
         switch (this.simulationParameters.rendering_specialized_mode) {
             case Constants.TEXTURE_MODE_SPECIALIZED_GRAVITATIONAL_FORCE:
@@ -431,10 +431,10 @@ class SceneWrapperVisualization {
                 console.error("Error: Unknown rendering_specialized_mode", this.simulationParameters.rendering_specialized_mode);
                 break;
         }
-        this.textureRenderer.changeDisplayedTexture(offscreenRenderer.renderTarget.texture);
+        textureRenderer.changeDisplayedTexture(offscreenRenderer.renderTarget.texture);
     }
 
-    changeDisplayedTextureRaw(){
+    changeDisplayedTextureRaw(textureRenderer){
         var offscreenRenderer;
         offscreenRenderer = this.offscreenRendererSeeds;
         
@@ -455,7 +455,7 @@ class SceneWrapperVisualization {
                 console.error("Error: Unknown rendering_raw_mode", this.simulationParameters.rendering_raw_mode);
                 break;
         }
-        this.textureRenderer.changeDisplayedTexture(offscreenRenderer.renderTarget.texture);
+        textureRenderer.changeDisplayedTexture(offscreenRenderer.renderTarget.texture);
     }
 
     updateClickedPosition() {

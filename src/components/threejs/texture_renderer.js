@@ -39,24 +39,27 @@ class TextureRenderer {
         this.height = 100;
 
         this.generateUniforms();
-        this.textured_plane_geometry = new THREE.PlaneGeometry(1, 1);
-        this.textured_plane_material = new THREE.ShaderMaterial({
+
+        this.textured_material = new THREE.ShaderMaterial({
             uniforms: this.uniforms,
             fragmentShader: this.fragmentShader(),
             vertexShader: this.vertexShader(),
             glslVersion: THREE.GLSL3
         })
-        this.textured_plane_material.transparent = true;
-        this.textured_plane_material.opacity = 0.5;
-        this.textured_plane_mesh = new THREE.Mesh(this.textured_plane_geometry, this.textured_plane_material);
-        this.scene.add(this.textured_plane_mesh);
+        this.textured_material.transparent = true;
+        this.textured_material.opacity = 0.5;
+
+        this.initializeTexturedGeometry();
+
         //console.warn(this.fragmentShader())
     }
 
-    updateTransform(pos_x, pos_y, scale_x, scale_y) {
-        this.textured_plane_mesh.scale.set(scale_x, scale_y, 1);
-        this.textured_plane_mesh.position.set(pos_x, pos_y, 0);
+    initializeTexturedGeometry(){
+        //define in child class
+        console.error("initializeTexturedGeometry not defined");
     }
+
+
 
     changeDisplayedTexture(texture) {
         this.displayedTexture = texture;
@@ -66,20 +69,20 @@ class TextureRenderer {
         this.displayedTextureBackwards = texture;
     }
 
-    updateTexturedPlane() {
+    updateTexturedMesh() {
         this.setAdditionalUniforms();
-        this.textured_plane_mesh.material.uniforms.mu.value = this.simulationParameters.mu;
-        this.textured_plane_mesh.material.uniforms.angular_velocity.value = this.simulationParameters.angular_velocity;
-        this.textured_plane_mesh.material.uniforms.primary_x.value = this.simulationParameters.getPrimaryX();
-        this.textured_plane_mesh.material.uniforms.secondary_x.value = this.simulationParameters.getSecondaryX();
-        this.textured_plane_mesh.material.uniforms.primary_mass.value = this.simulationParameters.getPrimaryMass();
-        this.textured_plane_mesh.material.uniforms.secondary_mass.value = this.simulationParameters.getSecondaryMass();
-        this.textured_plane_mesh.material.uniforms.planeCornerBL.value.x = this.simulationParameters.domain_min_x;
-        this.textured_plane_mesh.material.uniforms.planeCornerBL.value.y = this.simulationParameters.domain_min_y;
-        this.textured_plane_mesh.material.uniforms.planeDimensions.value.x = this.simulationParameters.domain_dimension_x;
-        this.textured_plane_mesh.material.uniforms.planeDimensions.value.y = this.simulationParameters.domain_dimension_y;
-        this.textured_plane_mesh.material.uniforms.planeDimensionsPixel.value.x = this.getPlaneDimensionX();
-        this.textured_plane_mesh.material.uniforms.planeDimensionsPixel.value.y = this.getPlaneDimensionY();
+        this.textured_mesh.material.uniforms.mu.value = this.simulationParameters.mu;
+        this.textured_mesh.material.uniforms.angular_velocity.value = this.simulationParameters.angular_velocity;
+        this.textured_mesh.material.uniforms.primary_x.value = this.simulationParameters.getPrimaryX();
+        this.textured_mesh.material.uniforms.secondary_x.value = this.simulationParameters.getSecondaryX();
+        this.textured_mesh.material.uniforms.primary_mass.value = this.simulationParameters.getPrimaryMass();
+        this.textured_mesh.material.uniforms.secondary_mass.value = this.simulationParameters.getSecondaryMass();
+        this.textured_mesh.material.uniforms.planeCornerBL.value.x = this.simulationParameters.domain_min_x;
+        this.textured_mesh.material.uniforms.planeCornerBL.value.y = this.simulationParameters.domain_min_y;
+        this.textured_mesh.material.uniforms.planeDimensions.value.x = this.simulationParameters.domain_dimension_x;
+        this.textured_mesh.material.uniforms.planeDimensions.value.y = this.simulationParameters.domain_dimension_y;
+        this.textured_mesh.material.uniforms.planeDimensionsPixel.value.x = this.getPlaneDimensionX();
+        this.textured_mesh.material.uniforms.planeDimensionsPixel.value.y = this.getPlaneDimensionY();
         return;
     }
 
@@ -544,20 +547,20 @@ class TextureRenderer {
     }
 
     setAdditionalUniforms() {
-        this.textured_plane_mesh.material.uniforms.displayedTexture.value = this.displayedTexture;
-        this.textured_plane_mesh.material.uniforms.displayedTextureBackwards.value = this.displayedTextureBackwards;
-        this.textured_plane_mesh.material.uniforms.colorMapsTexture.value = this.colorMaps.texture;
-        this.textured_plane_mesh.material.uniforms.rendering_texture_mode.value = this.simulationParameters.rendering_texture_mode;
-        this.textured_plane_mesh.material.uniforms.rendering_specialized_mode.value = this.simulationParameters.rendering_specialized_mode;
-        this.textured_plane_mesh.material.uniforms.return_layer.value = this.simulationParameters.return_layer;
-        this.textured_plane_mesh.material.uniforms.rendering_forward.value = this.simulationParameters.rendering_forward;        
-        this.textured_plane_mesh.material.uniforms.rendering_raw_mode_layer.value = this.simulationParameters.rendering_raw_mode_layer;
-        this.textured_plane_mesh.material.uniforms.rendering_raw_mode_x_texture_index.value = this.simulationParameters.rendering_raw_mode_x_texture_index;
-        this.textured_plane_mesh.material.uniforms.rendering_raw_mode_y_texture_index.value = this.simulationParameters.rendering_raw_mode_y_texture_index;
-        this.textured_plane_mesh.material.uniforms.scalar_min.value = this.simulationParameters.scalar_min;
-        this.textured_plane_mesh.material.uniforms.scalar_max.value = this.simulationParameters.scalar_max;
-        this.textured_plane_mesh.material.uniforms.opacity.value = this.simulationParameters.opacity;
-        this.textured_plane_mesh.material.uniforms.ftle_type.value = this.simulationParameters.rendering_ftle_type;
+        this.textured_mesh.material.uniforms.displayedTexture.value = this.displayedTexture;
+        this.textured_mesh.material.uniforms.displayedTextureBackwards.value = this.displayedTextureBackwards;
+        this.textured_mesh.material.uniforms.colorMapsTexture.value = this.colorMaps.texture;
+        this.textured_mesh.material.uniforms.rendering_texture_mode.value = this.simulationParameters.rendering_texture_mode;
+        this.textured_mesh.material.uniforms.rendering_specialized_mode.value = this.simulationParameters.rendering_specialized_mode;
+        this.textured_mesh.material.uniforms.return_layer.value = this.simulationParameters.return_layer;
+        this.textured_mesh.material.uniforms.rendering_forward.value = this.simulationParameters.rendering_forward;        
+        this.textured_mesh.material.uniforms.rendering_raw_mode_layer.value = this.simulationParameters.rendering_raw_mode_layer;
+        this.textured_mesh.material.uniforms.rendering_raw_mode_x_texture_index.value = this.simulationParameters.rendering_raw_mode_x_texture_index;
+        this.textured_mesh.material.uniforms.rendering_raw_mode_y_texture_index.value = this.simulationParameters.rendering_raw_mode_y_texture_index;
+        this.textured_mesh.material.uniforms.scalar_min.value = this.simulationParameters.scalar_min;
+        this.textured_mesh.material.uniforms.scalar_max.value = this.simulationParameters.scalar_max;
+        this.textured_mesh.material.uniforms.opacity.value = this.simulationParameters.opacity;
+        this.textured_mesh.material.uniforms.ftle_type.value = this.simulationParameters.rendering_ftle_type;
 
         console.warn("this.uniforms", this.uniforms);
     }
