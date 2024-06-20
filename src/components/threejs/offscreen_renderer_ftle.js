@@ -78,10 +78,12 @@ class OffscreenRendererFTLE extends OffscreenRenderer {
                     outputColor = texelFetch(texture_seeds_and_returns, pointer_original, 0);
                 }
                 else{
-                    float ftle = computeFTLE(x_pixel_mod, y_pixel_mod);
-                    float psftle = computePSFTLE(x_pixel_mod, y_pixel_mod);
+                    //float ftle = computeFTLE(x_pixel_mod, y_pixel_mod);
+                    float psftle = computePSFTLE(x_pixel_mod, y_pixel_mod, 0);//0 = psftle
+                    float psftle_pos = computePSFTLE(x_pixel_mod, y_pixel_mod, 1);//1 = psftle_pos
+                    float psftle_vel = computePSFTLE(x_pixel_mod, y_pixel_mod, 2);//2 = psftle_vel
                     
-                    outputColor = vec4(ftle,psftle, 0.0, 1.0); 
+                    outputColor = vec4(psftle,psftle_pos,psftle_vel, 1.0); 
                 }
             }
         `
@@ -89,8 +91,8 @@ class OffscreenRendererFTLE extends OffscreenRenderer {
 
     fragmentShaderAdditionalMethodDeclarations(){
         return glsl`
-        float computeFTLE(int x_pixel_mod, int y_pixel_mod);
-        float computePSFTLE(int x_pixel_mod, int y_pixel_mod);
+        //float computeFTLE(int x_pixel_mod, int y_pixel_mod);
+        float computePSFTLE(int x_pixel_mod, int y_pixel_mod, int type);
         `;
     }
 
@@ -98,7 +100,7 @@ class OffscreenRendererFTLE extends OffscreenRenderer {
         return glsl`
 
 
-
+        /*
         float computeFTLE(int x_pixel_mod, int y_pixel_mod){
             float dx = 1.0 / (planeDimensionsPixel.x-1.0);
             float dy = 1.0 / (planeDimensionsPixel.y-1.0);
@@ -147,9 +149,9 @@ class OffscreenRendererFTLE extends OffscreenRenderer {
             float ftle = 1.0 / advection_time * log(sqrt(lambda_max));
 
             return ftle;
-        }
+        }*/
 
-        float computePSFTLE(int x_pixel_mod, int y_pixel_mod){
+        float computePSFTLE(int x_pixel_mod, int y_pixel_mod, int type){
             float dx = 1.0 / (planeDimensionsPixel.x-1.0);
             float dy = 1.0 / (planeDimensionsPixel.y-1.0);
             ivec3 pointer = ivec3(x_pixel_mod, y_pixel_mod, target_layer_index);
@@ -188,7 +190,16 @@ class OffscreenRendererFTLE extends OffscreenRenderer {
                 dvel_dy = computeCentralDifference(texture_seeds_and_returns, pointer+x_offset_vel, ivec3(0,-1,0), ivec3(0,1,0), dy );
             }
 
-            mat2 C = BuildCauchyGreen(dpos_dx, dvel_dx, dpos_dy, dvel_dy);
+            mat2 C;
+            if(type == 0){//0 = psftle
+                C = BuildCauchyGreen(dpos_dx, dvel_dx, dpos_dy, dvel_dy);
+            }
+            else if(type == 1){//1 = psftle_pos
+                C = BuildCauchyGreenPos(dpos_dx, dpos_dy);
+            }
+            else if(type == 2){//2 = psftle_vel
+                C = BuildCauchyGreenVel(dvel_dx, dvel_dy);
+            }
 
             //biggest eigenvalue lambda_max
             vec2 lambdas = vec2(0,0);

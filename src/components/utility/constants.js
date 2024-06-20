@@ -43,8 +43,9 @@ export const LAYER_INDEX_SECOND_RETURN = 2;
 export const RENDERER_DIRECTION_FORWARD = true;
 export const RENDERER_DIRECTION_BACKWARD = false;
 
-export const FTLE_TYPE_END_POSITION = 0;
-export const FTLE_TYPE_PSFTLE = 1;
+export const FTLE_TYPE_PSFTLE = 0;
+export const FTLE_TYPE_END_POSITION = 1;
+export const FTLE_TYPE_END_VELOCITY = 2;
 
 export const AUX_CONTENT_DEFAULT = 0;
 export const AUX_CONTENT_SPHERE = 1;

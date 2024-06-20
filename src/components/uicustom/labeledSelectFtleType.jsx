@@ -3,8 +3,9 @@ import LabeledSelect from './labeledSelect';
 import * as Constants from "@/components/utility/constants";
 
 const options = [
-    { value: Constants.FTLE_TYPE_END_POSITION, label: 'FTLE (return position)' },
-    { value: Constants.FTLE_TYPE_PSFTLE, label: 'PSFTLE (return position and return velocity)' } 
+    { value: Constants.FTLE_TYPE_PSFTLE, label: 'position and velocity separation' },
+    { value: Constants.FTLE_TYPE_END_POSITION, label: 'position separation' },
+    { value: Constants.FTLE_TYPE_END_VELOCITY, label: 'velocity separation' },
 ];
 
 const LabeledSelectFtleType = () => (
