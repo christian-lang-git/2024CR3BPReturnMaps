@@ -10,13 +10,15 @@ import {
     ResizablePanelGroup,
 } from "@/components/ui/resizable"
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { AppProvider } from '@/components/uicustom/AppContext'
 import BehaviorBar from "./components/uicustom/behaviorbar";
 import ActionBar from "./components/uicustom/actionbar";
 import LabeledSelectAuxContent from '@/components/uicustom/labeledSelectAuxContent'
 
 function App() {
+    const mainRef = useRef(null);
+    const auxRef = useRef(null);
 
     function handleResizePanel() {
         console.log("handleResizePanel")
@@ -34,7 +36,7 @@ function App() {
                     <ResizablePanel onResize={handleResizePanel} defaultSize={50}>
                         <ResizablePanelGroup direction="vertical">
                             <ResizablePanel onResize={handleResizePanel} defaultSize={85}>
-                                <ThreeContainerMain />
+                                <ThreeContainerMain ref={mainRef} auxRef={auxRef}/>
                             </ResizablePanel>
                             <ResizableHandle />
                             <ResizablePanel defaultSize={15}>
@@ -51,7 +53,7 @@ function App() {
                     <ResizablePanel defaultSize={25}>
                     <ResizablePanelGroup direction="vertical">
                             <ResizablePanel onResize={handleResizePanel} defaultSize={50}>
-                                <ThreeContainerAux />
+                                <ThreeContainerAux ref={auxRef} mainRef={mainRef}/>
                             </ResizablePanel>
                             <ResizableHandle />
                             <ResizablePanel defaultSize={50}>

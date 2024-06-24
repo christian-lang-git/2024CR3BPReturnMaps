@@ -117,6 +117,16 @@ class SimulationParameters {
         console.log("primary_volume_unscaled", primary_volume_unscaled);
         console.log("secondary_volume_unscaled", secondary_volume_unscaled);
     }
+
+    static CreateOrGetInstance(){
+        if(SimulationParameters.instance){
+            console.error("Already exists, return instance");
+            return SimulationParameters.instance;
+        }
+        console.error("Create new instane");
+        SimulationParameters.instance = new SimulationParameters();
+        return SimulationParameters.instance;
+    }
 }
 
 export { SimulationParameters };

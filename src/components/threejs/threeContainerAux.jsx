@@ -13,6 +13,7 @@ class ThreeContainerAux extends ThreeContainer {
 
     constructor(props) {
         super(props);
+        this.mainRef = props.mainRef;
         console.warn("CONSTRUCTOR ThreeContainerAux");
     }
 

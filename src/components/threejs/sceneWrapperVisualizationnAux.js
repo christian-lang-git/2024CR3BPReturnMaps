@@ -14,6 +14,7 @@ import { StreamlineGenerator } from "@/components/threejs/streamline_generator";
 import { SceneWrapperVisualization } from "@/components/threejs/sceneWrapperVisualization";
 
 import { ColorMaps } from "@/components/colormaps/colormaps"
+import Emitter from '@/components/utility/emitter';
 
 /**
  * This class is responsible for the scene that shows the main visualization
@@ -36,6 +37,7 @@ class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
     initializeAdditionalObjects(){
         this.initializeAxesArrowsSpheres();
         this.initializeSpherelikeGrid();
+        this.initializeClickedPositionMarkerSphericalGrid();
     }
 
     getTexturedPlaneMinX(){
@@ -137,11 +139,61 @@ class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
         this.textureRendererSphere.initialize();
     }
 
+    initializeClickedPositionMarkerSphericalGrid(){
+        var radius = 1.0;
+        this.clicked_geometry_spherical_view = new THREE.SphereGeometry(radius);
+        this.clicked_material_spherical_view = new THREE.MeshStandardMaterial({ color: 0x000000 });
+        this.clicked_mesh_spherical_view = new THREE.Mesh(this.clicked_geometry_spherical_view, this.clicked_material_spherical_view);
+        this.clicked_mesh_spherical_view.position.set(0, 0, 10000);
+        this.scene_sphere.add(this.clicked_mesh_spherical_view);
+    }
+
     computeAdditionalStuff(){
         var subdivide = false;
         this.textureRendererSphere.spherelikeGrid.updateGrid(subdivide ,this.offscreenRendererSeedsAndReturns.getPlaneDimensionX(), this.offscreenRendererSeedsAndReturns.getPlaneDimensionY());
     }
 
+    rayCastAndMovePosition(mousePositionNDC){  
+        var mouse = new THREE.Vector2();
+        mouse.x = mousePositionNDC.x;
+        mouse.y = mousePositionNDC.y;
+
+        if(false){
+            this.raycaster.setFromCamera(mouse, this.camera);
+            const intersects = this.raycaster.intersectObject(this.plane_mesh);
+            if (intersects.length > 0) {
+                this.simulationParameters.seed_position_x = intersects[0].point.x;
+                this.simulationParameters.seed_position_y = intersects[0].point.y;
+            }
+        }else{
+            this.raycaster.setFromCamera(mouse, this.camera_sphere);
+            const intersects = this.raycaster.intersectObject(this.textureRendererSphere.spherelikeGrid.mesh);
+            if (intersects.length > 0) {
+                console.log("spherelikeGrid intersection", intersects[0].point);
+                this.simulationParameters.seed_direction_x = intersects[0].point.x;
+                this.simulationParameters.seed_direction_y = intersects[0].point.y;
+                this.simulationParameters.seed_direction_z = intersects[0].point.z;
+
+                this.simulationParameters.seed_angle_theta = 0;
+                this.simulationParameters.seed_angle_phi = 0;
+                Emitter.emit(Constants.EVENT_SEED_DIRECTION_CHANGED,{});
+            }
+        }
+
+    }
+
+    recalculateStreamlineFromSimulationParameters(){
+        //DO NOTHING
+    }
+
+    repositionSeedSpheres(){        
+        this.clicked_mesh_spherical_view.position.set(this.simulationParameters.seed_direction_x, this.simulationParameters.seed_direction_y, this.simulationParameters.seed_direction_z);
+    }
+
+    OnSeedPositonChanged(){
+        console.warn("OnSeedPositonChanged");
+        this.seed_changed = true;
+    }
 }
 
 export { SceneWrapperVisualizationAux };

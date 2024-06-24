@@ -30,7 +30,8 @@ class SceneWrapperVisualization {
         this.controls = controls;
         this.raycaster = raycaster;
         this.mode_constant_direction = mode_constant_direction;
-        this.simulationParameters = new SimulationParameters();
+        this.simulationParameters = SimulationParameters.CreateOrGetInstance();
+        //this.simulationParameters = new SimulationParameters();
         this.colorMaps = new ColorMaps();
         this.streamlineGenerator = new StreamlineGenerator(this.simulationParameters, scene);
         this.streamlineGenerator.initialize();
@@ -62,6 +63,7 @@ class SceneWrapperVisualization {
 
         this.textureRenderer = new TextureRendererPlane(renderer, this.simulationParameters, this.colorMaps, scene, useAnglePlane);
 
+        this.activeBehaviorLastFrame = null;
     }
 
     initialize() {
@@ -157,8 +159,8 @@ class SceneWrapperVisualization {
                 return;
             }
 
-            var mousePositionNDC = getMousePositionInCanvasNDC(this.renderer.domElement, event);
-            this.rayCastAndMovePosition(mousePositionNDC);
+            this.clickedMousePositionNDC = getMousePositionInCanvasNDC(this.renderer.domElement, event);
+            this.newClickedPosition = true;
         },
             false
         );
@@ -208,22 +210,8 @@ class SceneWrapperVisualization {
     }
 
     rayCastAndMovePosition(mousePositionNDC){
-        
-        //console.log("CLICK NDC:", mousePositionNDC.x, mousePositionNDC.y);
-        var mouse = new THREE.Vector2();
-        mouse.x = mousePositionNDC.x;
-        mouse.y = mousePositionNDC.y;
-        this.raycaster.setFromCamera(mouse, this.camera);
-        const intersects = this.raycaster.intersectObject(this.plane_mesh);
-        if (intersects.length > 0) {
-            //console.log("plane intersection", intersects[0].point);
-            this.clicked_mesh.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
-            this.recalculateStreamlineAtPosition(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
-        }
-        else {
-            //console.log("no plane intersection");
-            this.clicked_mesh.position.set(0, 0, 10000);
-        }
+        //define in child class
+        console.error("rayCastAndMovePosition not defined");
     }
 
 
@@ -484,9 +472,26 @@ class SceneWrapperVisualization {
         this.clicked_mesh.scale.set(radius, radius, radius);
         this.return_1_mesh.scale.set(radius, radius, radius);
         this.return_2_mesh.scale.set(radius, radius, radius);
+        if(this.clicked_mesh_spherical_view)//this only exists in aux view
+            this.clicked_mesh_spherical_view.scale.set(radius, radius, radius);
+    }
+
+    recalculateStreamlineFromSimulationParameters(){
+        console.warn("recalculateStreamlineFromSimulationParameters")
+        var pos_x = this.simulationParameters.seed_position_x;
+        var pos_y = this.simulationParameters.seed_position_y;
+        var pos_z = 0;
+        var dir_x = this.simulationParameters.seed_direction_x;
+        var dir_y = this.simulationParameters.seed_direction_y;
+        var dir_z = this.simulationParameters.seed_direction_z;
+        var energy = this.simulationParameters.seed_energy;   
+        console.warn("dir", dir_x, dir_y, dir_z)         
+        this.streamlineGenerator.recalculateMulti(0, pos_x, pos_y, pos_z, dir_x, dir_y, dir_z, energy);
+        this.streamlineGenerator.updateMultiModel(0);
     }
 
     recalculateStreamlineAtPosition(pos_x, pos_y, pos_z){
+        console.warn("recalculateStreamlineAtPosition")
         var dir_x = this.simulationParameters.seed_direction_x;
         var dir_y = this.simulationParameters.seed_direction_y;
         var dir_z = this.simulationParameters.seed_direction_z;
@@ -497,6 +502,7 @@ class SceneWrapperVisualization {
     }
 
     recalculateStreamlineKeepPosition(){
+        console.warn("recalculateStreamlineKeepPosition")
         var dir_x = this.simulationParameters.seed_direction_x;
         var dir_y = this.simulationParameters.seed_direction_y;
         var dir_z = this.simulationParameters.seed_direction_z;
@@ -507,6 +513,7 @@ class SceneWrapperVisualization {
     }
 
     recalculateStreamlineWithLastParameters(){    
+        console.warn("recalculateStreamlineWithLastParameters")
         this.streamlineGenerator.recalculateMultiWithLastParameters(0);
         this.streamlineGenerator.updateMultiModel(0);
         this.repositionReturnSpheres();
@@ -536,24 +543,40 @@ class SceneWrapperVisualization {
     }
 
     updateBehavior() {
-        if(this.simulationParameters.activeBehavior == this.simulationParameters.activeBehaviorLastFrame){
+        if(this.simulationParameters.activeBehavior == this.activeBehaviorLastFrame){
             return;
         }
-        this.simulationParameters.activeBehaviorLastFrame = this.simulationParameters.activeBehavior;
+        this.activeBehaviorLastFrame = this.simulationParameters.activeBehavior;
         //console.warn("behavior changed", this.simulationParameters.activeBehavior);
         if(this.simulationParameters.activeBehavior == Constants.BEHAVIOR_CONTROL_CAMERA){
             this.controls.noRotate = false;
+            if(this.controls_sphere)
+                this.controls_sphere.noRotate = false;
         }
         if(this.simulationParameters.activeBehavior == Constants.BEHAVIOR_MOVE_SEED){
             this.controls.noRotate = true;
+            if(this.controls_sphere)
+                this.controls_sphere.noRotate = true;
         }
     }
 
     preRender(){
         if(this.newClickedPosition){
-            this.newClickedPosition = false;            
-            this.rayCastAndMovePosition(this.clickedMousePositionNDC);
+            this.newClickedPosition = false;     
+            this.seed_changed = true;       
+            this.rayCastAndMovePosition(this.clickedMousePositionNDC);            
         }
+        if(this.seed_changed){
+            this.seed_changed = false;
+            this.recalculateStreamlineFromSimulationParameters();//this does nothing in aux view
+            this.repositionReturnSpheres();
+            this.repositionSeedSpheres();
+        }
+    }
+
+    repositionSeedSpheres(){        
+        //define in child class
+        console.error("repositionSeedSpheres not defined");
     }
 }
 

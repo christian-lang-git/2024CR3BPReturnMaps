@@ -13,6 +13,7 @@ class ThreeContainerMain extends ThreeContainer {
 
     constructor(props) {
         super(props);
+        this.auxRef = props.auxRef;
         console.warn("CONSTRUCTOR ThreeContainerMain");
     }
 
@@ -27,7 +28,9 @@ class ThreeContainerMain extends ThreeContainer {
     initializeAdditional() {
         Emitter.on(Constants.EVENT_DATA_UPDATE, this.handleEventDataUpdate);
         Emitter.on(Constants.EVENT_RENDERING_UPDATE, this.handleEventRenderingUpdate);
-        Emitter.on(Constants.EVENT_ALIGN_CAMERA, this.handleEventAlignCamera);        
+        Emitter.on(Constants.EVENT_ALIGN_CAMERA, this.handleEventAlignCamera);       
+
+        Emitter.on(Constants.EVENT_SEED_DIRECTION_CHANGED, this.handleEventSeedDirectionChanged);       
     }
 
     loadScene() {
@@ -59,6 +62,11 @@ class ThreeContainerMain extends ThreeContainer {
     handleEventAlignCamera = () => {
         console.log("handleEventAlignCamera");
         this.alignCameraWithDomain();
+    }
+
+    handleEventSeedDirectionChanged = () => {
+        console.log("handleEventSeedDirectionChanged");
+        this.sceneWrapper.OnSeedDirectionChanged();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -14,6 +14,7 @@ import { StreamlineGenerator } from "@/components/threejs/streamline_generator";
 import { SceneWrapperVisualization } from "@/components/threejs/sceneWrapperVisualization";
 
 import { ColorMaps } from "@/components/colormaps/colormaps"
+import Emitter from '@/components/utility/emitter';
 
 /**
  * This class is responsible for the scene that shows the main visualization
@@ -111,6 +112,30 @@ class SceneWrapperVisualizationMain extends SceneWrapperVisualization{
         var color2 = 0x00ff00;
         var color3 = 0x0000ff;
         this.objectAxes.rebuild(has_z, z_factor, this.scene, this.simulationParameters, min_x, max_x, min_y, max_y, radius, color1, color2, color3);
+    }
+
+    rayCastAndMovePosition(mousePositionNDC){        
+        //console.log("CLICK NDC:", mousePositionNDC.x, mousePositionNDC.y);
+        var mouse = new THREE.Vector2();
+        mouse.x = mousePositionNDC.x;
+        mouse.y = mousePositionNDC.y;
+        this.raycaster.setFromCamera(mouse, this.camera);
+        const intersects = this.raycaster.intersectObject(this.plane_mesh);
+        if (intersects.length > 0) {
+            this.simulationParameters.seed_position_x = intersects[0].point.x;
+            this.simulationParameters.seed_position_y = intersects[0].point.y;
+            Emitter.emit(Constants.EVENT_SEED_POSITION_CHANGED,{});
+        }
+
+    }
+
+    repositionSeedSpheres(){        
+        this.clicked_mesh.position.set(this.simulationParameters.seed_position_x, this.simulationParameters.seed_position_y, 0);
+    }
+
+    OnSeedDirectionChanged(){
+        console.warn("OnSeedDirectionChanged");
+        this.seed_changed = true;
     }
 }
 
