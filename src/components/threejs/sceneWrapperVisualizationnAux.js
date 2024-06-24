@@ -190,8 +190,8 @@ class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
         this.clicked_mesh_spherical_view.position.set(this.simulationParameters.seed_direction_x, this.simulationParameters.seed_direction_y, this.simulationParameters.seed_direction_z);
     }
 
-    OnSeedPositonChanged(){
-        console.warn("OnSeedPositonChanged");
+    OnSeedPositionChanged(){
+        console.warn("OnSeedPositionChanged");
         this.seed_changed = true;
     }
 }

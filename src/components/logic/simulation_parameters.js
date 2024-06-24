@@ -51,6 +51,8 @@ class SimulationParameters {
         this.scalar_max = 1.0;
         this.opacity = 1.0;
 
+        this.linkedViewsActive = true;
+
         this.print();
     }
 

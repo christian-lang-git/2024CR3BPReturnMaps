@@ -31,6 +31,7 @@ class ThreeContainerAux extends ThreeContainer {
         Emitter.on(Constants.EVENT_ALIGN_CAMERA, this.handleEventAlignCamera);  
         Emitter.on(Constants.EVENT_SELECT_CHANGED, this.handleEventSelectChanged);      
 
+        Emitter.on(Constants.EVENT_SEED_POSITION_CHANGED, this.handleEventSeedPositionChanged);     
         
         
         this.initializeAdditionalSceneSphere();
@@ -121,6 +122,11 @@ class ThreeContainerAux extends ThreeContainer {
                 //do nothing
                 break;
         }
+    }
+
+    handleEventSeedPositionChanged = () => {
+        console.log("handleEventSeedPositionChanged");
+        this.sceneWrapper.OnSeedPositionChanged();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

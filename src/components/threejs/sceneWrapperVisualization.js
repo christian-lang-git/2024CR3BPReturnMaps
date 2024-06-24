@@ -568,6 +568,9 @@ class SceneWrapperVisualization {
         }
         if(this.seed_changed){
             this.seed_changed = false;
+            if(this.simulationParameters.linkedViewsActive){
+                this.computeStuff();
+            }
             this.recalculateStreamlineFromSimulationParameters();//this does nothing in aux view
             this.repositionReturnSpheres();
             this.repositionSeedSpheres();
