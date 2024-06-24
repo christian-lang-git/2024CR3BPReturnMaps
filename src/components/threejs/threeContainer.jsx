@@ -249,7 +249,8 @@ class ThreeContainer extends Component {
     updateParametersActiveBehavior() {
         const { uiState } = this.context;
         var activeBehavior = uiState.UI_STATE_ACTIVE_BEHAVIOR;
-        this.sceneWrapper.updateParametersActiveBehavior(activeBehavior);
+        var linkedViewsActive = uiState.UI_STATE_LINKED_VIEWS_ACTIVE;
+        this.sceneWrapper.updateParametersActiveBehavior(activeBehavior, linkedViewsActive);
         this.sceneWrapper.updateBehavior();
     }
 

@@ -272,8 +272,9 @@ class SceneWrapperVisualization {
         this.simulationParameters.tube_only_show_successful_returns = tube_only_show_successful_returns;         
     }
 
-    updateParametersActiveBehavior(activeBehavior){
-        this.simulationParameters.activeBehavior = activeBehavior;        
+    updateParametersActiveBehavior(activeBehavior, linkedViewsActive){
+        this.simulationParameters.activeBehavior = activeBehavior;     
+        this.simulationParameters.linkedViewsActive = linkedViewsActive;       
     }
 
     computeStuff(){

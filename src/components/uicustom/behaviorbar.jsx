@@ -5,8 +5,11 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 
 import {
     Camera,
-    Move
+    Move,
+    Bold
 } from "lucide-react"
+import { Toggle } from "@/components/ui/toggle"
+import ToggleLinked from "@/components/uicustom/toggleLinked"
 
 class BehaviorBar extends Component {
 
@@ -27,6 +30,7 @@ class BehaviorBar extends Component {
         const value = uiState["UI_STATE_ACTIVE_BEHAVIOR"];
 
         return (
+            <div>                
             <ToggleGroup type="single" value={value} onValueChange={this.handleToggleChange}>
                 <ToggleGroupItem value={Constants.BEHAVIOR_CONTROL_CAMERA}>
                     <Camera className="h-8 w-8" />    
@@ -34,7 +38,9 @@ class BehaviorBar extends Component {
                 <ToggleGroupItem value={Constants.BEHAVIOR_MOVE_SEED}>
                     <Move className="h-8 w-8" />
                 </ToggleGroupItem>
-            </ToggleGroup>
+            </ToggleGroup>  
+            <ToggleLinked/>
+            </div>   
         )
     }
 

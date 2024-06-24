@@ -122,10 +122,8 @@ class SimulationParameters {
 
     static CreateOrGetInstance(){
         if(SimulationParameters.instance){
-            console.error("Already exists, return instance");
             return SimulationParameters.instance;
         }
-        console.error("Create new instane");
         SimulationParameters.instance = new SimulationParameters();
         return SimulationParameters.instance;
     }
