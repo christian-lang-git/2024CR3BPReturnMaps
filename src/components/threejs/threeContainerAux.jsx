@@ -38,10 +38,14 @@ class ThreeContainerAux extends ThreeContainer {
         this.initializeAdditionalCameraSphere();
         this.initializeAdditionalControlsSphere();
 
+        this.sceneWrapper = new SceneWrapperVisualizationAux(this.renderer, this.scene, this.camera, this.controls, this.raycaster, this.scene_sphere, this.camera_sphere, this.controls_sphere);
+        this.sceneWrapper.initialize();
+            
         this.switchToScene(0);
     }
 
     switchToScene(index){
+        this.sceneWrapper.simulationParameters.active_aux_scene_index = index;
         if(index == 0){
             this.active_scene = this.scene;
             this.active_camera = this.camera;
@@ -78,12 +82,6 @@ class ThreeContainerAux extends ThreeContainer {
         this.controls_sphere.update();
 
         this.list_controls.push(this.controls_sphere);
-    }
-
-
-    loadScene() {
-        this.sceneWrapper = new SceneWrapperVisualizationAux(this.renderer, this.scene, this.camera, this.controls, this.raycaster, this.scene_sphere, this.camera_sphere, this.controls_sphere);
-        this.sceneWrapper.initialize();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

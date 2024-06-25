@@ -30,8 +30,6 @@ class ThreeContainer extends Component {
 
         this.initializeAdditional();
 
-        this.loadScene();
-
         this.updateCanvasSize();
         this.updateControls();
         this.updateParameters();

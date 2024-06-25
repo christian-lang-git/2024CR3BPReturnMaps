@@ -15,6 +15,7 @@ import { SceneWrapperVisualization } from "@/components/threejs/sceneWrapperVisu
 
 import { ColorMaps } from "@/components/colormaps/colormaps"
 import Emitter from '@/components/utility/emitter';
+import { clamp } from "@/components/utility/utility";
 
 /**
  * This class is responsible for the scene that shows the main visualization
@@ -158,24 +159,21 @@ class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
         mouse.x = mousePositionNDC.x;
         mouse.y = mousePositionNDC.y;
 
-        if(false){
+        if(this.simulationParameters.active_aux_scene_index == Constants.AUX_CONTENT_DEFAULT){
             this.raycaster.setFromCamera(mouse, this.camera);
             const intersects = this.raycaster.intersectObject(this.plane_mesh);
             if (intersects.length > 0) {
-                this.simulationParameters.seed_position_x = intersects[0].point.x;
-                this.simulationParameters.seed_position_y = intersects[0].point.y;
+                var x_frac = clamp(intersects[0].point.x, 0, 1);
+                var y_frac = clamp(intersects[0].point.y, 0, 1);
+                this.simulationParameters.setSeedDirectionAnglesFromFrac(x_frac, y_frac);
+                Emitter.emit(Constants.EVENT_SEED_DIRECTION_CHANGED,{});
             }
-        }else{
+        }else{//Constants.AUX_CONTENT_SPHERE
             this.raycaster.setFromCamera(mouse, this.camera_sphere);
             const intersects = this.raycaster.intersectObject(this.textureRendererSphere.spherelikeGrid.mesh);
             if (intersects.length > 0) {
                 console.log("spherelikeGrid intersection", intersects[0].point);
-                this.simulationParameters.seed_direction_x = intersects[0].point.x;
-                this.simulationParameters.seed_direction_y = intersects[0].point.y;
-                this.simulationParameters.seed_direction_z = intersects[0].point.z;
-
-                this.simulationParameters.seed_angle_theta = 0;
-                this.simulationParameters.seed_angle_phi = 0;
+                this.simulationParameters.setSeedDirection(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
                 Emitter.emit(Constants.EVENT_SEED_DIRECTION_CHANGED,{});
             }
         }
@@ -188,6 +186,7 @@ class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
 
     repositionSeedSpheres(){        
         this.clicked_mesh_spherical_view.position.set(this.simulationParameters.seed_direction_x, this.simulationParameters.seed_direction_y, this.simulationParameters.seed_direction_z);
+        this.clicked_mesh.position.set(this.simulationParameters.seed_direction_theta_frac, this.simulationParameters.seed_direction_phi_frac, 0);
     }
 
     OnSeedPositionChanged(){

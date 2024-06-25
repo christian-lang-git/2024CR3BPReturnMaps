@@ -5,9 +5,13 @@ class SimulationParameters {
         //physics
         this.mu = 0.1;//mass of secondary
         this.angular_velocity = 1;//n in the equations of motion
-        this.seed_direction_x = 1;
-        this.seed_direction_y = 0;
-        this.seed_direction_z = 1;
+        this.seed_direction_x = 1;//used for computation
+        this.seed_direction_y = 0;//used for computation
+        this.seed_direction_z = 1;//used for computation
+        this.seed_direction_theta_frac = 0;//used for displaying in grid view
+        this.seed_direction_phi_frac = 0;//used for displaying in grid view
+        this.seed_direction_theta_radians = 0;//TODO: used for displaying to user?
+        this.seed_direction_phi_radians = 0;//TODO: used for displaying to user?
         this.seed_position_x = 0;
         this.seed_position_y = 0;
         this.seed_energy = 0.25;//used to calculate seed velocity - this is either the hamiltonian or the magnitude depending on use_constant_velocity
@@ -118,6 +122,43 @@ class SimulationParameters {
         console.log("secondary_volume", secondary_volume);
         console.log("primary_volume_unscaled", primary_volume_unscaled);
         console.log("secondary_volume_unscaled", secondary_volume_unscaled);
+    }
+
+    setSeedDirectionAnglesFromFrac(x_frac, y_frac){
+        //calculate values
+        var theta_radians = Math.PI * x_frac;
+        var phi_radians = 2.0 * Math.PI * y_frac;
+
+        var dir_x = Math.sin(theta_radians) * Math.cos(phi_radians);
+        var dir_y = Math.sin(theta_radians) * Math.sin(phi_radians);
+        var dir_z = Math.cos(theta_radians);
+
+        //set values
+        this.seed_direction_theta_frac = x_frac;
+        this.seed_direction_phi_frac = y_frac;
+        this.seed_direction_theta_radians = theta_radians;
+        this.seed_direction_phi_radians = phi_radians;
+        this.seed_direction_x = dir_x;
+        this.seed_direction_y = dir_y;
+        this.seed_direction_z = dir_z;
+    }
+
+    setSeedDirection(dir_x, dir_y, dir_z){
+        //calculate values
+        var theta_radians = 0;
+        var phi_radians = 0;
+
+        var x_frac = theta_radians / Math.PI;
+        var y_frac = phi_radians / (2*Math.PI);
+
+        //set values
+        this.seed_direction_theta_frac = x_frac;
+        this.seed_direction_phi_frac = y_frac;
+        this.seed_direction_theta_radians = theta_radians;
+        this.seed_direction_phi_radians = phi_radians;
+        this.seed_direction_x = dir_x;
+        this.seed_direction_y = dir_y;
+        this.seed_direction_z = dir_z;
     }
 
     static CreateOrGetInstance(){

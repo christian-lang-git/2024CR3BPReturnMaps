@@ -30,10 +30,8 @@ class ThreeContainerMain extends ThreeContainer {
         Emitter.on(Constants.EVENT_RENDERING_UPDATE, this.handleEventRenderingUpdate);
         Emitter.on(Constants.EVENT_ALIGN_CAMERA, this.handleEventAlignCamera);       
 
-        Emitter.on(Constants.EVENT_SEED_DIRECTION_CHANGED, this.handleEventSeedDirectionChanged);       
-    }
-
-    loadScene() {
+        Emitter.on(Constants.EVENT_SEED_DIRECTION_CHANGED, this.handleEventSeedDirectionChanged);     
+        
         this.sceneWrapper = new SceneWrapperVisualizationMain(this.renderer, this.scene, this.camera, this.controls, this.raycaster);
         this.sceneWrapper.initialize();
     }
