@@ -185,6 +185,24 @@ class ThreeContainer extends Component {
         console.error("updateVisualElements not defined");
     }
 
+    writeSeedDataToUI() {
+        console.warn("writeSeedDataToUI", this.sceneWrapper.simulationParameters.seed_position_x, this.sceneWrapper.simulationParameters.seed_position_y);
+        const { uiState, setUiState } = this.context;
+        //setUiState({ ["UI_STATE_DATA_PHYSICS_SEED_DIRECTION_X"]: this.sceneWrapper.simulationParameters.seed_direction_x });
+        //setUiState({ ["UI_STATE_DATA_PHYSICS_SEED_DIRECTION_Y"]: this.sceneWrapper.simulationParameters.seed_direction_y });
+        //setUiState({ ["UI_STATE_DATA_PHYSICS_SEED_DIRECTION_Z"]: this.sceneWrapper.simulationParameters.seed_direction_z });
+        //setUiState({ ["UI_STATE_DATA_PHYSICS_SEED_POSITION_X"]: this.sceneWrapper.simulationParameters.seed_position_x });
+        //setUiState({ ["UI_STATE_DATA_PHYSICS_SEED_POSITION_Y"]: this.sceneWrapper.simulationParameters.seed_position_y });
+        
+        setUiState({ 
+            ["UI_STATE_DATA_PHYSICS_SEED_DIRECTION_X"]: this.sceneWrapper.simulationParameters.seed_direction_x,
+            ["UI_STATE_DATA_PHYSICS_SEED_DIRECTION_Y"]: this.sceneWrapper.simulationParameters.seed_direction_y,
+            ["UI_STATE_DATA_PHYSICS_SEED_DIRECTION_Z"]: this.sceneWrapper.simulationParameters.seed_direction_z,
+            ["UI_STATE_DATA_PHYSICS_SEED_POSITION_X"]: this.sceneWrapper.simulationParameters.seed_position_x,
+            ["UI_STATE_DATA_PHYSICS_SEED_POSITION_Y"]: this.sceneWrapper.simulationParameters.seed_position_y
+         });
+    }
+
     updateParametersData() {
         const { uiState } = this.context;
         var mu = uiState.UI_STATE_DATA_PHYSICS_MU;

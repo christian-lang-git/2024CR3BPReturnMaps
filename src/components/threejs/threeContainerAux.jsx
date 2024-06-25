@@ -125,6 +125,7 @@ class ThreeContainerAux extends ThreeContainer {
     handleEventSeedPositionChanged = () => {
         console.log("handleEventSeedPositionChanged");
         this.sceneWrapper.OnSeedPositionChanged();
+        this.writeSeedDataToUI();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

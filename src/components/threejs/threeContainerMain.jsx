@@ -65,6 +65,7 @@ class ThreeContainerMain extends ThreeContainer {
     handleEventSeedDirectionChanged = () => {
         console.log("handleEventSeedDirectionChanged");
         this.sceneWrapper.OnSeedDirectionChanged();
+        this.writeSeedDataToUI();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
