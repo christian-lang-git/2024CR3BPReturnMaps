@@ -41,7 +41,8 @@ class ThreeContainerAux extends ThreeContainer {
         this.sceneWrapper = new SceneWrapperVisualizationAux(this.renderer, this.scene, this.camera, this.controls, this.raycaster, this.scene_sphere, this.camera_sphere, this.controls_sphere);
         this.sceneWrapper.initialize();
             
-        this.switchToScene(0);
+        this.switchToScene(Constants.AUX_CONTENT_DEFAULT);
+        this.switchGridDirection(Constants.AUX_GRID_DIRECTION_THETA_DOWN_PHI_RIGHT);
     }
 
     switchToScene(index){
@@ -62,6 +63,11 @@ class ThreeContainerAux extends ThreeContainer {
             this.controls.enabled = false;
             this.controls_sphere.enabled = true;
         }
+    }
+
+    switchGridDirection(value){
+        this.sceneWrapper.switchGridDirection(value);
+        this.updateVisualElements();
     }
 
     initializeAdditionalSceneSphere() {
@@ -115,6 +121,9 @@ class ThreeContainerAux extends ThreeContainer {
         switch(event.key){
             case "UI_STATE_AUX_CONTENT":
                 this.switchToScene(event.value);
+                break;
+            case "UI_STATE_AUX_GRID_DIRECTION":
+                this.switchGridDirection(event.value);
                 break;
             default:
                 //do nothing

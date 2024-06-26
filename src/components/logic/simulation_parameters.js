@@ -56,6 +56,7 @@ class SimulationParameters {
         this.opacity = 1.0;
 
         this.linkedViewsActive = true;
+        this.auxGridDirection = Constants.AUX_GRID_DIRECTION_THETA_DOWN_PHI_RIGHT;
 
         this.print();
     }
@@ -125,6 +126,18 @@ class SimulationParameters {
     }
 
     setSeedDirectionAnglesFromFrac(x_frac, y_frac){
+        //switch directions
+        if(this.auxGridDirection == Constants.AUX_GRID_DIRECTION_THETA_DOWN_PHI_RIGHT){
+            var tmp_x = x_frac;
+            var tmp_y = y_frac;
+            x_frac = 1-tmp_y;
+            y_frac = tmp_x;
+        }else if(this.auxGridDirection == Constants.AUX_GRID_DIRECTION_THETA_RIGHT_PHI_UP){
+            //do nothing
+        }else{
+            console.error("setSeedDirectionAnglesFromFrac: unkonw auxGridDirection", this.auxGridDirection);
+        }
+
         //calculate values
         var theta_radians = Math.PI * x_frac;
         var phi_radians = 2.0 * Math.PI * y_frac;

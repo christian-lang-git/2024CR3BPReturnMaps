@@ -50,3 +50,9 @@ export const FTLE_TYPE_END_VELOCITY = 2;
 
 export const AUX_CONTENT_DEFAULT = 0;
 export const AUX_CONTENT_SPHERE = 1;
+
+export const AUX_GRID_DIRECTION_THETA_RIGHT_PHI_UP = 0;
+export const AUX_GRID_DIRECTION_THETA_DOWN_PHI_RIGHT = 1;
+
+export const RENDERER_ID_MAIN = 0;
+export const RENDERER_ID_AUX = 1;

@@ -17,8 +17,8 @@ const glsl = x => x[0];
  */
 class TextureRendererPlane extends TextureRenderer {
 
-    constructor(renderer, simulationParameters, colorMaps, scene, useAnglePlane) {
-        super(renderer, simulationParameters, colorMaps, scene, useAnglePlane);
+    constructor(renderer_id, renderer, simulationParameters, colorMaps, scene, useAnglePlane) {
+        super(renderer_id, renderer, simulationParameters, colorMaps, scene, useAnglePlane);
         console.warn("CONSTRUCTOR: TextureRendererPlane");
     }
     
@@ -33,6 +33,10 @@ class TextureRendererPlane extends TextureRenderer {
         this.textured_mesh.position.set(pos_x, pos_y, 0);
     }
 
+    addAdditionalUniforms(){
+        super.addAdditionalUniforms();
+        this.uniforms["is_plane"] = { type: 'bool', value: true };
+    }
 }
 
 export { TextureRendererPlane }

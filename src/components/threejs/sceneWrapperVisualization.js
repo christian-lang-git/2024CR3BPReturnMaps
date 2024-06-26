@@ -22,8 +22,9 @@ import { ColorMaps } from "@/components/colormaps/colormaps"
  * - a deformed sphere that visualizes equivalent energy
  */
 class SceneWrapperVisualization {
-    constructor(renderer, scene, camera, controls, raycaster, mode_constant_direction, useAnglePlane) {
+    constructor(renderer_id, renderer, scene, camera, controls, raycaster, mode_constant_direction, useAnglePlane) {
         console.warn("CONSTRUCTOR SceneWrapperVisualization");
+        this.renderer_id = renderer_id;//Constants.RENDERER_ID_MAIN or Constants.RENDERER_ID_AUX
         this.renderer = renderer;
         this.scene = scene;
         this.camera = camera;
@@ -61,7 +62,7 @@ class SceneWrapperVisualization {
         this.OffscreenRendererFTLEBackwards.initialize();
         this.offscreenRendererGravitationalForce.initialize();
 
-        this.textureRenderer = new TextureRendererPlane(renderer, this.simulationParameters, this.colorMaps, scene, useAnglePlane);
+        this.textureRenderer = new TextureRendererPlane(renderer_id, renderer, this.simulationParameters, this.colorMaps, scene, useAnglePlane);
 
         this.activeBehaviorLastFrame = null;
     }
@@ -108,12 +109,14 @@ class SceneWrapperVisualization {
     }
 
     initializeAxesArrows() {
+        console.warn("#999 initializeAxesArrows");
         var position = vec3.fromValues(-4, -4, 0);
         var length = 8;
         var radius = 0.02;
         var cone_radius_factor = 5.0;
-        var cone_fraction = 0.05;
-        this.objectAxes = new ObjectAxes(position, length, length, length, radius, cone_radius_factor, cone_fraction);
+        var cone_fraction = 0.05;        
+        var theta_down = false;
+        this.objectAxes = new ObjectAxes(position, length, length, length, radius, cone_radius_factor, cone_fraction, theta_down);
         this.objectAxes.addToScene(this.scene);
     }
 
@@ -344,7 +347,7 @@ class SceneWrapperVisualization {
 
     updateAxes(){
         //define in child class
-        console.error("loadScene not defined");
+        console.error("updateAxes not defined");
     }
 
     alignCameraWithDomain(camera, controls, min_x, max_x, min_y, max_y){

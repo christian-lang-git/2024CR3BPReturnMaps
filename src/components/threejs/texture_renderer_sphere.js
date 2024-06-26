@@ -20,8 +20,8 @@ const glsl = x => x[0];
  */
 class TextureRendererSphere extends TextureRenderer {
 
-    constructor(renderer, simulationParameters, colorMaps, scene, useAnglePlane) {
-        super(renderer, simulationParameters, colorMaps, scene, useAnglePlane);
+    constructor(renderer_id, renderer, simulationParameters, colorMaps, scene, useAnglePlane) {
+        super(renderer_id, renderer, simulationParameters, colorMaps, scene, useAnglePlane);
         console.warn("CONSTRUCTOR: TextureRendererSphere");
     }
     
@@ -85,6 +85,10 @@ class TextureRendererSphere extends TextureRenderer {
         && this.simulationParameters.rendering_specialized_mode == Constants.TEXTURE_MODE_SPECIALIZED_SEED_VELOCITY_MAGNITUDE;
     }
 
+    addAdditionalUniforms(){
+        super.addAdditionalUniforms();
+        this.uniforms["is_plane"] = { type: 'bool', value: false };
+    }
 }
 
 export { TextureRendererSphere }

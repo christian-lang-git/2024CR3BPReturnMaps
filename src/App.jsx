@@ -15,6 +15,7 @@ import { AppProvider } from '@/components/uicustom/AppContext'
 import BehaviorBar from "./components/uicustom/behaviorbar";
 import ActionBar from "./components/uicustom/actionbar";
 import LabeledSelectAuxContent from '@/components/uicustom/labeledSelectAuxContent'
+import LabeledSelectAuxGridDirection from '@/components/uicustom/labeledSelectAuxGridDirection'
 
 function App() {
     const mainRef = useRef(null);
@@ -58,6 +59,7 @@ function App() {
                             <ResizableHandle />
                             <ResizablePanel defaultSize={50}>
                                 <LabeledSelectAuxContent/>
+                                <LabeledSelectAuxGridDirection/>
                             </ResizablePanel>
                         </ResizablePanelGroup>
                     </ResizablePanel>

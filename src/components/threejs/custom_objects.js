@@ -55,7 +55,7 @@ class ObjectArrow {
 
 class ObjectAxes{
 
-    constructor(position, length_x, length_y, length_z, radius, cone_radius_factor, cone_fraction){
+    constructor(position, length_x, length_y, length_z, radius, cone_radius_factor, cone_fraction, theta_down){
         this.position = position;
         this.length_x = length_x;
         this.length_y = length_y;
@@ -63,6 +63,7 @@ class ObjectAxes{
         this.radius = radius;
         this.cone_radius_factor = cone_radius_factor;
         this.cone_fraction = cone_fraction;
+        this.theta_down = theta_down;
 
         this.list_arrows = [];
 
@@ -78,13 +79,15 @@ class ObjectAxes{
         this.radius = radius;
         this.cone_radius_factor = cone_radius_factor;
         this.cone_fraction = cone_fraction;
+        if(this.theta_down){
+            this.position[1] += this.length_y;   
+        }
     }
 
     build(has_z, color1, color2, color3){
         this.list_arrows = [];
 
         this.axes_arrow_x = new ObjectArrow(this.position, this.length_x, this.radius, this.cone_radius_factor, this.cone_fraction, color1);
-        this.axes_arrow_x.mesh.rotateZ(THREE.MathUtils.degToRad(-90));
         this.list_arrows.push(this.axes_arrow_x);
 
         this.axes_arrow_y = new ObjectArrow(this.position, this.length_y, this.radius, this.cone_radius_factor, this.cone_fraction, color2);
@@ -94,6 +97,14 @@ class ObjectAxes{
             this.axes_arrow_z = new ObjectArrow(this.position, this.length_z, this.radius, this.cone_radius_factor, this.cone_fraction, color3);
             this.axes_arrow_z.mesh.rotateX(THREE.MathUtils.degToRad(90));
             this.list_arrows.push(this.axes_arrow_z);
+        }
+
+        if(this.theta_down){
+            this.axes_arrow_x.mesh.rotateZ(THREE.MathUtils.degToRad(180));
+            this.axes_arrow_y.mesh.rotateZ(THREE.MathUtils.degToRad(-90));
+            
+        }else{
+            this.axes_arrow_x.mesh.rotateZ(THREE.MathUtils.degToRad(-90));
         }
     }
 

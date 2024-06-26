@@ -26,16 +26,18 @@ import { clamp } from "@/components/utility/utility";
  */
 class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
     constructor(renderer, scene, camera, controls, raycaster, scene_sphere, camera_sphere, controls_sphere) {
-        super(renderer, scene, camera, controls, raycaster, false, true);
+        super(Constants.RENDERER_ID_AUX, renderer, scene, camera, controls, raycaster, false, true);
         console.warn("CONSTRUCTOR SceneWrapperVisualizationAux");
         this.scene_sphere = scene_sphere;
         this.camera_sphere = camera_sphere;
         this.controls_sphere = controls_sphere;
         var useAnglePlane = true;
-        this.textureRendererSphere = new TextureRendererSphere(renderer, this.simulationParameters, this.colorMaps, this.scene_sphere, useAnglePlane);
+        this.textureRendererSphere = new TextureRendererSphere(Constants.RENDERER_ID_AUX, renderer, this.simulationParameters, this.colorMaps, this.scene_sphere, useAnglePlane);
     }
 
     initializeAdditionalObjects(){
+        this.initializeAxesArrowsPart2();
+        this.initializeAxesThetaDown();
         this.initializeAxesArrowsSpheres();
         this.initializeSpherelikeGrid();
         this.initializeClickedPositionMarkerSphericalGrid();
@@ -67,6 +69,7 @@ class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
         this.updateTexturedPlane();
         this.updateTexturedSphere();
         this.updateAxes();
+        this.repositionSeedSpheres();
     }
 
     updateTexturedSphere(){
@@ -83,7 +86,7 @@ class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
         this.textureRendererSphere.updateTexturedMesh();
     }
 
-    updateAxes(){
+    initializeAxesArrowsPart2(){
         var has_z = false;
         var z_factor = 0.5;
         var min_x = 0;
@@ -95,6 +98,10 @@ class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
         var color2 = 0xff00ff;
         var color3 = 0x000000;
         this.objectAxes.rebuild(has_z, z_factor, this.scene, this.simulationParameters, min_x, max_x, min_y, max_y, radius, color1, color2, color3);
+    }
+
+    updateAxes(){
+        //DO NOTHING, we do not want to buiild new axes here, otherwise they would be readded to the scene
     }
 
     //for sphere sceen
@@ -112,14 +119,41 @@ class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
         this.scene_sphere.add(ambientLight_sphere);
     }
 
+    //alternative axes
+    initializeAxesThetaDown() {
+        console.warn("#999 initializeAxesThetaDown");
+        var position = vec3.fromValues(-4, -4, 0);
+        var length = 8;
+        var radius = 0.02;
+        var cone_radius_factor = 5.0;
+        var cone_fraction = 0.05;
+        var theta_down = true;
+        this.objectAxes_thetaDown = new ObjectAxes(position, length, length, length, radius, cone_radius_factor, cone_fraction, theta_down);
+        this.objectAxes_thetaDown.addToScene(this.scene);
+
+        
+        var has_z = false;
+        var z_factor = 1;
+        var min_x = 0;
+        var max_x = 1;
+        var min_y = 0;
+        var max_y = 1;        
+        var radius = 0.002;
+        var color1 = 0x00ffff;
+        var color2 = 0xff00ff;
+        var color3 = 0x000000;
+        this.objectAxes_thetaDown.rebuild(has_z, z_factor, this.scene, this.simulationParameters, min_x, max_x, min_y, max_y, radius, color1, color2, color3);
+    }
+
     //for sphere sceen
     initializeAxesArrowsSpheres() {
         var position = vec3.fromValues(-4, -4, 0);
         var length = 8;
         var radius = 0.02;
         var cone_radius_factor = 5.0;
-        var cone_fraction = 0.05;
-        this.objectAxes_spheres = new ObjectAxes(position, length, length, length, radius, cone_radius_factor, cone_fraction);
+        var cone_fraction = 0.05;   
+        var theta_down = false;
+        this.objectAxes_spheres = new ObjectAxes(position, length, length, length, radius, cone_radius_factor, cone_fraction, theta_down);
         this.objectAxes_spheres.addToScene(this.scene_sphere);
 
         
@@ -186,12 +220,38 @@ class SceneWrapperVisualizationAux extends SceneWrapperVisualization{
 
     repositionSeedSpheres(){        
         this.clicked_mesh_spherical_view.position.set(this.simulationParameters.seed_direction_x, this.simulationParameters.seed_direction_y, this.simulationParameters.seed_direction_z);
-        this.clicked_mesh.position.set(this.simulationParameters.seed_direction_theta_frac, this.simulationParameters.seed_direction_phi_frac, 0);
+        
+        if(this.simulationParameters.auxGridDirection == Constants.AUX_GRID_DIRECTION_THETA_DOWN_PHI_RIGHT){
+            this.clicked_mesh.position.set(this.simulationParameters.seed_direction_phi_frac, 1-this.simulationParameters.seed_direction_theta_frac, 0);
+        }else if(this.simulationParameters.auxGridDirection == Constants.AUX_GRID_DIRECTION_THETA_RIGHT_PHI_UP){
+            this.clicked_mesh.position.set(this.simulationParameters.seed_direction_theta_frac, this.simulationParameters.seed_direction_phi_frac, 0);
+        }else{
+            console.error("repositionSeedSpheres: unkown auxGridDirection", this.simulationParameters.auxGridDirection);
+        }
     }
 
     OnSeedPositionChanged(){
         console.warn("OnSeedPositionChanged");
         this.seed_changed = true;
+    }
+
+    switchGridDirection(value){
+        console.warn("#999 switchGridDirection", value);
+        this.simulationParameters.auxGridDirection = value;
+        if(value == Constants.AUX_GRID_DIRECTION_THETA_DOWN_PHI_RIGHT){
+            this.objectAxes.removefromScene(this.scene);
+            this.objectAxes_thetaDown.removefromScene(this.scene);
+
+            this.objectAxes_thetaDown.addToScene(this.scene);
+        }
+        else if(value == Constants.AUX_GRID_DIRECTION_THETA_RIGHT_PHI_UP){    
+            this.objectAxes.removefromScene(this.scene);        
+            this.objectAxes_thetaDown.removefromScene(this.scene);
+
+            this.objectAxes.addToScene(this.scene);
+        }else{
+            console.error("switchGridDirection unkown value", value);
+        }
     }
 }
 

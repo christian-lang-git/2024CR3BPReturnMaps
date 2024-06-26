@@ -18,7 +18,8 @@ const glsl = x => x[0];
  */
 class TextureRenderer {
 
-    constructor(renderer, simulationParameters, colorMaps, scene, useAnglePlane) {
+    constructor(renderer_id, renderer, simulationParameters, colorMaps, scene, useAnglePlane) {
+        this.renderer_id = renderer_id;//Constants.RENDERER_ID_MAIN or Constants.RENDERER_ID_AUX
         this.renderer = renderer;
         this.simulationParameters = simulationParameters;
         this.colorMaps = colorMaps;
@@ -142,6 +143,12 @@ class TextureRenderer {
             float x_frac = vUv.x;
             float y_frac = vUv.y;
 
+            //change coordinate directions if theta down
+            if(is_aux_view && is_plane && theta_down){
+                x_frac = 1.0-vUv.y;
+                y_frac = vUv.x;
+            }
+
             //coordinates in pixel in virtual texture starting bottom left
             int x_pixel = int(round(x_frac * (planeDimensionsPixel.x-1.0)));
             int y_pixel = int(round(y_frac * (planeDimensionsPixel.y-1.0)));
@@ -150,6 +157,18 @@ class TextureRenderer {
 
             int x_offset = rendering_raw_mode_x_texture_index * int(planeDimensionsPixel.x);
             int y_offset = rendering_raw_mode_y_texture_index * int(planeDimensionsPixel.y);
+
+            //testing correct pixel access if theta_down
+            /*
+            if(x_pixel < 10 && y_pixel < 10){
+                outputColor = vec4(0.0, 1.0, 0.0, 1.0);                
+                return;
+            }
+            if(x_pixel < 10 && y_pixel > 90){
+                outputColor = vec4(0.0, 0.0, 1.0, 1.0);                
+                return;
+            }
+            */
 
             ivec3 pointer;
             vec4 data;
@@ -477,7 +496,8 @@ class TextureRenderer {
         this.uniforms["ftle_type"] = { type: 'int', value: Constants.FTLE_TYPE_PSFTLE };
         this.uniforms["scale_vertices_by_velocity_magnitude"] = { type: 'bool', value: false };
 
-        
+        this.uniforms["theta_down"] = { type: 'bool', value: true };
+        this.uniforms["is_aux_view"] = { type: 'bool', value: this.renderer_id == Constants.RENDERER_ID_AUX };
         
     }
 
@@ -500,6 +520,7 @@ class TextureRenderer {
         
         this.textured_mesh.material.uniforms.scale_vertices_by_velocity_magnitude.value = this.shouldScaleVerticesByVelocityMagnitude();
 
+        this.textured_mesh.material.uniforms.theta_down.value = this.simulationParameters.auxGridDirection == Constants.AUX_GRID_DIRECTION_THETA_DOWN_PHI_RIGHT;
         console.warn("this.uniforms", this.uniforms);
     }
 
