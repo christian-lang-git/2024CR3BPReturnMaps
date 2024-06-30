@@ -53,6 +53,7 @@ export const AppProvider = ({ children }) => {
         UI_STATE_DATA_PHYSICS_USE_CONSTANT_VELOCITY: false,
         UI_STATE_AUX_CONTENT: Constants.AUX_CONTENT_DEFAULT,
         UI_STATE_AUX_GRID_DIRECTION: Constants.AUX_GRID_DIRECTION_THETA_DOWN_PHI_RIGHT,
+        UI_STATE_RENDERING_SCALE_VERTICES: false,
     });
 
     const value = {

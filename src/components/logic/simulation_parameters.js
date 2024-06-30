@@ -57,6 +57,7 @@ class SimulationParameters {
 
         this.linkedViewsActive = true;
         this.auxGridDirection = Constants.AUX_GRID_DIRECTION_THETA_DOWN_PHI_RIGHT;
+        this.rendering_scale_vertices = false;
 
         this.print();
     }

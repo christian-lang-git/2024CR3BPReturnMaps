@@ -4,6 +4,7 @@ import ThreeContainerMain from "./components/threejs/threeContainerMain";
 import ThreeContainerAux from "./components/threejs/threeContainerAux";
 import Emitter from "./components/utility/emitter";
 import LeftPanel from "./components/uicustom/leftpanel";
+import RightPanel from "./components/uicustom/rightpanel";
 import {
     ResizableHandle,
     ResizablePanel,
@@ -14,8 +15,6 @@ import { useState, useRef } from 'react'
 import { AppProvider } from '@/components/uicustom/AppContext'
 import BehaviorBar from "./components/uicustom/behaviorbar";
 import ActionBar from "./components/uicustom/actionbar";
-import LabeledSelectAuxContent from '@/components/uicustom/labeledSelectAuxContent'
-import LabeledSelectAuxGridDirection from '@/components/uicustom/labeledSelectAuxGridDirection'
 
 function App() {
     const mainRef = useRef(null);
@@ -58,9 +57,8 @@ function App() {
                             </ResizablePanel>
                             <ResizableHandle />
                             <ResizablePanel defaultSize={50}>
-                                <LabeledSelectAuxContent/>
-                                <LabeledSelectAuxGridDirection/>
-                            </ResizablePanel>
+                                <RightPanel/>
+                            </ResizablePanel>                            
                         </ResizablePanelGroup>
                     </ResizablePanel>
                 </ResizablePanelGroup>

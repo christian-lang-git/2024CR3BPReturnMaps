@@ -82,7 +82,8 @@ class TextureRendererSphere extends TextureRenderer {
 
     shouldScaleVerticesByVelocityMagnitude(){
         return this.simulationParameters.rendering_texture_mode == Constants.TEXTURE_MODE_SPECIALIZED
-        && this.simulationParameters.rendering_specialized_mode == Constants.TEXTURE_MODE_SPECIALIZED_SEED_VELOCITY_MAGNITUDE;
+        && this.simulationParameters.rendering_specialized_mode == Constants.TEXTURE_MODE_SPECIALIZED_SEED_VELOCITY_MAGNITUDE
+        && this.simulationParameters.rendering_scale_vertices;
     }
 
     addAdditionalUniforms(){
