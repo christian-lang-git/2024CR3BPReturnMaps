@@ -227,11 +227,9 @@ class SceneWrapperVisualization {
         this.simulationParameters.angular_velocity = parseFloat(angular_velocity);
         this.simulationParameters.use_constant_velocity = use_constant_velocity;
         this.simulationParameters.seed_energy = parseFloat(seed_energy);
-        this.simulationParameters.seed_direction_x = parseFloat(seed_direction_x);
-        this.simulationParameters.seed_direction_y = parseFloat(seed_direction_y);
-        this.simulationParameters.seed_direction_z = parseFloat(seed_direction_z);
         this.simulationParameters.seed_position_x = parseFloat(seed_position_x);
         this.simulationParameters.seed_position_y = parseFloat(seed_position_y);
+        this.simulationParameters.setSeedDirection(parseFloat(seed_direction_x), parseFloat(seed_direction_y), parseFloat(seed_direction_z));
 
         this.simulationParameters.step_size = parseFloat(step_size);
         this.simulationParameters.max_steps = parseInt(max_steps);        

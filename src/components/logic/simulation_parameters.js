@@ -1,4 +1,6 @@
 import * as Constants from "@/components/utility/constants";
+import { getThetaFromCartesian, getPhiFromCartesian } from "@/components/utility/utility";
+import { vec3 } from "gl-matrix/esm";
 
 class SimulationParameters {
     constructor() {
@@ -158,12 +160,24 @@ class SimulationParameters {
     }
 
     setSeedDirection(dir_x, dir_y, dir_z){
+        //normalize input
+        var dir = vec3.fromValues(dir_x, dir_y, dir_z);
+        vec3.normalize(dir, dir);
+        dir_x = dir[0];
+        dir_y = dir[1];
+        dir_z = dir[2];
+
         //calculate values
-        var theta_radians = 0;
-        var phi_radians = 0;
+        var theta_radians = getThetaFromCartesian(dir_x, dir_y, dir_z);
+        var phi_radians = getPhiFromCartesian(dir_x, dir_y, dir_z);
+        if(phi_radians < 0){
+            phi_radians += 2 * Math.PI;
+        }
 
         var x_frac = theta_radians / Math.PI;
         var y_frac = phi_radians / (2*Math.PI);
+
+        //console.warn("x_frac", x_frac, "y_frac", y_frac);
 
         //set values
         this.seed_direction_theta_frac = x_frac;
