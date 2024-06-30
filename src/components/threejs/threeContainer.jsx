@@ -237,6 +237,8 @@ class ThreeContainer extends Component {
         var max_radius_bodies = uiState.UI_STATE_RENDERING_BODIES_MAX_RADIUS_BODIES;
         var radius_center_of_mass = uiState.UI_STATE_RENDERING_BODIES_RADIUS_CENTER_OF_MASS;
         var radius_clicked_position = uiState.UI_STATE_RENDERING_CLICKED_POSITION_RADIUS;
+        var radius_clicked_position_aux = uiState.UI_STATE_RENDERING_CLICKED_POSITION_RADIUS_AUX;
+        var radius_clicked_position_aux_sphere = uiState.UI_STATE_RENDERING_CLICKED_POSITION_RADIUS_AUX_SPHERE;
         var rendering_ftle_type = uiState.UI_STATE_RENDERING_FTLE_TYPE;
         var rendering_texture_mode = uiState.UI_STATE_RENDERING_TEXTURE_MODE;
         var rendering_specialized_mode = uiState.UI_STATE_RENDERING_SPECIALIZED_MODE;
@@ -257,7 +259,7 @@ class ThreeContainer extends Component {
         var tube_only_show_successful_returns = uiState.UI_STATE_RENDERING_TUBE_ONLY_SHOW_SUCCESSFUL_RETURNS;
         var scale_vertices = uiState.UI_STATE_RENDERING_SCALE_VERTICES;
 
-        this.sceneWrapper.updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position, 
+        this.sceneWrapper.updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position, radius_clicked_position_aux, radius_clicked_position_aux_sphere,
             rendering_ftle_type, rendering_texture_mode, rendering_specialized_mode, return_number, rendering_forward, rendering_raw_mode, 
             rendering_raw_mode_layer, rendering_raw_mode_x_texture_index, rendering_raw_mode_y_texture_index,
             scalar_min, scalar_max, opacity, tube_segment_length, tube_max_segments, tube_num_sides, tube_radius, tube_only_show_successful_returns, scale_vertices);       

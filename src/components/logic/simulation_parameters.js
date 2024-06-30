@@ -34,6 +34,7 @@ class SimulationParameters {
         this.radius_center_of_mass = 0.01;
         //clicked position
         this.radius_clicked_position = 0.025;
+        this.radius_clicked_position_aux = 0.025;
         //tubes
         this.tube_radius = 0.0025;
         this.tube_num_sides = 20;
@@ -101,7 +102,10 @@ class SimulationParameters {
         return this.radius_center_of_mass;
     }
 
-    getClickedPositionRadius(){
+    getClickedPositionRadius(renderer_id){
+        if(renderer_id == Constants.RENDERER_ID_AUX){
+            return this.radius_clicked_position_aux;
+        }
         return this.radius_clicked_position;
     }
 

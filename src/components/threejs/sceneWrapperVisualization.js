@@ -248,10 +248,12 @@ class SceneWrapperVisualization {
         this.simulationParameters.angle_pixels_y = parseInt(angle_pixels_y);
     }
 
-    updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position, rendering_ftle_type, rendering_texture_mode, rendering_specialized_mode, return_number, rendering_forward, rendering_raw_mode, rendering_raw_mode_layer, rendering_raw_mode_x_texture_index, rendering_raw_mode_y_texture_index, scalar_min, scalar_max, opacity, tube_segment_length, tube_max_segments, tube_num_sides, tube_radius, tube_only_show_successful_returns, scale_vertices) {
+    updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position, radius_clicked_position_aux, radius_clicked_position_aux_sphere, rendering_ftle_type, rendering_texture_mode, rendering_specialized_mode, return_number, rendering_forward, rendering_raw_mode, rendering_raw_mode_layer, rendering_raw_mode_x_texture_index, rendering_raw_mode_y_texture_index, scalar_min, scalar_max, opacity, tube_segment_length, tube_max_segments, tube_num_sides, tube_radius, tube_only_show_successful_returns, scale_vertices) {
         this.simulationParameters.max_radius_bodies = max_radius_bodies;
         this.simulationParameters.radius_center_of_mass = radius_center_of_mass;
         this.simulationParameters.radius_clicked_position = radius_clicked_position;
+        this.simulationParameters.radius_clicked_position_aux = radius_clicked_position_aux;      
+        this.simulationParameters.radius_clicked_position_aux_sphere = radius_clicked_position_aux_sphere;              
         this.simulationParameters.rendering_ftle_type = parseInt(rendering_ftle_type);
         this.simulationParameters.rendering_texture_mode = parseInt(rendering_texture_mode);
         this.simulationParameters.rendering_specialized_mode = parseInt(rendering_specialized_mode);
@@ -472,12 +474,15 @@ class SceneWrapperVisualization {
     }
 
     updateClickedPosition() {
-        var radius = this.simulationParameters.getClickedPositionRadius();
+        var radius = this.simulationParameters.getClickedPositionRadius(this.renderer_id);
         this.clicked_mesh.scale.set(radius, radius, radius);
         this.return_1_mesh.scale.set(radius, radius, radius);
         this.return_2_mesh.scale.set(radius, radius, radius);
-        if(this.clicked_mesh_spherical_view)//this only exists in aux view
+        if(this.clicked_mesh_spherical_view){
+            //this only exists in aux view
+            var radius = this.simulationParameters.radius_clicked_position_aux_sphere;
             this.clicked_mesh_spherical_view.scale.set(radius, radius, radius);
+        }
     }
 
     recalculateStreamlineFromSimulationParameters(){

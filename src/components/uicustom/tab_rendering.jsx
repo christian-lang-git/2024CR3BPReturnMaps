@@ -19,6 +19,7 @@ import LabeledSelectSpecializedMode from './labeledSelectSpecializedMode';
 import LabeledSelectRawMode from './labeledSelectRawMode';
 import LabeledSelectRenderingDirection from './labeledSelectRenderingDirection';
 import LabeledSelectFtleType from './labeledSelectFtleType';
+import { Label } from '@radix-ui/react-label';
 
 
 class TabRendering extends Component {
@@ -157,10 +158,21 @@ class TabRendering extends Component {
                                         name="UI_STATE_RENDERING_BODIES_MAX_RADIUS_BODIES"
                                         labelText={"max radius bodies"}
                                     />
+                                    <Label className="font-medium">radius clicked position</Label>
+                                    <div className="grid grid-cols-3">
                                     <LabeledField
                                         name="UI_STATE_RENDERING_CLICKED_POSITION_RADIUS"
-                                        labelText={"radius clicked position"}
+                                        labelText={"main"}
                                     />
+                                    <LabeledField
+                                        name="UI_STATE_RENDERING_CLICKED_POSITION_RADIUS_AUX"
+                                        labelText={"aux (plane)"}
+                                    />
+                                    <LabeledField
+                                        name="UI_STATE_RENDERING_CLICKED_POSITION_RADIUS_AUX_SPHERE"
+                                        labelText={"aux (sphere)"}
+                                    />
+                                    </div>
                                 </AccordionContent>
                             </AccordionItem>
                             <AccordionItem value="spheres">
