@@ -30,8 +30,13 @@ class TabData extends Component {
     static contextType = AppContext;
 
     handleClickDataUpdate() {
-        console.log("handleClickDataUpdate")
+        console.warn("handleClickDataUpdate")
         Emitter.emit(Constants.EVENT_DATA_UPDATE, {});
+    }
+
+    handleClickDataUpdateStreamline() {
+        console.warn("handleClickDataUpdateStreamline")
+        Emitter.emit(Constants.EVENT_DATA_UPDATE_STREAMLINE, {});
     }
 
     shouldRenderSeedMagnitude = () => {
@@ -47,8 +52,9 @@ class TabData extends Component {
     render() {
         return (
             <div className="flex flex-col h-full">
-                <div className="p-2 bg-secondary">
-                    <Button className="w-full" onClick={this.handleClickDataUpdate}>update</Button>
+                <div className="p-2 bg-secondary grid grid-cols-2">
+                    <Button className="w-full" onClick={this.handleClickDataUpdate}>update all</Button>
+                    <Button className="w-full" onClick={this.handleClickDataUpdateStreamline}>update streamline</Button>
                 </div>
                 <ScrollArea className="flex-1 overflow-y-auto">
                     <div className="pl-2 pr-4 pb-2">

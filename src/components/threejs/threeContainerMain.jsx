@@ -27,6 +27,7 @@ class ThreeContainerMain extends ThreeContainer {
 
     initializeAdditional() {
         Emitter.on(Constants.EVENT_DATA_UPDATE, this.handleEventDataUpdate);
+        Emitter.on(Constants.EVENT_DATA_UPDATE_STREAMLINE, this.handleEventDataUpdateStreamline);        
         Emitter.on(Constants.EVENT_RENDERING_UPDATE, this.handleEventRenderingUpdate);
         Emitter.on(Constants.EVENT_ALIGN_CAMERA, this.handleEventAlignCamera);       
 
@@ -45,9 +46,16 @@ class ThreeContainerMain extends ThreeContainer {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     handleEventDataUpdate = () => {
-        console.log("handleEventDataUpdate");
+        console.warn("handleEventDataUpdate");
         this.updateParametersData();
         this.computeStuff();
+        this.updateVisualElements();
+    }
+
+    handleEventDataUpdateStreamline = () => {
+        console.warn("handleEventDataUpdateStreamline");
+        this.updateParametersData();
+        this.computeStreamline();
         this.updateVisualElements();
     }
 
@@ -77,9 +85,17 @@ class ThreeContainerMain extends ThreeContainer {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     computeStuff(){
+        console.warn("computeStuff");
         this.sceneWrapper.computeStuff();
         this.sceneWrapper.recalculateStreamlineWithLastParameters();
         this.sceneWrapper.recalculateStreamlineKeepPosition();        
+    }
+
+    computeStreamline(){
+        console.warn("computeStreamline");
+        this.sceneWrapper.recalculateStreamlineFromSimulationParameters();//this does nothing in aux view
+        this.sceneWrapper.repositionReturnSpheres();
+        this.sceneWrapper.repositionSeedSpheres();
     }
 
     updateVisualElements(){

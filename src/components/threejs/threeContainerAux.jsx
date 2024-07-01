@@ -26,7 +26,7 @@ class ThreeContainerAux extends ThreeContainer {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    
     initializeAdditional() {
-        Emitter.on(Constants.EVENT_DATA_UPDATE, this.handleEventDataUpdate);
+        Emitter.on(Constants.EVENT_DATA_UPDATE, this.handleEventDataUpdate);     
         Emitter.on(Constants.EVENT_RENDERING_UPDATE, this.handleEventRenderingUpdate);
         Emitter.on(Constants.EVENT_ALIGN_CAMERA, this.handleEventAlignCamera);  
         Emitter.on(Constants.EVENT_SELECT_CHANGED, this.handleEventSelectChanged);      
