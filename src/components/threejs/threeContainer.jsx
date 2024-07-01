@@ -119,6 +119,7 @@ class ThreeContainer extends Component {
     handleEventCameraUpdate = () => {
         console.log("handleEventCameraUpdate");
         this.updateControls();
+        this.updateCamera();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -161,12 +162,23 @@ class ThreeContainer extends Component {
         this.updateControlsInstance(this.controls);
     }
 
+    updateCamera(){
+        this.updateCameraInstance(this.camera);
+    }
+
     updateControlsInstance(controls) {
         const { uiState } = this.context;
         controls.rotateSpeed = uiState.UI_STATE_CAMERA_CONTROLS_ROTATESPEED * 5.0;//default: 1.0
         controls.panSpeed = uiState.UI_STATE_CAMERA_CONTROLS_PANSPEED * 0.3;//default: 0.3
         controls.zoomSpeed = uiState.UI_STATE_CAMERA_CONTROLS_ZOOMSPEED * 1.2;//default: 1.2
         controls.update();
+    }
+
+    updateCameraInstance(camera) {
+        const { uiState } = this.context;
+        camera.near = parseFloat(uiState.UI_STATE_CAMERA_NEAR);
+        camera.far = parseFloat(uiState.UI_STATE_CAMERA_FAR);
+        camera.updateProjectionMatrix();
     }
 
     updateParameters() {

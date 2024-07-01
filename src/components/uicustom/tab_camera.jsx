@@ -46,6 +46,14 @@ class TabCamera extends Component {
                                         name="UI_STATE_CAMERA_CONTROLS_ZOOMSPEED"
                                         labelText={"zoom speed"}
                                     />
+                                    <LabeledField
+                                        name="UI_STATE_CAMERA_NEAR"
+                                        labelText={"min distance"}
+                                    />
+                                    <LabeledField
+                                        name="UI_STATE_CAMERA_FAR"
+                                        labelText={"far distance"}
+                                    />
                                 </AccordionContent>
                             </AccordionItem>
                         </Accordion>
