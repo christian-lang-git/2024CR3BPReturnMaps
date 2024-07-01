@@ -87,8 +87,12 @@ class ThreeContainerMain extends ThreeContainer {
     computeStuff(){
         console.warn("computeStuff");
         this.sceneWrapper.computeStuff();
-        this.sceneWrapper.recalculateStreamlineWithLastParameters();
-        this.sceneWrapper.recalculateStreamlineKeepPosition();        
+        this.sceneWrapper.recalculateStreamlineFromSimulationParameters();//this does nothing in aux view
+        this.sceneWrapper.repositionReturnSpheres();
+        this.sceneWrapper.repositionSeedSpheres();
+        //old below:
+        //this.sceneWrapper.recalculateStreamlineWithLastParameters();
+        //this.sceneWrapper.recalculateStreamlineKeepPosition();        
     }
 
     computeStreamline(){
