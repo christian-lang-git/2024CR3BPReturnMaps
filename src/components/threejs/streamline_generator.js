@@ -138,6 +138,13 @@ class Streamline {
         vec3.copy(current_position_data.direction, this.seed_velocity);
         this.list_point_data.push(current_position_data);
 
+        //debug: hamiltonian
+        var H = this.calculateHamiltonian(this.seed_position[0], this.seed_position[1], this.seed_position[2],
+            this.seed_velocity[0], this.seed_velocity[1], this.seed_velocity[2], this.simulationParameters.mu, this.simulationParameters.angular_velocity);
+        console.warn("debug hamiltonian start:", H);
+        this.hamiltonian_smallest = H;
+        this.hamiltonian_largest = H;
+
         var difference = vec3.create();//current - previous positions, calculated from k values
         var k1 = vec3.create();
         var k2 = vec3.create();
@@ -242,6 +249,14 @@ class Streamline {
 
             this.arc_length = next_position_data.arc_length;
 
+
+            //debug: hamiltonian
+            var H = this.calculateHamiltonian(next_position_data.position[0], next_position_data.position[1], next_position_data.position[2],
+                next_position_data.direction[0], next_position_data.direction[1], next_position_data.direction[2],
+                this.simulationParameters.mu, this.simulationParameters.angular_velocity);
+            this.hamiltonian_smallest = Math.min(H, this.hamiltonian_smallest);
+            this.hamiltonian_largest = Math.max(H, this.hamiltonian_largest);
+
             //check if there is a plane intersection
             if (isOnPositiveZ) {
                 //we are currently at z > 0
@@ -251,7 +266,7 @@ class Streamline {
                     console.warn("multi a", this.multi);
                     this.multi.list_point_data_returns.push(current_position_data);
                     this.success = true;
-                    return;//stop early
+                    break;//stop early
                 }
             } else {
                 //we are currently at z < 0
@@ -261,7 +276,7 @@ class Streamline {
                     console.warn("multi b", this.multi);
                     this.multi.list_point_data_returns.push(current_position_data);
                     this.success = true;
-                    return;//stop early
+                    break;//stop early
                 }
             }
 
@@ -270,6 +285,9 @@ class Streamline {
 
             current_position_data = next_position_data;
         }
+        
+        console.warn("debug hamiltonian smallest:", this.hamiltonian_smallest);
+        console.warn("debug hamiltonian largest:", this.hamiltonian_largest);
     }
 
     build() {
@@ -292,6 +310,13 @@ class Streamline {
         this.geometry = new THREE.TubeGeometry(this.path, num_segments, radius, num_sides, false);
         this.material = new THREE.MeshStandardMaterial({ color: 0xff0000 });
         this.mesh = new THREE.Mesh(this.geometry, this.material);
+    }
+
+    calculateHamiltonian(x, y, z, px, py, pz, mu, n){
+        var L = 0.5*(px*px + py*py + pz*pz);
+        var phi = - (1-mu)/(Math.sqrt((x+mu)*(x+mu) + y*y + z*z)) - mu/(Math.sqrt((x-(1-mu))*(x-(1-mu)) + y*y + z*z));
+        var R = n*(y*px - x*py);        
+        return L + phi + R;
     }
 }
 
