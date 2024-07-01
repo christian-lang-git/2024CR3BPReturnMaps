@@ -99,7 +99,7 @@ class ThreeContainerAux extends ThreeContainer {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     handleEventDataUpdate = () => {
-        console.log("handleEventDataUpdate");
+        console.warn("aux handleEventDataUpdate");
         this.updateParametersData();
         this.computeStuff();
         this.updateVisualElements();
@@ -147,8 +147,8 @@ class ThreeContainerAux extends ThreeContainer {
 
     computeStuff(){
         this.sceneWrapper.computeStuff();
-        this.sceneWrapper.recalculateStreamlineWithLastParameters();
-        this.sceneWrapper.recalculateStreamlineKeepPosition();        
+        //this.sceneWrapper.recalculateStreamlineWithLastParameters();
+        //this.sceneWrapper.recalculateStreamlineKeepPosition();        
     }
 
     updateVisualElements(){
