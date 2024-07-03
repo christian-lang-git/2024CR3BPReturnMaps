@@ -345,6 +345,29 @@ class TextureRenderer {
                     scalar = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
                     outputColor = vec4(mapScalarToColorWithInterval(scalar, scalar_min, scalar_max), opacity);
                     break;
+                case 12://TEXTURE_MODE_SPECIALIZED_HAMILTONIAN_ERROR
+                    //debug: hamiltonian
+                    //seed hamiltonian
+                    x_virtual = 0;
+                    y_virtual = 0;
+                    z_layer = 0;
+                    component = 3;
+                    float scalar_seed = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
+
+                    //return hamiltonian min
+                    x_virtual = 0;
+                    z_layer = return_layer;
+                    float hamiltonian_min = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
+
+                    //return hamiltonian min
+                    x_virtual = 1;
+                    float hamiltonian_max = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
+
+                    scalar = abs(hamiltonian_max - hamiltonian_min);
+                    //scalar = hamiltonian_max;
+
+                    outputColor = vec4(mapScalarToColorWithInterval(scalar, scalar_min, scalar_max), opacity);
+                    break;
             }
 
         }      

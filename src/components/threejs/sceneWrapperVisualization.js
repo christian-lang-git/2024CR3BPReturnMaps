@@ -435,7 +435,11 @@ class SceneWrapperVisualization {
             case Constants.TEXTURE_MODE_SPECIALIZED_SEED_VELOCITY_MAGNITUDE:
                 offscreenRenderer = this.offscreenRendererSeedsAndReturns;
                 offscreenRendererBackwards = this.offscreenRendererSeedsAndReturnsBackwards;
-                break;                
+                break;  
+            case Constants.TEXTURE_MODE_SPECIALIZED_HAMILTONIAN_ERROR:
+                offscreenRenderer = this.offscreenRendererSeedsAndReturns;
+                offscreenRendererBackwards = this.offscreenRendererSeedsAndReturnsBackwards;
+                break;                  
             default:
                 console.error("Error: Unknown rendering_specialized_mode", this.simulationParameters.rendering_specialized_mode);
                 break;

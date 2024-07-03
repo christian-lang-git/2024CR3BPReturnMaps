@@ -251,8 +251,8 @@ class Streamline {
 
 
             //debug: hamiltonian
-            var H = this.calculateHamiltonian(next_position_data.position[0], next_position_data.position[1], next_position_data.position[2],
-                next_position_data.direction[0], next_position_data.direction[1], next_position_data.direction[2],
+            var H = this.calculateHamiltonian(current_position_data.position[0], current_position_data.position[1], current_position_data.position[2],
+                current_position_data.direction[0], current_position_data.direction[1], current_position_data.direction[2],
                 this.simulationParameters.mu, this.simulationParameters.angular_velocity);
             this.hamiltonian_smallest = Math.min(H, this.hamiltonian_smallest);
             this.hamiltonian_largest = Math.max(H, this.hamiltonian_largest);

@@ -78,6 +78,9 @@ class OffscreenRendererFlowMap extends OffscreenRenderer {
             float old_success_float = data3.x;
             float advection_time = data3.y;
             float arc_length = data3.z;
+            float hamiltonian_smallest = texelFetch(texture_seeds_and_returns, pointer, 0).w;
+            float hamiltonian_largest = texelFetch(texture_seeds_and_returns, pointer+ivec3(int(planeDimensionsPixel.x),0,0), 0).w;
+            
 
             vec3 current_position = seed_position;
             current_position.z = 0.0;
@@ -116,6 +119,12 @@ class OffscreenRendererFlowMap extends OffscreenRenderer {
                 vec3 next_position = current_position + add_position;
                 vec3 next_direction = current_direction + add_direction;
 
+                //debug: hamiltonian
+                float H = calculateHamiltonian(current_position[0], current_position[1], current_position[2],
+                    current_direction[0], current_direction[1], current_direction[2],
+                    mu, angular_velocity);
+                hamiltonian_smallest = min(H, hamiltonian_smallest);
+                hamiltonian_largest = max(H, hamiltonian_largest);
 
                 float segment_length = length(add_position);
                 float next_arc_length = arc_length + segment_length;
@@ -159,11 +168,11 @@ class OffscreenRendererFlowMap extends OffscreenRenderer {
 
             if(virtual_texture_y == 0){
                 if(virtual_texture_x == 0){
-                    outputColor = vec4(current_position, 1.0); 
+                    outputColor = vec4(current_position, hamiltonian_smallest); 
                     //outputColor = vec4(0.0, current_position.y, 0.0, 1.0); 
                 }
                 else{
-                    outputColor = vec4(current_direction, 1.0); 
+                    outputColor = vec4(current_direction, hamiltonian_largest); 
                 }
             }
             else{
@@ -182,6 +191,7 @@ class OffscreenRendererFlowMap extends OffscreenRenderer {
         return glsl`
         vec3 f_position(vec3 position, vec3 direction, float signum);
         vec3 f_direction(vec3 position, vec3 direction, float signum);
+        float calculateHamiltonian(float x, float y, float z, float px, float py, float pz, float mu, float n);
         `;
     }
 
@@ -235,6 +245,13 @@ class OffscreenRendererFlowMap extends OffscreenRenderer {
             float w = - dphi_dz;
     
             return vec3(u * signum, v * signum, w * signum);
+        }
+
+        float calculateHamiltonian(float x, float y, float z, float px, float py, float pz, float mu, float n){
+            float L = 0.5*(px*px + py*py + pz*pz);
+            float phi = - (1.0-mu)/(sqrt((x+mu)*(x+mu) + y*y + z*z)) - mu/(sqrt((x-(1.0-mu))*(x-(1.0-mu)) + y*y + z*z));
+            float R = n*(y*px - x*py);        
+            return L + phi + R;
         }
         `
     }
