@@ -194,7 +194,9 @@ class TextureRenderer {
         }   
         
         void RenderSpecializedMode(float x_frac, float y_frac){
+            bool show_no_data_marker = true;
             int check_return_z_layer = -1;//deactivated if smaller than 0
+            bool check_return_z_layer_both_directions = false;
             int x_virtual = 0;
             int y_virtual = 0;
             int z_layer = 0;
@@ -232,6 +234,7 @@ class TextureRenderer {
                     component = 1;
                     scalar = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
                     outputColor = vec4(mapScalarToColor(scalar), opacity);
+                    check_return_z_layer = return_layer;
                     //outputColor = vec4(scalar, 0.0, 0.0, opacity);
 
                     //ivec3 pointer = ivec3(x_pixel, y_pixel, rendering_raw_mode_layer);
@@ -251,6 +254,7 @@ class TextureRenderer {
                     component = 2;
                     scalar = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
                     outputColor = vec4(mapScalarToColor(scalar), opacity);
+                    check_return_z_layer = return_layer;
                     //outputColor = vec4(scalar, 0.0, 0.0, opacity);
 
                     //ivec3 pointer = ivec3(x_pixel, y_pixel, rendering_raw_mode_layer);
@@ -268,6 +272,7 @@ class TextureRenderer {
                     data = InterpolateVec4Wrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer);
                     //outputColor = vec4(normalMappingVec2(data.xy), opacity);
                     outputColor = vec4(normalMappingVec3(data.xyz), opacity);
+                    check_return_z_layer = return_layer;
                     break;
                 case 5://TEXTURE_MODE_SPECIALIZED_RETURN_POSITION_RELATIVE
                     x_virtual = 0;
@@ -276,6 +281,7 @@ class TextureRenderer {
                     data = InterpolateVec4Wrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer);
                     data_seeds = InterpolateVec4Wrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer-1);
                     outputColor = vec4(normalMappingVec3(data.xyz - data_seeds.xyz), opacity);
+                    check_return_z_layer = return_layer;
                     break;
                 case 6://TEXTURE_MODE_SPECIALIZED_RETURN_POSITION_RELATIVE_MAGNITUDE
                     x_virtual = 0;
@@ -285,6 +291,7 @@ class TextureRenderer {
                     data_seeds = InterpolateVec4Wrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer-1);
                     float magnitude = length(data.xyz - data_seeds.xyz);
                     outputColor = vec4(mapScalarToColor(magnitude), opacity);
+                    check_return_z_layer = return_layer;
                     break;                    
                 case 7://TEXTURE_MODE_SPECIALIZED_RETURN_DIRECTION
                     x_virtual = 1;
@@ -292,6 +299,7 @@ class TextureRenderer {
                     z_layer = return_layer;
                     data = InterpolateVec4Wrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer);
                     outputColor = vec4(normalMappingVec3(data.xyz), opacity);
+                    check_return_z_layer = return_layer;
                     break;
                 case 8://TEXTURE_MODE_SPECIALIZED_RETURN_FTLE
                     x_virtual = 1;
@@ -312,7 +320,8 @@ class TextureRenderer {
                         col_forward = vec3(1.0, 1.0-t, 1.0-t);
                         col_backwards = vec3(1.0-t, 1.0-t, 1.0);
                         outputColor = forward ? vec4(col_forward, opacity) : vec4(col_backwards, opacity);
-                    }
+                    }                    
+                    check_return_z_layer = return_layer;
                     break;
                 case 9://TEXTURE_MODE_SPECIALIZED_RETURN_FTLE_BOTH
                     x_virtual = 1;
@@ -329,6 +338,8 @@ class TextureRenderer {
                     col_forward = vec3(1.0, 1.0-t_forward, 1.0-t_forward);
                     col_backwards = vec3(1.0-t_backwards, 1.0-t_backwards, 1.0);
                     outputColor = vec4(mix(col_forward, col_backwards, 0.5), opacity);
+                    check_return_z_layer_both_directions = true;
+                    check_return_z_layer = return_layer;
                     break;
                 case 10://TEXTURE_MODE_SPECIALIZED_RETURN_SUCCESS
                     x_virtual = 0;
@@ -372,20 +383,53 @@ class TextureRenderer {
                     break;
             }
 
-            //MARK NO RETURN
-            if(check_return_z_layer >= 0){
-                //use z_layer set above
-                x_virtual = 0;
-                y_virtual = 1;
-                z_layer = return_layer;
-                component = 0;
-                scalar = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
-                if(scalar < 1.0){
-                    outputColor = vec4(0.5, 0.5, 0.5, 1.0);
+            /////////////////////////////////////////////////
+            //
+            //MARK CELLS WITHOUT SUFFICIENT DATA
+            //
+            /////////////////////////////////////////////////
+            if(show_no_data_marker){
+                float return_scalar_threshold = 1.0;
+                //MARK NO RETURN
+                if(check_return_z_layer >= 0){
+                    //use z_layer set above
+                    x_virtual = 0;
+                    y_virtual = 1;
+                    z_layer = return_layer;
+                    component = 0;
+                    if(check_return_z_layer_both_directions){
+                        float scalar_forward = InterpolateScalarWrapper(true, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
+                        float scalar_backward = InterpolateScalarWrapper(false, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
+                        scalar = max(scalar_forward, scalar_forward);
+                    }
+                    else{
+                        scalar = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
+                    }
+                    if(scalar < return_scalar_threshold){
+                        outputColor = vec4(0.5, 0.5, 0.5, 1.0);
+                    }
+                }
+
+                //MARK NO START
+                if(check_return_z_layer >= 0){
+                    //use z_layer of seed
+                    x_virtual = 0;
+                    y_virtual = 1;
+                    z_layer = 0;
+                    component = 0;
+                    if(check_return_z_layer_both_directions){
+                        float scalar_forward = InterpolateScalarWrapper(true, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
+                        float scalar_backward = InterpolateScalarWrapper(false, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
+                        scalar = max(scalar_forward, scalar_forward);
+                    }
+                    else{
+                        scalar = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
+                    }
+                    if(scalar < return_scalar_threshold){
+                        outputColor = vec4(0.25, 0.25, 0.25, 1.0);
+                    }
                 }
             }
-
-
         }      
 
         vec3 mapScalarToColor(float scalar){
