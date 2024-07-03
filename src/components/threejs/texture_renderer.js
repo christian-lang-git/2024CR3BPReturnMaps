@@ -406,7 +406,7 @@ class TextureRenderer {
                         scalar = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
                     }
                     if(scalar < return_scalar_threshold){
-                        outputColor = vec4(0.5, 0.5, 0.5, 1.0);
+                        outputColor = vec4(0.5, 0.5, 0.5, opacity);
                     }
                 }
 
@@ -426,7 +426,7 @@ class TextureRenderer {
                         scalar = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
                     }
                     if(scalar < return_scalar_threshold){
-                        outputColor = vec4(0.25, 0.25, 0.25, 1.0);
+                        outputColor = vec4(0.25, 0.25, 0.25, opacity);
                     }
                 }
             }
