@@ -77,6 +77,7 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
         void computeSeedConstantDirection(int virtual_texture_x, int virtual_texture_y, float world_x, float world_y);
         void computeSeedConstantPosition(int virtual_texture_x, int virtual_texture_y, float theta_radians, float phi_radians);
         float calculateHamiltonian(float x, float y, float z, float px, float py, float pz, float mu, float n);
+        bool allowStart(float a);
         `;
     }
 
@@ -87,6 +88,7 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
             float x = world_x;
             float y = world_y;
             float z = 0.0;
+            float a = 1.0;
             vec3 seed_velocity;
 
             if(use_constant_velocity){
@@ -110,7 +112,7 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
 
                 float a1 = L + R;
                 float a2 = L - R;
-                float a = max(a1, a2);
+                a = max(a1, a2);
 
                 seed_velocity = vec3(a*dir_x, a*dir_y, a*dir_z);
             }  
@@ -129,7 +131,14 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
                 }
             }
             else{
-                outputColor = vec4(0.0, 0.0, 0.0, 0.0);         
+                if(virtual_texture_x == 0){
+                    //first value is "success" flag --> if this is 0, we do not start the integration
+                    bool allow_start = allowStart(a);
+                    outputColor = vec4(allow_start, 0.0, 0.0, 0.0);
+                }
+                else{
+                    outputColor = vec4(0.0, 0.0, 0.0, 0.0);  
+                }         
             }
         }
 
@@ -137,6 +146,7 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
             float x = seed_position.x;
             float y = seed_position.y;
             float z = 0.0;
+            float a = 1.0;
             vec3 seed_velocity;
 
             float dir_x = sin(theta_radians) * cos(phi_radians);
@@ -165,7 +175,7 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
 
                 float a1 = L + R;
                 float a2 = L - R;
-                float a = max(a1, a2);
+                a = max(a1, a2);
 
                 seed_velocity = vec3(a*dir_x, a*dir_y, a*dir_z);
             }     
@@ -186,7 +196,14 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
                 }
             }
             else{
-                outputColor = vec4(0.0, 0.0, 0.0, 0.0);         
+                if(virtual_texture_x == 0){
+                    //first value is "success" flag --> if this is 0, we do not start the integration
+                    bool allow_start = allowStart(a);
+                    outputColor = vec4(allow_start, 0.0, 0.0, 0.0);
+                }
+                else{
+                    outputColor = vec4(0.0, 0.0, 0.0, 0.0);  
+                }       
             }
         }
 
@@ -195,6 +212,10 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
             float phi = - (1.0-mu)/(sqrt((x+mu)*(x+mu) + y*y + z*z)) - mu/(sqrt((x-(1.0-mu))*(x-(1.0-mu)) + y*y + z*z));
             float R = n*(y*px - x*py);        
             return L + phi + R;
+        }
+
+        bool allowStart(float a){
+            return a > 0.0;
         }
         `
     }

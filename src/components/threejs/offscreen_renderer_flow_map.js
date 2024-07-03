@@ -90,12 +90,11 @@ class OffscreenRendererFlowMap extends OffscreenRenderer {
             float success_float = 0.0;
             bool isOnPositiveZ = f_direction(current_position, current_direction, signum).z > 0.0;
 
-            if(target_layer_index > 1){
-                //this is not the first return --> only continue if previous was success
-                if(old_success_float < 0.5){
-                    outputColor = vec4(0.0, 0.0, 0.0, 1.0); 
-                    return;
-                }            
+            //if this is not the first return --> only continue if previous was success
+            //if this is the first return --> only continue if seed was ok
+            if(old_success_float < 0.5){
+                outputColor = vec4(0.0, 0.0, 0.0, 1.0); 
+                return;
             }
 
             for (int i = 0; i < max_steps; i++) {
