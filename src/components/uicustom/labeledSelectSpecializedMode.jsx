@@ -16,6 +16,7 @@ const options = [
     { value: Constants.TEXTURE_MODE_SPECIALIZED_RETURN_SUCCESS, label: 'return: success' },
     { value: Constants.TEXTURE_MODE_SPECIALIZED_SEED_VELOCITY_MAGNITUDE, label: 'seed: velocity magnitude' },  
     { value: Constants.TEXTURE_MODE_SPECIALIZED_HAMILTONIAN_ERROR, label: 'return: hamiltonian error' },
+    { value: Constants.TEXTURE_MODE_SPECIALIZED_RETURN_DIST_BODIES, label: 'return: nearest body' },    
     
 ];
 

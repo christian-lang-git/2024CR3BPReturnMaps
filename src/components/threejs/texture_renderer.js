@@ -381,6 +381,30 @@ class TextureRenderer {
                     outputColor = vec4(mapScalarToColorWithInterval(scalar, scalar_min, scalar_max), opacity);
                     check_return_z_layer = return_layer;
                     break;
+                case 13://TEXTURE_MODE_SPECIALIZED_RETURN_DIST_BODIES
+                    x_virtual = 0;
+                    y_virtual = 0;
+                    z_layer = return_layer;
+                    data = InterpolateVec4Wrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer);
+                    float posistion_x = data.x;
+                    float posistion_y = data.y;
+                    //outputColor = vec4(normalMappingVec3(data.xyz - data_seeds.xyz), opacity);
+                    float dx = posistion_x-(-mu);
+                    float dy = posistion_y;
+                    float dist_primary = sqrt(dx*dx + dy*dy);
+                    dx = posistion_x-(1.0-mu);
+                    float dist_secondary = sqrt(dx*dx + dy*dy);
+                    float scalar = scalar_max;
+                    if(dist_primary < dist_secondary){
+                        scalar -= dist_primary;
+                        outputColor = vec4(scalar, 0.0, 0.0, opacity);
+                    }
+                    else{
+                        scalar -= dist_secondary;
+                        outputColor = vec4(0.0, scalar, 0.0, opacity);
+                    }
+                    check_return_z_layer = return_layer;
+                    break;
             }
 
             /////////////////////////////////////////////////
