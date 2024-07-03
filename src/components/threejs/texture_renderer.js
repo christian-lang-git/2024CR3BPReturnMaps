@@ -194,6 +194,7 @@ class TextureRenderer {
         }   
         
         void RenderSpecializedMode(float x_frac, float y_frac){
+            int check_return_z_layer = -1;//deactivated if smaller than 0
             int x_virtual = 0;
             int y_virtual = 0;
             int z_layer = 0;
@@ -339,9 +340,9 @@ class TextureRenderer {
                     break;
                 case 11://TEXTURE_MODE_SPECIALIZED_SEED_VELOCITY_MAGNITUDE
                     x_virtual = 1;
-                    y_virtual = 0;
+                    y_virtual = 1;
                     z_layer = 0;
-                    component = 3;
+                    component = 0;
                     scalar = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
                     outputColor = vec4(mapScalarToColorWithInterval(scalar, scalar_min, scalar_max), opacity);
                     break;
@@ -367,8 +368,23 @@ class TextureRenderer {
                     //scalar = hamiltonian_max;
 
                     outputColor = vec4(mapScalarToColorWithInterval(scalar, scalar_min, scalar_max), opacity);
+                    check_return_z_layer = return_layer;
                     break;
             }
+
+            //MARK NO RETURN
+            if(check_return_z_layer >= 0){
+                //use z_layer set above
+                x_virtual = 0;
+                y_virtual = 1;
+                z_layer = return_layer;
+                component = 0;
+                scalar = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
+                if(scalar < 1.0){
+                    outputColor = vec4(0.5, 0.5, 0.5, 1.0);
+                }
+            }
+
 
         }      
 

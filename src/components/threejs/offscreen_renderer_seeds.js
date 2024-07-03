@@ -137,7 +137,7 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
                     outputColor = vec4(allow_start, 0.0, 0.0, 0.0);
                 }
                 else{
-                    outputColor = vec4(0.0, 0.0, 0.0, 0.0);  
+                    outputColor = vec4(a, 0.0, 0.0, 0.0);  
                 }         
             }
         }
@@ -202,7 +202,7 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
                     outputColor = vec4(allow_start, 0.0, 0.0, 0.0);
                 }
                 else{
-                    outputColor = vec4(0.0, 0.0, 0.0, 0.0);  
+                    outputColor = vec4(a, 0.0, 0.0, 0.0);  
                 }       
             }
         }
