@@ -77,6 +77,7 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
         void computeSeedConstantDirection(int virtual_texture_x, int virtual_texture_y, float world_x, float world_y);
         void computeSeedConstantPosition(int virtual_texture_x, int virtual_texture_y, float theta_radians, float phi_radians);
         float calculateHamiltonian(float x, float y, float z, float px, float py, float pz, float mu, float n);
+        float calculateUeff(float x, float y, float z, float mu);
         bool allowStart(float a);
         `;
     }
@@ -119,6 +120,7 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
 
             //debug: hamiltonian
             float H = calculateHamiltonian(x, y, z, seed_velocity.x, seed_velocity.y, seed_velocity.z, mu, angular_velocity);
+            float Ueff = calculateUeff(x, y, z, mu);
 
             if(virtual_texture_y == 0){                
                 if(virtual_texture_x == 0){
@@ -137,7 +139,7 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
                     outputColor = vec4(allow_start, 0.0, 0.0, 0.0);
                 }
                 else{
-                    outputColor = vec4(a, 0.0, 0.0, 0.0);  
+                    outputColor = vec4(a, 0.0, Ueff, 0.0);  
                 }         
             }
         }
@@ -182,6 +184,7 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
 
             //debug: hamiltonian
             float H = calculateHamiltonian(x, y, z, seed_velocity.x, seed_velocity.y, seed_velocity.z, mu, angular_velocity);
+            float Ueff = calculateUeff(x, y, z, mu);
 
             if(virtual_texture_y == 0){                
                 if(virtual_texture_x == 0){
@@ -202,7 +205,7 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
                     outputColor = vec4(allow_start, 0.0, 0.0, 0.0);
                 }
                 else{
-                    outputColor = vec4(a, 0.0, 0.0, 0.0);  
+                    outputColor = vec4(a, 0.0, Ueff, 0.0);  
                 }       
             }
         }
@@ -212,6 +215,12 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
             float phi = - (1.0-mu)/(sqrt((x+mu)*(x+mu) + y*y + z*z)) - mu/(sqrt((x-(1.0-mu))*(x-(1.0-mu)) + y*y + z*z));
             float R = n*(y*px - x*py);        
             return L + phi + R;
+        }
+
+        float calculateUeff(float x, float y, float z, float mu){
+            float phi = - (1.0-mu)/(sqrt((x+mu)*(x+mu) + y*y + z*z)) - mu/(sqrt((x-(1.0-mu))*(x-(1.0-mu)) + y*y + z*z));
+            float R = 1.0/2.0*(x*x + y*y);
+            return phi - R;
         }
 
         bool allowStart(float a){

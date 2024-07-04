@@ -86,6 +86,9 @@ class TextureRenderer {
         this.textured_mesh.material.uniforms.planeDimensions.value.y = this.simulationParameters.domain_dimension_y;
         this.textured_mesh.material.uniforms.planeDimensionsPixel.value.x = this.getPlaneDimensionX();
         this.textured_mesh.material.uniforms.planeDimensionsPixel.value.y = this.getPlaneDimensionY();
+
+        this.textured_mesh.material.uniforms.constant_hamiltonian.value = this.simulationParameters.seed_energy;
+        
         return;
     }
 
@@ -430,7 +433,7 @@ class TextureRenderer {
                         scalar = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
                     }
                     if(scalar < return_scalar_threshold){
-                        outputColor = vec4(0.5, 0.5, 0.5, opacity);
+                        outputColor = vec4(0.6, 0.6, 0.6, opacity);
                     }
                 }
 
@@ -450,8 +453,27 @@ class TextureRenderer {
                         scalar = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
                     }
                     if(scalar < return_scalar_threshold){
-                        outputColor = vec4(0.25, 0.25, 0.25, opacity);
+                        outputColor = vec4(0.4, 0.4, 0.4, opacity);
                     }
+                }
+
+                if(check_return_z_layer >= 0){
+                    //seed Ueff
+                    x_virtual = 1;
+                    y_virtual = 1;
+                    z_layer = 0;
+                    component = 2;
+                    scalar = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
+                    
+                    //seed hamiltonian
+                    x_virtual = 0;
+                    y_virtual = 0;
+                    z_layer = 0;
+                    component = 3;
+
+                    if(scalar > constant_hamiltonian){
+                        outputColor = vec4(0.2, 0.2, 0.2, opacity);     
+                    } 
                 }
             }
         }      
@@ -605,6 +627,8 @@ class TextureRenderer {
 
         this.uniforms["theta_down"] = { type: 'bool', value: true };
         this.uniforms["is_aux_view"] = { type: 'bool', value: this.renderer_id == Constants.RENDERER_ID_AUX };
+
+        this.uniforms["constant_hamiltonian"] = { type: 'float', value: 0.0 };
         
     }
 

@@ -145,6 +145,10 @@ class Streamline {
         this.hamiltonian_smallest = H;
         this.hamiltonian_largest = H;
 
+        //debug: Ueff
+        var Ueff = this.calculateUeff(this.seed_position[0], this.seed_position[1], this.seed_position[2], this.simulationParameters.mu);
+        console.warn("debug Ueff start:", Ueff);
+
         var difference = vec3.create();//current - previous positions, calculated from k values
         var k1 = vec3.create();
         var k2 = vec3.create();
@@ -317,6 +321,12 @@ class Streamline {
         var phi = - (1-mu)/(Math.sqrt((x+mu)*(x+mu) + y*y + z*z)) - mu/(Math.sqrt((x-(1-mu))*(x-(1-mu)) + y*y + z*z));
         var R = n*(y*px - x*py);        
         return L + phi + R;
+    }
+
+    calculateUeff(x, y, z, mu){
+        var phi = - (1-mu)/(Math.sqrt((x+mu)*(x+mu) + y*y + z*z)) - mu/(Math.sqrt((x-(1-mu))*(x-(1-mu)) + y*y + z*z));
+        var R = 1/2*(x*x + y*y);
+        return phi - R;
     }
 }
 
