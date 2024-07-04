@@ -90,6 +90,7 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
             float y = world_y;
             float z = 0.0;
             float a = 1.0;
+            bool a_is_real = true;
             vec3 seed_velocity;
 
             if(use_constant_velocity){
@@ -109,11 +110,13 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
                 float phi = - (1.0-mu)/(sqrt((x+mu)*(x+mu) + y*y + z*z)) - mu/(sqrt((x-(1.0-mu))*(x-(1.0-mu)) + y*y + z*z));
                 float ydxminusxdy = y*dir_x - x*dir_y;
                 float L = -n * ydxminusxdy;
-                float R = sqrt(n*n*ydxminusxdy*ydxminusxdy - 2.0*(phi-H));
+                float root = n*n*ydxminusxdy*ydxminusxdy - 2.0*(phi-H);
+                float R = sqrt(root);
 
                 float a1 = L + R;
                 float a2 = L - R;
                 a = max(a1, a2);
+                a_is_real = root >= 0.0;
 
                 seed_velocity = vec3(a*dir_x, a*dir_y, a*dir_z);
             }  
@@ -139,7 +142,7 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
                     outputColor = vec4(allow_start, 0.0, 0.0, 0.0);
                 }
                 else{
-                    outputColor = vec4(a, 0.0, Ueff, 0.0);  
+                    outputColor = vec4(a, a_is_real, Ueff, 0.0);  
                 }         
             }
         }
@@ -149,6 +152,7 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
             float y = seed_position.y;
             float z = 0.0;
             float a = 1.0;
+            bool a_is_real = true;
             vec3 seed_velocity;
 
             float dir_x = sin(theta_radians) * cos(phi_radians);
@@ -173,11 +177,13 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
                 float phi = - (1.0-mu)/(sqrt((x+mu)*(x+mu) + y*y + z*z)) - mu/(sqrt((x-(1.0-mu))*(x-(1.0-mu)) + y*y + z*z));
                 float ydxminusxdy = y*dir_x - x*dir_y;
                 float L = -n * ydxminusxdy;
-                float R = sqrt(n*n*ydxminusxdy*ydxminusxdy - 2.0*(phi-H));
+                float root = n*n*ydxminusxdy*ydxminusxdy - 2.0*(phi-H);
+                float R = sqrt(root);
 
                 float a1 = L + R;
                 float a2 = L - R;
                 a = max(a1, a2);
+                a_is_real = root >= 0.0;
 
                 seed_velocity = vec3(a*dir_x, a*dir_y, a*dir_z);
             }     
@@ -205,7 +211,7 @@ class OffscreenRendererSeeds extends OffscreenRenderer {
                     outputColor = vec4(allow_start, 0.0, 0.0, 0.0);
                 }
                 else{
-                    outputColor = vec4(a, 0.0, Ueff, 0.0);  
+                    outputColor = vec4(a, a_is_real, Ueff, 0.0);  
                 }       
             }
         }

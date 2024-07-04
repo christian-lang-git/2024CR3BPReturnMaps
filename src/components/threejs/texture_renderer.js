@@ -433,7 +433,8 @@ class TextureRenderer {
                         scalar = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
                     }
                     if(scalar < return_scalar_threshold){
-                        outputColor = vec4(0.6, 0.6, 0.6, opacity);
+                        float value = 0.6;
+                        outputColor = vec4(value, value, value, opacity);   
                     }
                 }
 
@@ -453,8 +454,29 @@ class TextureRenderer {
                         scalar = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
                     }
                     if(scalar < return_scalar_threshold){
-                        outputColor = vec4(0.4, 0.4, 0.4, opacity);
+                        float value = 0.45;
+                        outputColor = vec4(value, value, value, opacity);   
                     }
+                }
+
+                if(check_return_z_layer >= 0){
+                    //seed Ueff
+                    x_virtual = 1;
+                    y_virtual = 1;
+                    z_layer = 0;
+                    component = 1;
+                    scalar = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
+                    
+                    //seed hamiltonian
+                    x_virtual = 0;
+                    y_virtual = 0;
+                    z_layer = 0;
+                    component = 3;
+
+                    if(scalar < 1.0){
+                        float value = 0.3;
+                        outputColor = vec4(value, value, value, opacity);      
+                    } 
                 }
 
                 if(check_return_z_layer >= 0){
@@ -472,7 +494,8 @@ class TextureRenderer {
                     component = 3;
 
                     if(scalar > constant_hamiltonian){
-                        outputColor = vec4(0.2, 0.2, 0.2, opacity);     
+                        float value = 0.15;
+                        outputColor = vec4(value, value, value, opacity);     
                     } 
                 }
             }
