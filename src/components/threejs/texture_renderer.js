@@ -397,13 +397,15 @@ class TextureRenderer {
                     float dist_primary = sqrt(dx*dx + dy*dy);
                     dx = posistion_x-(1.0-mu);
                     float dist_secondary = sqrt(dx*dx + dy*dy);
-                    float scalar = scalar_max;
+                    float scalar;
                     if(dist_primary < dist_secondary){
-                        scalar -= dist_primary;
+                        float t = dist_primary/scalar_max;
+                        scalar = mix(1.0, 0.0, t);
                         outputColor = vec4(scalar, 0.0, 0.0, opacity);
                     }
                     else{
-                        scalar -= dist_secondary;
+                        float t = dist_secondary/scalar_max;
+                        scalar = mix(1.0, 0.0, t);
                         outputColor = vec4(0.0, scalar, 0.0, opacity);
                     }
                     check_return_z_layer = return_layer;
