@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { AppContext } from "@/components/uicustom/AppContext"
 import Emitter from '../utility/emitter';
 import * as Constants from "../utility/constants";
-
+import * as THREE from "three";
 class InputWrapper {
 
     constructor(input_parameter_wrapper, ui_state_name, url_parameter_name, type) {
@@ -41,6 +41,8 @@ class InputParameterWrapper extends Component{
 
     constructor(props) {   
         super(props);
+        this.mainRef = props.mainRef;
+        this.auxRef = props.auxRef;
         console.warn("CONSTRUCTOR: InputParameterWrapper");     
         this.dict_url_parameter_name_to_input_wrapper = {};
         this.dict_ui_state_name_to_input_wrapper = {};
@@ -152,6 +154,14 @@ class InputParameterWrapper extends Component{
             }
         }
 
+        //special string representations
+        const string_camera_and_controls1 = urlParams.get("cc1");
+        this.fromStringCameraAndControls(this.mainRef.current.sceneWrapper.camera, this.mainRef.current.sceneWrapper.controls, string_camera_and_controls1);
+        const string_camera_and_controls2 = urlParams.get("cc2");
+        this.fromStringCameraAndControls(this.auxRef.current.sceneWrapper.camera, this.auxRef.current.sceneWrapper.controls, string_camera_and_controls2);
+        const string_camera_and_controls3 = urlParams.get("cc3");
+        this.fromStringCameraAndControls(this.auxRef.current.sceneWrapper.camera_sphere, this.auxRef.current.sceneWrapper.controls_sphere, string_camera_and_controls3);
+
         this.setValues(dict);
     }
 
@@ -169,7 +179,7 @@ class InputParameterWrapper extends Component{
     */
 
     toQueryString() {
-        console.log("toURL");
+        console.warn("toURL");
         var params = {};
 
         for (var key in this.dict_url_parameter_name_to_input_wrapper) {
@@ -181,6 +191,11 @@ class InputParameterWrapper extends Component{
                 continue;
             params[input_wrapper.url_parameter_name] = value;
         }
+
+        //special string representations
+        params["cc1"] = this.toStringCameraAndControls(this.mainRef.current.sceneWrapper.camera, this.mainRef.current.sceneWrapper.controls);
+        params["cc2"] = this.toStringCameraAndControls(this.auxRef.current.sceneWrapper.camera, this.auxRef.current.sceneWrapper.controls);
+        params["cc3"] = this.toStringCameraAndControls(this.auxRef.current.sceneWrapper.camera_sphere, this.auxRef.current.sceneWrapper.controls_sphere);
         
         var query_string = "?" + Object.entries(params)
             .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
@@ -216,6 +231,47 @@ class InputParameterWrapper extends Component{
                 {children}
             </div>
         )
+    }
+
+    toStringCameraAndControls(camera, controls){
+        console.warn(camera)
+        return camera.position.x + "~" +
+            camera.position.y + "~" +
+            camera.position.z + "~" +
+            camera.up.x + "~" +
+            camera.up.y + "~" +
+            camera.up.z + "~" +
+            camera.quaternion.x + "~" +
+            camera.quaternion.y + "~" +
+            camera.quaternion.z + "~" +
+            camera.quaternion.w + "~" +
+            controls.target.x + "~" +
+            controls.target.y + "~" +
+            controls.target.z; 
+    }
+
+    fromStringCameraAndControls(camera, controls, string){
+        if (string === null)
+            return;
+        
+        var split = string.split("~");
+
+        camera.position.x = parseFloat(split[0]);
+        camera.position.y = parseFloat(split[1]);
+        camera.position.z = parseFloat(split[2]);
+
+        controls.target.x = parseFloat(split[10]);
+        controls.target.y = parseFloat(split[11]);
+        controls.target.z = parseFloat(split[12]);
+
+        camera.up.x = parseFloat(split[3]);
+        camera.up.y = parseFloat(split[4]);
+        camera.up.z = parseFloat(split[5]);
+
+        //var q = new THREE.Quaternion()
+        //q.set(parseFloat(parseFloat(split[6])), parseFloat(split[7]), parseFloat(split[8]), parseFloat(split[9]))
+        //camera.quaternion.copy(q);        
+        camera.quaternion.set(parseFloat(split[6]), parseFloat(split[7]), parseFloat(split[8]), parseFloat(split[9]));
     }
 }
 

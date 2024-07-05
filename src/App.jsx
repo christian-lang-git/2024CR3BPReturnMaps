@@ -28,7 +28,7 @@ function App() {
 
     return (
         <AppProvider>
-            <InputParameterWrapper>
+            <InputParameterWrapper mainRef={mainRef} auxRef={auxRef}>
                 <div className="absolute inset-2 flex flex-col">
                     <ResizablePanelGroup direction="horizontal" className="max-w-md inset-0 min-w-full rounded-lg border">
                         <ResizablePanel defaultSize={25}>
