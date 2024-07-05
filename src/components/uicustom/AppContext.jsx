@@ -16,7 +16,6 @@ export const AppProvider = ({ children }) => {
         UI_STATE_DATA_INTEGRATION_STEP_SIZE: "0.001",
         UI_STATE_DATA_INTEGRATION_MAX_STEPS: "25000",
         UI_STATE_DATA_INTEGRATION_TERMINATION_METHOD: Constants.TERMINATION_METHOD_FIRST_RETURN,
-        UI_STATE_DATA_INTEGRATION_STEP_SIZE: "0.001",
         UI_STATE_DATA_DOMAIN_MIN_X: "-8",
         UI_STATE_DATA_DOMAIN_MAX_X: "8",
         UI_STATE_DATA_DOMAIN_PIXELS_X: "400",
@@ -62,7 +61,10 @@ export const AppProvider = ({ children }) => {
 
     const value = {
         uiState,
-        setUiState: (newState) => setUiState({ ...uiState, ...newState })
+        setUiState: (newState) => {
+            console.warn("update state:", newState);
+            setUiState({ ...uiState, ...newState })
+        }
     };
 
     return (

@@ -18,6 +18,7 @@ class ThreeContainer extends Component {
 
     componentDidMount() {
         console.warn("ThreeScene::componentDidMount");
+        this.frame_counter = 0;
         this.list_cameras = [];
         this.list_controls = [];
 
@@ -101,6 +102,10 @@ class ThreeContainer extends Component {
     loadScene() {
         //define in child class
         console.error("loadScene not defined");
+    }
+
+    initializationCompleted(){
+        Emitter.emit(Constants.EVENT_INITIALIZATION_COMPLETED, {});
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -299,6 +304,12 @@ class ThreeContainer extends Component {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     renderLoop = () => {
+        if(this.frame_counter == 1){            
+            this.initializationCompleted();
+        }
+        if(this.frame_counter >= 0){            
+            this.frame_counter += 1;
+        }
         this.updateParametersActiveBehavior();
         this.sceneWrapper.updateBehavior();
         this.sceneWrapper.preRender();

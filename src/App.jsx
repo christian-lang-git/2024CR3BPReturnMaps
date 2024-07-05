@@ -15,6 +15,7 @@ import { useState, useRef } from 'react'
 import { AppProvider } from '@/components/uicustom/AppContext'
 import BehaviorBar from "./components/uicustom/behaviorbar";
 import ActionBar from "./components/uicustom/actionbar";
+import { InputParameterWrapper } from "./components/uicustom/input_parameter_wrapper";
 
 function App() {
     const mainRef = useRef(null);
@@ -27,42 +28,44 @@ function App() {
 
     return (
         <AppProvider>
-            <div className="absolute inset-2 flex flex-col">
-                <ResizablePanelGroup direction="horizontal" className="max-w-md inset-0 min-w-full rounded-lg border">
-                    <ResizablePanel defaultSize={25}>
-                        <LeftPanel />
-                    </ResizablePanel>
-                    <ResizableHandle />
-                    <ResizablePanel onResize={handleResizePanel} defaultSize={50}>
+            <InputParameterWrapper>
+                <div className="absolute inset-2 flex flex-col">
+                    <ResizablePanelGroup direction="horizontal" className="max-w-md inset-0 min-w-full rounded-lg border">
+                        <ResizablePanel defaultSize={25}>
+                            <LeftPanel />
+                        </ResizablePanel>
+                        <ResizableHandle />
+                        <ResizablePanel onResize={handleResizePanel} defaultSize={50}>
+                            <ResizablePanelGroup direction="vertical">
+                                <ResizablePanel onResize={handleResizePanel} defaultSize={85}>
+                                    <ThreeContainerMain ref={mainRef} auxRef={auxRef}/>
+                                </ResizablePanel>
+                                <ResizableHandle />
+                                <ResizablePanel defaultSize={15}>
+                                    <div className="flex items-center justify-center p-2">
+                                        <BehaviorBar />
+                                    </div>
+                                    <div className="flex items-center justify-center p-2">
+                                        <ActionBar />
+                                    </div>
+                                </ResizablePanel>
+                            </ResizablePanelGroup>
+                        </ResizablePanel>
+                        <ResizableHandle />
+                        <ResizablePanel defaultSize={25}>
                         <ResizablePanelGroup direction="vertical">
-                            <ResizablePanel onResize={handleResizePanel} defaultSize={85}>
-                                <ThreeContainerMain ref={mainRef} auxRef={auxRef}/>
-                            </ResizablePanel>
-                            <ResizableHandle />
-                            <ResizablePanel defaultSize={15}>
-                                <div className="flex items-center justify-center p-2">
-                                    <BehaviorBar />
-                                </div>
-                                <div className="flex items-center justify-center p-2">
-                                    <ActionBar />
-                                </div>
-                            </ResizablePanel>
-                        </ResizablePanelGroup>
-                    </ResizablePanel>
-                    <ResizableHandle />
-                    <ResizablePanel defaultSize={25}>
-                    <ResizablePanelGroup direction="vertical">
-                            <ResizablePanel onResize={handleResizePanel} defaultSize={50}>
-                                <ThreeContainerAux ref={auxRef} mainRef={mainRef}/>
-                            </ResizablePanel>
-                            <ResizableHandle />
-                            <ResizablePanel defaultSize={50}>
-                                <RightPanel/>
-                            </ResizablePanel>                            
-                        </ResizablePanelGroup>
-                    </ResizablePanel>
-                </ResizablePanelGroup>
-            </div>
+                                <ResizablePanel onResize={handleResizePanel} defaultSize={50}>
+                                    <ThreeContainerAux ref={auxRef} mainRef={mainRef}/>
+                                </ResizablePanel>
+                                <ResizableHandle />
+                                <ResizablePanel defaultSize={50}>
+                                    <RightPanel/>
+                                </ResizablePanel>                            
+                            </ResizablePanelGroup>
+                        </ResizablePanel>
+                    </ResizablePanelGroup>
+                </div>
+            </InputParameterWrapper>            
         </AppProvider>
     )
 }
