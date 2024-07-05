@@ -29,6 +29,7 @@ class TabRendering extends Component {
     handleClickRenderingUpdate() {
         console.log("handleClickRenderingUpdate")
         Emitter.emit(Constants.EVENT_RENDERING_UPDATE, {});
+        Emitter.emit(Constants.EVENT_WRITE_FROM_UI_TO_URL, {});    
     }
 
     shouldRenderSpecializedMode = () => {

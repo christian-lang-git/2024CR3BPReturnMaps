@@ -26,6 +26,7 @@ class ThreeContainerAux extends ThreeContainer {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    
     initializeAdditional() {
+        Emitter.on(Constants.EVENT_FULL_UPDATE, this.handleEventFullUpdate);
         Emitter.on(Constants.EVENT_DATA_UPDATE, this.handleEventDataUpdate);     
         Emitter.on(Constants.EVENT_RENDERING_UPDATE, this.handleEventRenderingUpdate);
         Emitter.on(Constants.EVENT_ALIGN_CAMERA, this.handleEventAlignCamera);  
@@ -97,6 +98,14 @@ class ThreeContainerAux extends ThreeContainer {
     //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    handleEventFullUpdate = () => {
+        console.warn("handleEventFullUpdate");
+        this.updateParametersData();
+        this.updateParametersRendering();
+        this.computeStuff();
+        this.updateVisualElements();
+    }
 
     handleEventDataUpdate = () => {
         console.warn("aux handleEventDataUpdate");

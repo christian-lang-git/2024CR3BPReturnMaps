@@ -46,6 +46,7 @@ class InputParameterWrapper extends Component{
         this.dict_ui_state_name_to_input_wrapper = {};
         
         Emitter.on(Constants.EVENT_INITIALIZATION_COMPLETED, this.handleEventInitializationCompleted);
+        Emitter.on(Constants.EVENT_WRITE_FROM_UI_TO_URL, this.handleEventWriteFromUItoURL);
         this.waiting_for_completion = Constants.NUM_ELEMENTS_THAT_REQUIRE_INITIALIZATION;
 
         new InputWrapper(this, "UI_STATE_DATA_PHYSICS_MU", "mu", Constants.TYPE_STRING);
@@ -111,8 +112,13 @@ class InputParameterWrapper extends Component{
         this.waiting_for_completion -= 1;
         if(this.waiting_for_completion == 0){
             console.warn("all elements initialized");
-            Emitter.emit(Constants.EVENT_DATA_UPDATE, {});
+            Emitter.emit(Constants.EVENT_FULL_UPDATE, {});
         }
+    }
+
+    handleEventWriteFromUItoURL = () => {
+        console.warn("handleEventWriteFromUItoURL");
+        this.updateURL();
     }
 
     fromURL() {

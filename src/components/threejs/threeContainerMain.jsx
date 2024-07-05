@@ -26,11 +26,11 @@ class ThreeContainerMain extends ThreeContainer {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     initializeAdditional() {
+        Emitter.on(Constants.EVENT_FULL_UPDATE, this.handleEventFullUpdate);
         Emitter.on(Constants.EVENT_DATA_UPDATE, this.handleEventDataUpdate);
         Emitter.on(Constants.EVENT_DATA_UPDATE_STREAMLINE, this.handleEventDataUpdateStreamline);        
         Emitter.on(Constants.EVENT_RENDERING_UPDATE, this.handleEventRenderingUpdate);
-        Emitter.on(Constants.EVENT_ALIGN_CAMERA, this.handleEventAlignCamera);       
-
+        Emitter.on(Constants.EVENT_ALIGN_CAMERA, this.handleEventAlignCamera);               
         Emitter.on(Constants.EVENT_SEED_DIRECTION_CHANGED, this.handleEventSeedDirectionChanged);     
         
         this.sceneWrapper = new SceneWrapperVisualizationMain(this.renderer, this.scene, this.camera, this.controls, this.raycaster);
@@ -44,6 +44,14 @@ class ThreeContainerMain extends ThreeContainer {
     //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    handleEventFullUpdate = () => {
+        console.warn("handleEventFullUpdate");
+        this.updateParametersData();
+        this.updateParametersRendering();
+        this.computeStuff();
+        this.updateVisualElements();
+    }
 
     handleEventDataUpdate = () => {
         console.warn("handleEventDataUpdate");

@@ -18,6 +18,7 @@ class TabCamera extends Component {
     handleClickCameraUpdate() {
         console.log("handleClickCameraUpdate")
         Emitter.emit(Constants.EVENT_CAMERA_UPDATE, {});
+        Emitter.emit(Constants.EVENT_WRITE_FROM_UI_TO_URL, {});    
     }
 
     render() {

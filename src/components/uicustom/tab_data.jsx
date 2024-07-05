@@ -32,11 +32,13 @@ class TabData extends Component {
     handleClickDataUpdate() {
         console.warn("handleClickDataUpdate")
         Emitter.emit(Constants.EVENT_DATA_UPDATE, {});
+        Emitter.emit(Constants.EVENT_WRITE_FROM_UI_TO_URL, {});        
     }
 
     handleClickDataUpdateStreamline() {
         console.warn("handleClickDataUpdateStreamline")
         Emitter.emit(Constants.EVENT_DATA_UPDATE_STREAMLINE, {});
+        Emitter.emit(Constants.EVENT_WRITE_FROM_UI_TO_URL, {});    
     }
 
     shouldRenderSeedMagnitude = () => {
