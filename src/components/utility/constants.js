@@ -66,3 +66,5 @@ export const RENDERER_ID_AUX = 1;
 export const TYPE_STRING = 0;
 export const TYPE_BOOL = 1;
 export const TYPE_INT = 2;
+export const TYPE_INT_EMIT_SELECT_CHANGED = 3;
+

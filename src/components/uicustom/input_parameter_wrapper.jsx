@@ -100,8 +100,8 @@ class InputParameterWrapper extends Component{
         new InputWrapper(this, "UI_STATE_ACTIVE_BEHAVIOR", "ab", Constants.TYPE_STRING);
         new InputWrapper(this, "UI_STATE_LINKED_VIEWS_ACTIVE", "link", Constants.TYPE_STRING);
         new InputWrapper(this, "UI_STATE_DATA_PHYSICS_USE_CONSTANT_VELOCITY", "cvel", Constants.TYPE_BOOL);
-        new InputWrapper(this, "UI_STATE_AUX_CONTENT", "auxc", Constants.TYPE_STRING);
-        new InputWrapper(this, "UI_STATE_AUX_GRID_DIRECTION", "auxgd", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_AUX_CONTENT", "auxc", Constants.TYPE_INT_EMIT_SELECT_CHANGED);
+        new InputWrapper(this, "UI_STATE_AUX_GRID_DIRECTION", "auxgd", Constants.TYPE_INT_EMIT_SELECT_CHANGED);
         new InputWrapper(this, "UI_STATE_RENDERING_SCALE_VERTICES", "scalev", Constants.TYPE_STRING);
     }
 
@@ -147,6 +147,14 @@ class InputParameterWrapper extends Component{
                     break;
                 case Constants.TYPE_INT:
                     dict[input_wrapper.ui_state_name] = parseInt(value);                    
+                    break;
+                case Constants.TYPE_INT_EMIT_SELECT_CHANGED:
+                    dict[input_wrapper.ui_state_name] = parseInt(value);   
+                    Emitter.emit(Constants.EVENT_SELECT_CHANGED, 
+                        {
+                            key:input_wrapper.ui_state_name,
+                            value:value
+                        });
                     break;
                 default:
                     dict[input_wrapper.ui_state_name] = value;
