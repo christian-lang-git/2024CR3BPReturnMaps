@@ -5,10 +5,11 @@ import * as Constants from "../utility/constants";
 
 class InputWrapper {
 
-    constructor(input_parameter_wrapper, ui_state_name, url_parameter_name) {
+    constructor(input_parameter_wrapper, ui_state_name, url_parameter_name, type) {
         this.input_parameter_wrapper = input_parameter_wrapper;
         this.ui_state_name = ui_state_name;
         this.url_parameter_name = url_parameter_name;
+        this.type = type;
 
         this.addToDicts();
     }
@@ -47,58 +48,58 @@ class InputParameterWrapper extends Component{
         Emitter.on(Constants.EVENT_INITIALIZATION_COMPLETED, this.handleEventInitializationCompleted);
         this.waiting_for_completion = Constants.NUM_ELEMENTS_THAT_REQUIRE_INITIALIZATION;
 
-        new InputWrapper(this, "UI_STATE_DATA_PHYSICS_MU", "mu");
-        new InputWrapper(this, "UI_STATE_DATA_PHYSICS_ANGULAR_VELOCITY", "n");
-        new InputWrapper(this, "UI_STATE_DATA_PHYSICS_SEED_ENERGY", "e");
-        new InputWrapper(this, "UI_STATE_DATA_PHYSICS_SEED_DIRECTION_X", "dx");
-        new InputWrapper(this, "UI_STATE_DATA_PHYSICS_SEED_DIRECTION_Y", "dy");
-        new InputWrapper(this, "UI_STATE_DATA_PHYSICS_SEED_DIRECTION_Z", "dz");
-        new InputWrapper(this, "UI_STATE_DATA_PHYSICS_SEED_POSITION_X", "qx");
-        new InputWrapper(this, "UI_STATE_DATA_PHYSICS_SEED_POSITION_Y", "qy");
-        new InputWrapper(this, "UI_STATE_DATA_INTEGRATION_STEP_SIZE", "ss");
-        new InputWrapper(this, "UI_STATE_DATA_INTEGRATION_MAX_STEPS", "sn");
-        new InputWrapper(this, "UI_STATE_DATA_INTEGRATION_TERMINATION_METHOD", "ter");
-        new InputWrapper(this, "UI_STATE_DATA_DOMAIN_MIN_X", "xmin");
-        new InputWrapper(this, "UI_STATE_DATA_DOMAIN_MAX_X", "xmax");
-        new InputWrapper(this, "UI_STATE_DATA_DOMAIN_PIXELS_X", "nx");
-        new InputWrapper(this, "UI_STATE_DATA_DOMAIN_MIN_Y", "ymin");
-        new InputWrapper(this, "UI_STATE_DATA_DOMAIN_MAX_Y", "ymax");
-        new InputWrapper(this, "UI_STATE_DATA_DOMAIN_PIXELS_Y", "ny");
-        new InputWrapper(this, "UI_STATE_DATA_ANGLE_PIXELS_X", "ax");
-        new InputWrapper(this, "UI_STATE_DATA_ANGLE_PIXELS_Y", "ay");
-        new InputWrapper(this, "UI_STATE_CAMERA_CONTROLS_ROTATESPEED", "rot");
-        new InputWrapper(this, "UI_STATE_CAMERA_CONTROLS_PANSPEED", "pan");
-        new InputWrapper(this, "UI_STATE_CAMERA_CONTROLS_ZOOMSPEED", "zoom");
-        new InputWrapper(this, "UI_STATE_CAMERA_NEAR", "near");
-        new InputWrapper(this, "UI_STATE_CAMERA_FAR", "far");
-        new InputWrapper(this, "UI_STATE_RENDERING_FTLE_TYPE", "ftype");
-        new InputWrapper(this, "UI_STATE_RENDERING_BODIES_MAX_RADIUS_BODIES", "radb");
-        new InputWrapper(this, "UI_STATE_RENDERING_BODIES_RADIUS_CENTER_OF_MASS", "radcm");
-        new InputWrapper(this, "UI_STATE_RENDERING_SCALAR_MIN", "smin");
-        new InputWrapper(this, "UI_STATE_RENDERING_SCALAR_MAX", "smax");
-        new InputWrapper(this, "UI_STATE_RENDERING_OPACITY", "opa");
-        new InputWrapper(this, "UI_STATE_RENDERING_CLICKED_POSITION_RADIUS", "radc");
-        new InputWrapper(this, "UI_STATE_RENDERING_CLICKED_POSITION_RADIUS_AUX", "rada");
-        new InputWrapper(this, "UI_STATE_RENDERING_CLICKED_POSITION_RADIUS_AUX_SPHERE", "radas");
-        new InputWrapper(this, "UI_STATE_RENDERING_TEXTURE_MODE", "tm");
-        new InputWrapper(this, "UI_STATE_RENDERING_SPECIALIZED_MODE", "sm");
-        new InputWrapper(this, "UI_STATE_RENDERING_RETURN_NUMBER", "rn");
-        new InputWrapper(this, "UI_STATE_RENDERING_DIRECTION", "dir");
-        new InputWrapper(this, "UI_STATE_RENDERING_RAW_MODE", "raw");
-        new InputWrapper(this, "UI_STATE_RENDERING_RAW_MODE_LAYER", "rawl");
-        new InputWrapper(this, "UI_STATE_RENDERING_RAW_MODE_X_TEXTURE_INDEX", "rawx");
-        new InputWrapper(this, "UI_STATE_RENDERING_RAW_MODE_Y_TEXTURE_INDEX", "rawy");
-        new InputWrapper(this, "UI_STATE_RENDERING_TUBE_SEGMENT_LENGTH", "tsl");
-        new InputWrapper(this, "UI_STATE_RENDERING_TUBE_MAX_SEGMENTS", "tsn");
-        new InputWrapper(this, "UI_STATE_RENDERING_TUBE_RADIUS", "tr");
-        new InputWrapper(this, "UI_STATE_RENDERING_TUBE_NUM_SIDES", "tns");
-        new InputWrapper(this, "UI_STATE_RENDERING_TUBE_ONLY_SHOW_SUCCESSFUL_RETURNS", "succ");
-        new InputWrapper(this, "UI_STATE_ACTIVE_BEHAVIOR", "ab");
-        new InputWrapper(this, "UI_STATE_LINKED_VIEWS_ACTIVE", "link");
-        new InputWrapper(this, "UI_STATE_DATA_PHYSICS_USE_CONSTANT_VELOCITY", "cvel");
-        new InputWrapper(this, "UI_STATE_AUX_CONTENT", "auxc");
-        new InputWrapper(this, "UI_STATE_AUX_GRID_DIRECTION", "auxgd");
-        new InputWrapper(this, "UI_STATE_RENDERING_SCALE_VERTICES", "scalev");
+        new InputWrapper(this, "UI_STATE_DATA_PHYSICS_MU", "mu", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_DATA_PHYSICS_ANGULAR_VELOCITY", "n", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_DATA_PHYSICS_SEED_ENERGY", "e", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_DATA_PHYSICS_SEED_DIRECTION_X", "dx", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_DATA_PHYSICS_SEED_DIRECTION_Y", "dy", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_DATA_PHYSICS_SEED_DIRECTION_Z", "dz", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_DATA_PHYSICS_SEED_POSITION_X", "qx", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_DATA_PHYSICS_SEED_POSITION_Y", "qy", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_DATA_INTEGRATION_STEP_SIZE", "ss", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_DATA_INTEGRATION_MAX_STEPS", "sn", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_DATA_INTEGRATION_TERMINATION_METHOD", "ter", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_DATA_DOMAIN_MIN_X", "xmin", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_DATA_DOMAIN_MAX_X", "xmax", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_DATA_DOMAIN_PIXELS_X", "nx", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_DATA_DOMAIN_MIN_Y", "ymin", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_DATA_DOMAIN_MAX_Y", "ymax", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_DATA_DOMAIN_PIXELS_Y", "ny", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_DATA_ANGLE_PIXELS_X", "ax", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_DATA_ANGLE_PIXELS_Y", "ay", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_CAMERA_CONTROLS_ROTATESPEED", "rot", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_CAMERA_CONTROLS_PANSPEED", "pan", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_CAMERA_CONTROLS_ZOOMSPEED", "zoom", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_CAMERA_NEAR", "near", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_CAMERA_FAR", "far", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_FTLE_TYPE", "ftype", Constants.TYPE_INT);
+        new InputWrapper(this, "UI_STATE_RENDERING_BODIES_MAX_RADIUS_BODIES", "radb", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_BODIES_RADIUS_CENTER_OF_MASS", "radcm", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_SCALAR_MIN", "smin", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_SCALAR_MAX", "smax", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_OPACITY", "opa", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_CLICKED_POSITION_RADIUS", "radc", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_CLICKED_POSITION_RADIUS_AUX", "rada", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_CLICKED_POSITION_RADIUS_AUX_SPHERE", "radas", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_TEXTURE_MODE", "tm", Constants.TYPE_INT);
+        new InputWrapper(this, "UI_STATE_RENDERING_SPECIALIZED_MODE", "sm", Constants.TYPE_INT);
+        new InputWrapper(this, "UI_STATE_RENDERING_RETURN_NUMBER", "rn", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_DIRECTION", "dir", Constants.TYPE_BOOL);
+        new InputWrapper(this, "UI_STATE_RENDERING_RAW_MODE", "raw", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_RAW_MODE_LAYER", "rawl", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_RAW_MODE_X_TEXTURE_INDEX", "rawx", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_RAW_MODE_Y_TEXTURE_INDEX", "rawy", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_TUBE_SEGMENT_LENGTH", "tsl", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_TUBE_MAX_SEGMENTS", "tsn", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_TUBE_RADIUS", "tr", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_TUBE_NUM_SIDES", "tns", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_TUBE_ONLY_SHOW_SUCCESSFUL_RETURNS", "succ", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_ACTIVE_BEHAVIOR", "ab", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_LINKED_VIEWS_ACTIVE", "link", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_DATA_PHYSICS_USE_CONSTANT_VELOCITY", "cvel", Constants.TYPE_BOOL);
+        new InputWrapper(this, "UI_STATE_AUX_CONTENT", "auxc", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_AUX_GRID_DIRECTION", "auxgd", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_SCALE_VERTICES", "scalev", Constants.TYPE_STRING);
     }
 
     componentDidMount() {
@@ -131,8 +132,18 @@ class InputParameterWrapper extends Component{
             console.warn("url_parameter_name:", input_wrapper.url_parameter_name, "value:", value);
             if (value === null)
                 continue;
-            //this.setValue(input_wrapper.ui_state_name, value);
-            dict[input_wrapper.ui_state_name] = value;
+
+            switch (input_wrapper.type) {
+                case Constants.TYPE_BOOL:
+                    dict[input_wrapper.ui_state_name] = value === "true" ? true : false;                    
+                    break;
+                case Constants.TYPE_INT:
+                    dict[input_wrapper.ui_state_name] = parseInt(value);                    
+                    break;
+                default:
+                    dict[input_wrapper.ui_state_name] = value;
+                    break;
+            }
         }
 
         this.setValues(dict);

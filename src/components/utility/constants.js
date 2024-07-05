@@ -63,3 +63,7 @@ export const AUX_GRID_DIRECTION_THETA_DOWN_PHI_RIGHT = 1;
 
 export const RENDERER_ID_MAIN = 0;
 export const RENDERER_ID_AUX = 1;
+
+export const TYPE_STRING = 0;
+export const TYPE_BOOL = 1;
+export const TYPE_INT = 2;
