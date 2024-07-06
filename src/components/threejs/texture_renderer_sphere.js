@@ -62,12 +62,12 @@ class TextureRendererSphere extends TextureRenderer {
                 int y_pixel_total = int(round(y_frac * (2.0*planeDimensionsPixel.y-1.0)));//TODO: const 2.0
 
                 int x_virtual = 1;
-                int y_virtual = 0;
+                int y_virtual = 1;
                 int z_layer = 0;
-                int component = 3;
+                int component = 0;
                 bool forward = rendering_forward;
                 a = InterpolateScalarWrapper(forward, x_frac, y_frac, x_virtual, y_virtual, z_layer, component);
-
+                a = max(a, 0.0);
                 //pos = vec3(x_frac, y_frac, 0);
                 pos *= a;
             }
