@@ -26,6 +26,7 @@ class ThreeContainerMain extends ThreeContainer {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     initializeAdditional() {
+        Emitter.on(Constants.EVENT_DOWNLOAD, this.handleEventDownload);
         Emitter.on(Constants.EVENT_FULL_UPDATE, this.handleEventFullUpdate);
         Emitter.on(Constants.EVENT_DATA_UPDATE, this.handleEventDataUpdate);
         Emitter.on(Constants.EVENT_DATA_UPDATE_STREAMLINE, this.handleEventDataUpdateStreamline);        
@@ -45,6 +46,11 @@ class ThreeContainerMain extends ThreeContainer {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
+    handleEventDownload = () => {
+        console.warn("handleEventDownload");
+        this.saveImage();
+    }
+
     handleEventFullUpdate = () => {
         console.warn("handleEventFullUpdate");
         this.updateParametersData();
@@ -119,6 +125,14 @@ class ThreeContainerMain extends ThreeContainer {
         this.sceneWrapper.updateTexturedPlane();
         this.sceneWrapper.updateAxes();
         */
+    }
+
+    saveImage(){
+        this.renderer.render(this.active_scene, this.active_camera);
+        var canvas = this.renderer.domElement;
+        canvas.toBlob((blob) => {
+            this.saveBlob(blob, "capture-main.png");
+        });
     }
 
 }

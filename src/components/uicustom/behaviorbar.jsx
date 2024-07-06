@@ -30,7 +30,7 @@ class BehaviorBar extends Component {
         const value = uiState["UI_STATE_ACTIVE_BEHAVIOR"];
 
         return (
-            <div>                
+            <div className="flex items-center justify-center space-x-8">                
             <ToggleGroup type="single" value={value} onValueChange={this.handleToggleChange}>
                 <ToggleGroupItem value={Constants.BEHAVIOR_CONTROL_CAMERA}>
                     <Camera className="h-8 w-8" />    

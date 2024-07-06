@@ -42,11 +42,13 @@ function App() {
                                 </ResizablePanel>
                                 <ResizableHandle />
                                 <ResizablePanel defaultSize={15}>
-                                    <div className="flex items-center justify-center p-2">
-                                        <BehaviorBar />
-                                    </div>
-                                    <div className="flex items-center justify-center p-2">
-                                        <ActionBar />
+                                    <div className="flex items-center justify-center space-x-4">
+                                        <div className="flex items-center justify-center p-2">
+                                            <BehaviorBar />
+                                        </div>
+                                        <div className="flex items-center justify-center p-2">
+                                            <ActionBar />
+                                        </div>
                                     </div>
                                 </ResizablePanel>
                             </ResizablePanelGroup>
