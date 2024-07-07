@@ -97,6 +97,9 @@ class InputParameterWrapper extends Component{
         new InputWrapper(this, "UI_STATE_RENDERING_TUBE_RADIUS", "tr", Constants.TYPE_STRING);
         new InputWrapper(this, "UI_STATE_RENDERING_TUBE_NUM_SIDES", "tns", Constants.TYPE_STRING);
         new InputWrapper(this, "UI_STATE_RENDERING_TUBE_ONLY_SHOW_SUCCESSFUL_RETURNS", "succ", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_TUBE_COLOR", "col", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_TUBE_ROUGHNESS", "rough", Constants.TYPE_STRING);
+        new InputWrapper(this, "UI_STATE_RENDERING_TUBE_EMISSIVE_INTENSITY", "int", Constants.TYPE_STRING);
         new InputWrapper(this, "UI_STATE_ACTIVE_BEHAVIOR", "ab", Constants.TYPE_STRING);
         new InputWrapper(this, "UI_STATE_LINKED_VIEWS_ACTIVE", "link", Constants.TYPE_STRING);
         new InputWrapper(this, "UI_STATE_DATA_PHYSICS_USE_CONSTANT_VELOCITY", "cvel", Constants.TYPE_BOOL);

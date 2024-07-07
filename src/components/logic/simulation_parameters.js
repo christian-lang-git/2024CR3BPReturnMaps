@@ -62,6 +62,10 @@ class SimulationParameters {
         this.auxGridDirection = Constants.AUX_GRID_DIRECTION_THETA_DOWN_PHI_RIGHT;
         this.rendering_scale_vertices = false;
 
+        this.tube_color = 0x00ffff;
+        this.tube_roughness = 0.75;
+        this.tube_emissive_intensity = 0.4;
+
         this.print();
     }
 

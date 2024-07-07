@@ -200,6 +200,20 @@ class TabRendering extends Component {
                                             labelText={"number of sides"}
                                         />
                                     </div>
+                                    <LabeledField
+                                            name="UI_STATE_RENDERING_TUBE_COLOR"
+                                            labelText={"color"}
+                                    />
+                                    <div className="grid grid-cols-2">
+                                        <LabeledField
+                                                name="UI_STATE_RENDERING_TUBE_ROUGHNESS"
+                                                labelText={"roughness"}
+                                        />
+                                        <LabeledField
+                                                name="UI_STATE_RENDERING_TUBE_EMISSIVE_INTENSITY"
+                                                labelText={"emissive intensity"}
+                                        />
+                                    </div>
                                     <LabeledCheckbox
                                         name="UI_STATE_RENDERING_TUBE_ONLY_SHOW_SUCCESSFUL_RETURNS"
                                         labelText={"only show successful returns"}

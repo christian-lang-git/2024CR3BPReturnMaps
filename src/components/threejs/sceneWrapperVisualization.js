@@ -95,7 +95,7 @@ class SceneWrapperVisualization {
     }
 
     initializeLight() {
-        this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        this.directionalLight = new THREE.DirectionalLight(0xffffff, 2);
         this.directionalLight.position.set(0, 0, 0);
         this.camera.add(this.directionalLight);
 
@@ -104,7 +104,8 @@ class SceneWrapperVisualization {
         this.directionalLightTarget.position.set(0, 0, -1);
         this.directionalLight.target = this.directionalLightTarget;
 
-        const ambientLight = new THREE.AmbientLight(0x404040); // soft white light
+        //const ambientLight = new THREE.AmbientLight(0x404040); // soft white light
+        const ambientLight = new THREE.AmbientLight(0x505050); // soft white light
         this.scene.add(ambientLight);
     }
 
@@ -135,20 +136,23 @@ class SceneWrapperVisualization {
 
     initializeClickedPositionMarker() {
         var radius = 1.0;
+        var cyan = 0x00ffff;
+        var magenta = 0xff00ff;
+        var yellow = 0xfbbc05;
         this.clicked_geometry = new THREE.SphereGeometry(radius);
-        this.clicked_material = new THREE.MeshStandardMaterial({ color: 0x000000 });
+        this.clicked_material = new THREE.MeshStandardMaterial({ color: cyan });
         this.clicked_mesh = new THREE.Mesh(this.clicked_geometry, this.clicked_material);
         this.clicked_mesh.position.set(0, 0, 10000);
         this.scene.add(this.clicked_mesh);
 
         this.return_1_geometry = new THREE.SphereGeometry(radius);
-        this.return_1_material = new THREE.MeshStandardMaterial({ color: 0xff00ff });
+        this.return_1_material = new THREE.MeshStandardMaterial({ color: magenta });
         this.return_1_mesh = new THREE.Mesh(this.return_1_geometry, this.return_1_material);
         this.return_1_mesh.position.set(0, 0, 10000);
         this.scene.add(this.return_1_mesh);
 
         this.return_2_geometry = new THREE.SphereGeometry(radius);
-        this.return_2_material = new THREE.MeshStandardMaterial({ color: 0x00ffff });
+        this.return_2_material = new THREE.MeshStandardMaterial({ color: yellow });
         this.return_2_mesh = new THREE.Mesh(this.return_2_geometry, this.return_2_material);
         this.return_2_mesh.position.set(0, 0, 10000);
         this.scene.add(this.return_2_mesh);
@@ -248,7 +252,7 @@ class SceneWrapperVisualization {
         this.simulationParameters.angle_pixels_y = parseInt(angle_pixels_y);
     }
 
-    updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position, radius_clicked_position_aux, radius_clicked_position_aux_sphere, rendering_ftle_type, rendering_texture_mode, rendering_specialized_mode, return_number, rendering_forward, rendering_raw_mode, rendering_raw_mode_layer, rendering_raw_mode_x_texture_index, rendering_raw_mode_y_texture_index, scalar_min, scalar_max, opacity, tube_segment_length, tube_max_segments, tube_num_sides, tube_radius, tube_only_show_successful_returns, scale_vertices) {
+    updateParametersRendering(max_radius_bodies, radius_center_of_mass, radius_clicked_position, radius_clicked_position_aux, radius_clicked_position_aux_sphere, rendering_ftle_type, rendering_texture_mode, rendering_specialized_mode, return_number, rendering_forward, rendering_raw_mode, rendering_raw_mode_layer, rendering_raw_mode_x_texture_index, rendering_raw_mode_y_texture_index, scalar_min, scalar_max, opacity, tube_segment_length, tube_max_segments, tube_num_sides, tube_radius, tube_only_show_successful_returns, tube_color, tube_roughness, tube_emissive_intensity, scale_vertices) {
         this.simulationParameters.max_radius_bodies = max_radius_bodies;
         this.simulationParameters.radius_center_of_mass = radius_center_of_mass;
         this.simulationParameters.radius_clicked_position = radius_clicked_position;
@@ -273,7 +277,9 @@ class SceneWrapperVisualization {
         this.simulationParameters.tube_num_sides = parseInt(tube_num_sides); 
         this.simulationParameters.tube_radius = parseFloat(tube_radius); 
         this.simulationParameters.tube_only_show_successful_returns = tube_only_show_successful_returns;         
-
+        this.simulationParameters.tube_color = parseInt(tube_color, 16);        
+        this.simulationParameters.tube_roughness = tube_roughness;         
+        this.simulationParameters.tube_emissive_intensity = tube_emissive_intensity;         
         this.simulationParameters.rendering_scale_vertices = scale_vertices;
     }
 

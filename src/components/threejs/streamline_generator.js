@@ -312,7 +312,16 @@ class Streamline {
         num_segments = Math.min(num_segments, this.streamline_generator.simulationParameters.tube_max_segments);
 
         this.geometry = new THREE.TubeGeometry(this.path, num_segments, radius, num_sides, false);
-        this.material = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+        //this.material = new THREE.MeshStandardMaterial({ color: 0xffff00, roughness: 0.5 });
+        //this.material = new THREE.MeshStandardMaterial({ color: 0x0090ff, roughness: 0.5 });
+        //this.material = new THREE.MeshStandardMaterial({ color: 0x00b0ff, roughness: 0.75 });
+        //this.material = new THREE.MeshStandardMaterial({ color: 0x00b0ff, roughness: 0.75, emissive: 0x00b0ff, emissiveIntensity: 0.4 });
+        //this.material = new THREE.MeshStandardMaterial({ color: 0x00ffff, roughness: 0.75, emissive: 0x00ffff, emissiveIntensity: 0.4 });
+
+        var tube_color = this.streamline_generator.simulationParameters.tube_color;
+        var tube_roughness = this.streamline_generator.simulationParameters.tube_roughness;
+        var tube_emissive_intensity = this.streamline_generator.simulationParameters.tube_emissive_intensity;
+        this.material = new THREE.MeshStandardMaterial({ color: tube_color, roughness: tube_roughness, emissive: tube_color, emissiveIntensity: tube_emissive_intensity });
         this.mesh = new THREE.Mesh(this.geometry, this.material);
     }
 
