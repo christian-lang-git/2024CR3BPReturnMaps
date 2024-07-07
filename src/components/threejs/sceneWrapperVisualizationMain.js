@@ -106,8 +106,13 @@ class SceneWrapperVisualizationMain extends SceneWrapperVisualization{
         var min_x = this.simulationParameters.domain_min_x;
         var max_x = this.simulationParameters.domain_max_x;
         var min_y = this.simulationParameters.domain_min_y;
-        var max_y = this.simulationParameters.domain_max_y;        
-        var radius = 0.02;
+        var max_y = this.simulationParameters.domain_max_y;      
+        
+        var diff_x = max_x - min_x;
+        var diff_y = max_y - min_y;
+        var diff = Math.min(diff_x, diff_y);
+
+        var radius = 0.02 * diff / 16;
         var color1 = 0xff0000;
         var color2 = 0x00ff00;
         var color3 = 0x0000ff;
