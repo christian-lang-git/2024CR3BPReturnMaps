@@ -75,7 +75,7 @@ class SceneWrapperVisualizationMain extends SceneWrapperVisualization{
     }
 
     getDefaultCameraDistance(){
-        return 11;
+        return 2.25;
     }
 
     updateVisualElements(){
